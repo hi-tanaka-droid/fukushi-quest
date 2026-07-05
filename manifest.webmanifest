@@ -1,0 +1,17 @@
+{
+  "name": "福祉クエスト 〜社会福祉原論A〜",
+  "short_name": "福祉クエスト",
+  "description": "社会福祉原論Aの内容で戦うレトロRPG風クイズバトルゲーム",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0e2a",
+  "theme_color": "#0b0e2a",
+  "lang": "ja",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

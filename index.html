@@ -1,0 +1,1027 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>福祉クエスト 〜社会福祉原論A〜</title>
+<meta name="theme-color" content="#0b0e2a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="福祉クエスト">
+</head>
+<body>
+<title>福祉クエスト 〜社会福祉原論A〜</title>
+<style>
+:root{
+  --ground:#0b0e2a;
+  --win:#0a0f26;
+  --frame:#f4f6ff;
+  --gold:#ffcf4d;
+  --hp:#4ade80;
+  --foe:#ff5d7a;
+  --cyan:#7dd8ff;
+  --dim:#a3abd6;
+  font-size:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--ground);}
+body{
+  font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+  color:var(--frame);
+  min-height:100vh;
+  overflow-x:hidden;
+  line-height:1.75;
+}
+.px{font-family:"ＭＳ ゴシック","MS Gothic","Osaka-Mono",monospace;}
+#sky{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1px 1px at 12% 18%,#fff9 50%,transparent 51%),
+    radial-gradient(1px 1px at 78% 8%,#fff7 50%,transparent 51%),
+    radial-gradient(2px 2px at 33% 62%,#9fd4ff55 50%,transparent 51%),
+    radial-gradient(1px 1px at 61% 41%,#fff6 50%,transparent 51%),
+    radial-gradient(1px 1px at 89% 71%,#fff8 50%,transparent 51%),
+    radial-gradient(2px 2px at 8% 84%,#ffd9a955 50%,transparent 51%),
+    radial-gradient(1px 1px at 45% 25%,#fff5 50%,transparent 51%),
+    radial-gradient(1px 1px at 70% 88%,#fff7 50%,transparent 51%),
+    radial-gradient(1px 1px at 25% 95%,#fff5 50%,transparent 51%),
+    radial-gradient(1px 1px at 95% 33%,#fff6 50%,transparent 51%),
+    radial-gradient(ellipse 120% 60% at 50% 115%,#1b2350 0%,transparent 60%),
+    linear-gradient(#070a20,#0b0e2a 40%,#0e1233);
+}
+#sky::after{
+  content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent 0 3px,#00000012 3px 4px);
+}
+#app{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:14px 12px 60px;}
+.screen{display:none;}
+.screen.on{display:block;animation:fadein .25s steps(4);}
+@keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* ===== RPG window ===== */
+.win{
+  background:var(--win);
+  border:3px solid var(--frame);
+  border-radius:12px;
+  box-shadow:0 0 0 3px var(--win), inset 0 0 0 3px #ffffff26, 0 6px 24px #00000088;
+  padding:16px 18px;
+}
+.win+.win{margin-top:12px;}
+
+/* ===== title ===== */
+#scr-title{text-align:center;padding-top:5vh;}
+.logo-eyebrow{color:var(--cyan);font-size:.82rem;letter-spacing:.45em;margin-bottom:10px;}
+.logo{
+  font-size:clamp(2.7rem,9vw,4.3rem);font-weight:bold;letter-spacing:.06em;color:#fff;
+  text-shadow:0 3px 0 #2a2f6b,0 6px 0 #14173d,4px 4px 0 #000,0 0 28px #7dd8ff44;
+  line-height:1.25;
+}
+.logo .q{color:var(--gold);text-shadow:0 3px 0 #8a6a10,0 6px 0 #4d3a06,4px 4px 0 #000,0 0 30px #ffcf4d66;}
+.logo-sub{color:var(--dim);margin-top:8px;font-size:.9rem;letter-spacing:.22em;}
+.tagline{
+  margin:24px auto 4px;color:var(--gold);font-size:1.02rem;letter-spacing:.1em;font-weight:bold;
+  animation:blink 1.3s steps(2) infinite;
+}
+@keyframes blink{50%{opacity:.2;}}
+.modes{display:flex;flex-direction:column;gap:12px;max-width:420px;margin:24px auto 0;}
+.mode-btn{
+  font-family:inherit;font-size:1.18rem;font-weight:bold;color:var(--frame);cursor:pointer;text-align:left;
+  background:var(--win);border:3px solid var(--frame);border-radius:12px;padding:16px 22px;
+  box-shadow:inset 0 0 0 3px #ffffff22,0 4px 0 #000;
+  transition:transform .06s;position:relative;
+}
+.mode-btn small{display:block;color:var(--dim);font-size:.8rem;font-weight:normal;margin-top:3px;line-height:1.6;}
+.mode-btn:hover,.mode-btn:focus-visible{color:var(--gold);transform:translateY(-2px);outline:none;border-color:var(--gold);}
+.mode-btn:hover::before,.mode-btn:focus-visible::before{content:"▶";position:absolute;left:-1.15em;color:var(--gold);animation:blink 1s steps(2) infinite;}
+.mode-btn:active{transform:translateY(2px);box-shadow:inset 0 0 0 3px #ffffff22,0 0 0 #000;}
+.title-tools{display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap;}
+.records{
+  max-width:420px;margin:20px auto 0;font-size:.82rem;color:var(--dim);
+  display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;text-align:left;
+}
+.records b{color:var(--gold);font-variant-numeric:tabular-nums;}
+.parade{overflow:hidden;white-space:nowrap;margin-top:26px;opacity:.9;pointer-events:none;}
+.parade span{display:inline-block;font-size:1.7rem;letter-spacing:20px;padding-right:20px;animation:march 26s linear infinite;filter:drop-shadow(2px 3px 0 #000);}
+@keyframes march{from{transform:translateX(0);}to{transform:translateX(-100%);}}
+.title-foot{margin-top:18px;color:var(--dim);font-size:.72rem;letter-spacing:.08em;}
+
+/* ===== bars & buttons ===== */
+.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;}
+.bar .mid{color:var(--gold);font-size:.85rem;font-weight:bold;text-align:center;flex:1;}
+.bar .sp{width:76px;}
+.icon-btn{
+  font-family:inherit;background:var(--win);color:var(--frame);border:2px solid var(--frame);
+  border-radius:8px;padding:5px 13px;font-size:.82rem;cursor:pointer;
+}
+.icon-btn:hover,.icon-btn:focus-visible{color:var(--gold);border-color:var(--gold);outline:none;}
+.next-btn{
+  font-family:inherit;display:inline-block;font-size:1rem;color:#1a1408;cursor:pointer;
+  background:var(--gold);border:3px solid #fff;border-radius:10px;padding:10px 34px;font-weight:bold;
+  box-shadow:0 4px 0 #8a6a10;
+}
+.next-btn:hover,.next-btn:focus-visible{transform:translateY(-2px);outline:none;}
+.next-btn:active{transform:translateY(2px);box-shadow:none;}
+.off{color:#333a5e;text-shadow:none;}
+
+/* ===== journey trail ===== */
+.trail{display:flex;gap:7px;justify-content:center;align-items:center;margin:0 0 12px;flex-wrap:wrap;}
+.tnode{font-size:1.3rem;line-height:1;filter:drop-shadow(1px 2px 0 #000);}
+.tnode.done{opacity:.32;filter:grayscale(1) drop-shadow(1px 2px 0 #000);}
+.tnode.now{transform:scale(1.28);animation:hover 1.6s ease-in-out infinite;text-shadow:0 0 14px var(--gold);}
+.tnode.todo{opacity:.3;}
+.tsep{color:#333a5e;font-size:.7rem;}
+
+/* ===== chapter intro ===== */
+.chapter-intro{
+  position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  background:#000000d9;z-index:70;pointer-events:none;
+  animation:chfade 1.7s steps(12) forwards;
+}
+.chapter-intro .ch{color:var(--gold);font-size:1.05rem;letter-spacing:.5em;padding-left:.5em;}
+.chapter-intro .tt{color:#fff;font-size:1.9rem;font-weight:bold;letter-spacing:.14em;text-shadow:2px 2px 0 #000,0 0 24px #7dd8ff33;}
+.chapter-intro .bs{color:var(--dim);font-size:.85rem;margin-top:4px;}
+@keyframes chfade{0%{opacity:0;}15%{opacity:1;}75%{opacity:1;}100%{opacity:0;}}
+
+/* ===== battle ===== */
+#battle-wrap.shake{animation:shake .4s steps(8);}
+@keyframes shake{
+  0%,100%{transform:none;}20%{transform:translate(-9px,3px);}40%{transform:translate(8px,-4px);}
+  60%{transform:translate(-6px,-3px);}80%{transform:translate(5px,3px);}
+}
+.foe-win{position:relative;text-align:center;padding:14px 16px 12px;overflow:hidden;}
+.foe-name{font-size:1rem;font-weight:bold;color:#fff;letter-spacing:.1em;}
+.foe-name small{color:var(--dim);font-size:.68rem;letter-spacing:.14em;display:block;font-weight:normal;}
+.foe-state{font-size:.75rem;color:var(--foe);height:1.2em;font-weight:bold;}
+.foe-sprite{
+  font-size:clamp(3.2rem,12vw,4.6rem);line-height:1.15;display:inline-block;margin:6px 0 4px;
+  filter:drop-shadow(4px 5px 0 #000);
+  animation:hover 2.4s ease-in-out infinite;
+}
+@keyframes hover{50%{transform:translateY(-7px);}}
+.foe-sprite.angry{animation:angry .5s ease-in-out infinite;filter:drop-shadow(4px 5px 0 #000) drop-shadow(0 0 14px #ff5d7abb)!important;}
+@keyframes angry{25%{transform:translate(-3px,-4px);}75%{transform:translate(3px,-2px);}}
+.foe-sprite.hit{animation:foehit .45s steps(6);}
+@keyframes foehit{
+  0%{transform:translateX(0);filter:drop-shadow(4px 5px 0 #000) brightness(3);}
+  25%{transform:translateX(-13px);}50%{transform:translateX(11px);filter:drop-shadow(4px 5px 0 #000) brightness(2.4);}
+  75%{transform:translateX(-7px);}100%{transform:none;}
+}
+.foe-sprite.dead{animation:foedead 1.2s steps(10) forwards;}
+@keyframes foedead{to{transform:translateY(26px) scaleY(.1);opacity:0;filter:brightness(4) blur(3px);}}
+.hpwrap{max-width:360px;margin:2px auto 0;}
+.hplabel{display:flex;justify-content:space-between;font-size:.7rem;color:var(--dim);}
+.hpbar{height:15px;border:2px solid var(--frame);border-radius:8px;background:#1a1030;overflow:hidden;}
+.hpbar>i{display:block;height:100%;background:linear-gradient(#ff8ba0,var(--foe));width:100%;transition:width .5s steps(12);}
+.atk-banner{
+  position:absolute;left:0;right:0;top:42%;font-size:1.15rem;font-weight:bold;color:#fff;
+  text-shadow:2px 2px 0 #000,0 0 14px #ff5d7a;pointer-events:none;
+  animation:atkfly .9s steps(12) forwards;
+}
+@keyframes atkfly{0%{transform:translateX(60%);opacity:0;}20%{transform:translateX(0);opacity:1;}80%{transform:translateX(-4%);opacity:1;}100%{transform:translateX(-60%);opacity:0;}}
+.dmg{
+  position:absolute;left:50%;top:30%;font-size:2.1rem;font-weight:bold;color:#fff;
+  text-shadow:2px 2px 0 #000,0 0 12px #ff5d7a;pointer-events:none;font-variant-numeric:tabular-nums;
+  animation:dmgpop 1s steps(10) forwards;white-space:nowrap;
+}
+.dmg.crit{color:var(--gold);font-size:2.7rem;text-shadow:2px 2px 0 #000,0 0 18px #ffcf4d;}
+@keyframes dmgpop{0%{transform:translate(-50%,0) scale(.4);opacity:0;}15%{transform:translate(-50%,-14px) scale(1.25);opacity:1;}
+  60%{transform:translate(-50%,-34px) scale(1);opacity:1;}100%{transform:translate(-50%,-58px) scale(.9);opacity:0;}}
+.crit-flash{position:fixed;inset:0;background:#fff;z-index:50;pointer-events:none;animation:cflash .28s steps(3) forwards;}
+@keyframes cflash{from{opacity:.85;}to{opacity:0;}}
+.toast{
+  position:fixed;left:50%;top:18%;transform:translateX(-50%);z-index:55;pointer-events:none;
+  background:var(--win);border:3px solid var(--gold);border-radius:10px;padding:8px 22px;
+  color:var(--gold);font-weight:bold;font-size:1rem;box-shadow:0 6px 20px #000a;
+  animation:toastpop 1.6s steps(12) forwards;white-space:nowrap;
+}
+@keyframes toastpop{0%{transform:translate(-50%,-16px);opacity:0;}15%{transform:translate(-50%,0);opacity:1;}80%{opacity:1;}100%{transform:translate(-50%,-10px);opacity:0;}}
+
+.pstrip{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;font-size:.9rem;flex-wrap:wrap;}
+.pstrip .hearts{letter-spacing:3px;font-size:1.05rem;text-shadow:1px 1px 0 #000;}
+.pstrip .hearts small{color:var(--dim);font-size:.7rem;letter-spacing:0;margin-right:4px;}
+.combo{color:var(--cyan);font-weight:bold;}
+.combo b{color:var(--gold);font-size:1.1rem;}
+.combo .fv{color:#ff9de2;animation:blink .5s steps(2) infinite;}
+.score{color:var(--gold);font-variant-numeric:tabular-nums;font-weight:bold;}
+
+.qwin{margin-top:12px;position:relative;}
+.qwin.fever{animation:feverglow 1s linear infinite;}
+@keyframes feverglow{0%{border-color:var(--gold);}33%{border-color:#ff9de2;}66%{border-color:var(--cyan);}100%{border-color:var(--gold);}}
+.qtext{font-size:1.13rem;line-height:1.9;min-height:3.8em;cursor:pointer;font-weight:600;}
+
+.choices{display:flex;flex-direction:column;gap:10px;margin-top:14px;}
+.choice{
+  font-family:inherit;font-size:1.02rem;color:var(--frame);cursor:pointer;text-align:left;line-height:1.6;
+  background:var(--win);border:3px solid var(--frame);border-radius:12px;padding:11px 14px 11px 52px;
+  box-shadow:inset 0 0 0 3px #ffffff1c,0 3px 0 #000;position:relative;transition:transform .05s;
+}
+.choice .key{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:28px;height:28px;line-height:24px;text-align:center;border:2px solid var(--dim);border-radius:7px;
+  font-size:.85rem;color:var(--dim);font-weight:bold;
+}
+.choice:hover:not(:disabled),.choice:focus-visible{color:var(--gold);border-color:var(--gold);outline:none;transform:translateY(-2px);}
+.choice:hover:not(:disabled) .key,.choice:focus-visible .key{color:var(--gold);border-color:var(--gold);}
+.choice:disabled{cursor:default;}
+.choice.right{border-color:var(--hp);color:var(--hp);box-shadow:inset 0 0 0 3px #4ade8033,0 3px 0 #000;}
+.choice.right .key{color:var(--hp);border-color:var(--hp);}
+.choice.wrongpick{border-color:var(--foe);color:var(--foe);animation:wobble .35s steps(6);}
+.choice.wrongpick .key{color:var(--foe);border-color:var(--foe);}
+.choice.faded{opacity:.28;}
+@keyframes wobble{25%{transform:translateX(-6px);}50%{transform:translateX(5px);}75%{transform:translateX(-3px);}}
+
+.explain{margin-top:12px;display:none;}
+.explain.on{display:block;}
+.explain.good{border-color:var(--hp);}
+.explain.bad{border-color:var(--foe);}
+.explain .tag{font-size:.95rem;font-weight:bold;letter-spacing:.1em;}
+.explain.good .tag{color:var(--hp);}
+.explain.bad .tag{color:var(--foe);}
+.explain p{font-size:.95rem;margin-top:6px;line-height:1.8;}
+.explain .foe-say{color:var(--foe);font-size:.85rem;margin-top:6px;}
+.explain .center{margin-top:12px;}
+.kbd-hint{margin-top:10px;color:var(--dim);font-size:.72rem;text-align:center;}
+@media(max-width:600px){.kbd-hint{display:none;}}
+
+/* ===== result ===== */
+.result-box{text-align:center;padding:30px 20px;}
+.stamp{
+  display:inline-block;transform:rotate(-7deg);border:4px solid var(--gold);color:var(--gold);
+  padding:0 22px;font-size:2.4rem;font-weight:bold;border-radius:10px;letter-spacing:.1em;
+  text-shadow:2px 2px 0 #000;margin-bottom:8px;
+  animation:stampin .35s cubic-bezier(.2,2.4,.5,1) both;
+}
+@keyframes stampin{from{transform:rotate(-7deg) scale(2.6);opacity:0;}to{transform:rotate(-7deg) scale(1);opacity:1;}}
+.stamp.rA{border-color:var(--cyan);color:var(--cyan);}
+.stamp.rB{border-color:var(--frame);color:var(--frame);}
+.result-title{font-size:1.65rem;letter-spacing:.2em;color:var(--gold);text-shadow:2px 2px 0 #000,0 0 22px #ffcf4d55;}
+.result-title.lose{color:var(--foe);text-shadow:2px 2px 0 #000,0 0 22px #ff5d7a55;}
+.result-stars{font-size:2.2rem;letter-spacing:8px;margin:10px 0 4px;color:var(--gold);text-shadow:2px 2px 0 #000;}
+.defeat-quote{color:var(--cyan);font-size:.95rem;margin:14px auto;max-width:32em;line-height:2;}
+.result-score{font-size:1.1rem;color:#fff;font-variant-numeric:tabular-nums;}
+.result-score b{color:var(--gold);font-size:1.55rem;}
+.trivia{margin-top:18px;color:var(--dim);font-size:.8rem;line-height:1.9;max-width:34em;margin-left:auto;margin-right:auto;
+  border-top:1px dashed #333a5e;padding-top:12px;}
+.trivia b{color:var(--cyan);}
+.result-btns{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;align-items:center;}
+.ending-parade{font-size:1.6rem;letter-spacing:10px;margin:10px 0 2px;filter:drop-shadow(2px 3px 0 #000);}
+
+/* ===== overlay / tutorial ===== */
+.overlay{position:fixed;inset:0;background:#000000c0;z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;}
+.overlay[hidden]{display:none;}
+.tut-box{max-width:460px;width:100%;}
+.tut-box h3{color:var(--gold);letter-spacing:.2em;font-size:1.15rem;text-align:center;margin-bottom:12px;}
+.tut-box ol{list-style:none;display:flex;flex-direction:column;gap:12px;font-size:.92rem;line-height:1.8;}
+.tut-box li{padding-left:2.4em;position:relative;}
+.tut-box li .ico{position:absolute;left:0;top:0;font-size:1.4rem;filter:drop-shadow(1px 2px 0 #000);}
+.tut-box .center{text-align:center;margin-top:18px;}
+
+.center{text-align:center;}
+.mt12{margin-top:12px;}
+.small-dim{color:var(--dim);font-size:.76rem;}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;}
+  .crit-flash{display:none;}
+  .chapter-intro{display:none;}
+}
+</style>
+
+<div id="sky"></div>
+<div id="app">
+
+  <!-- ===== TITLE ===== -->
+  <section class="screen on" id="scr-title">
+    <p class="logo-eyebrow px">社会福祉原論A 完全対応</p>
+    <h1 class="logo px">福祉<span class="q">クエスト</span></h1>
+    <p class="logo-sub px">— ソーシャルワーカーの冒険 —</p>
+    <p class="tagline">単位と関係ない戦いが、いま始まる。</p>
+    <div class="modes">
+      <button class="mode-btn" id="btn-story">⚔️ ぼうけんに出る<small id="story-sub"></small></button>
+    </div>
+    <div class="title-tools">
+      <button class="icon-btn" id="btn-restart" hidden>↩ 第1章から旅をやり直す</button>
+      <button class="icon-btn" id="btn-howto">❓ あそびかた</button>
+    </div>
+    <div class="records" id="records"></div>
+    <div class="parade" aria-hidden="true"><span id="parade1"></span><span id="parade2"></span></div>
+    <p class="title-foot" id="title-foot"></p>
+    <p class="title-foot"><button class="icon-btn" id="btn-reset" style="font-size:.68rem;padding:2px 8px;">きろくを消す</button></p>
+  </section>
+
+  <!-- ===== BATTLE ===== -->
+  <section class="screen" id="scr-battle">
+    <div class="bar">
+      <button class="icon-btn" id="btn-flee">◀ タイトル</button>
+      <span class="mid" id="battle-stage-name"></span>
+      <span class="sp"></span>
+    </div>
+    <div class="trail" id="trail" aria-hidden="true"></div>
+    <div id="battle-wrap">
+      <div class="win foe-win" id="foe-win">
+        <div class="foe-name" id="foe-name"></div>
+        <div class="foe-state" id="foe-state"></div>
+        <div class="foe-sprite" id="foe-sprite"></div>
+        <div class="hpwrap">
+          <div class="hplabel"><span>てきのHP</span><span id="foe-hp-num" class="px"></span></div>
+          <div class="hpbar"><i id="foe-hp"></i></div>
+        </div>
+      </div>
+      <div class="pstrip">
+        <span class="hearts" id="hearts"></span>
+        <span class="combo" id="combo"></span>
+        <span class="score px" id="battle-score"></span>
+      </div>
+      <div class="win qwin" id="qwin">
+        <p class="qtext" id="qtext"></p>
+      </div>
+      <div class="choices" id="choices"></div>
+      <div class="win explain" id="explain">
+        <span class="tag" id="ex-tag"></span>
+        <p id="ex-body"></p>
+        <p class="foe-say" id="foe-say"></p>
+        <div class="center"><button class="next-btn" id="btn-next">つづける ▶</button></div>
+      </div>
+      <p class="kbd-hint">⌨ キーボード:1〜4 で回答 / Enter で先へ / クリックで文字送りスキップ</p>
+    </div>
+  </section>
+
+  <!-- ===== RESULT ===== -->
+  <section class="screen" id="scr-result">
+    <div class="win result-box">
+      <div id="stamp-area"></div>
+      <h2 class="result-title px" id="result-title"></h2>
+      <div class="result-stars" id="result-stars"></div>
+      <p class="defeat-quote" id="defeat-quote"></p>
+      <p class="result-score px" id="result-score"></p>
+      <p class="trivia" id="trivia"></p>
+      <div class="result-btns" id="result-btns"></div>
+    </div>
+  </section>
+
+  <!-- ===== TUTORIAL ===== -->
+  <div class="overlay" id="tut" hidden>
+    <div class="win tut-box">
+      <h3 class="px">— あそびかた —</h3>
+      <ol>
+        <li><span class="ico">🗺️</span>冒険は全12章。ボスを倒すと<b style="color:var(--gold)">次の地へ進む!</b> 進み具合は自動セーブ。</li>
+        <li><span class="ico">⚔️</span>クイズに正解するとボスにダメージ! <b style="color:var(--gold)">3コンボで会心の一撃</b>、<b style="color:#ff9de2">5コンボでフィーバー(1.5倍)!</b></li>
+        <li><span class="ico">❤️</span>まちがえるとボスの反撃でライフが減る。0になると敗北…でもすぐリベンジできる!</li>
+        <li><span class="ico">💡</span>まちがえてもダイジョーブ。<b style="color:var(--hp)">解説で覚えれば</b>次は必ず勝てる!</li>
+      </ol>
+      <div class="center"><button class="next-btn" id="tut-close">わかった! ▶</button></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+"use strict";
+/* =========================================================
+   福祉クエスト v4 — ひとすじの冒険(音・タイマー・アイテムなし)
+   ========================================================= */
+
+/* ---------- DATA ---------- */
+const STAGES=[
+{id:"s1",no:"第2回",title:"能力主義と尊厳",
+ boss:{name:"メリトス",icon:"👑",kana:"MERITOCRACY LORD",glow:"#ffcf4d",
+   intro:"「役に立たぬ者に、価値などない…!」",
+   attacks:["偏差値プレッシャー","自己責任ビーム","「で、それ何の役に立つの?」"],
+   defeat:"「ば、ばかな…『できること』は『人間の価値』ではない…だと…!? 存在そのものに…尊厳が…グフッ」"},
+ q:[
+  ["「能力によって社会的な地位が変わる仕組み」を何という?",["メリトクラシー(能力主義)","アリストクラシー(貴族制)","デモクラシー(民主制)","テクノクラシー(技術者支配)"],"Merit(功績)+cracy(支配)。生まれた身分ではなく能力で地位が決まる仕組み。"],
+  ["『実力も運のうち 能力主義は正義か?』の著者は?",["マイケル・サンデル","ジョン・ロールズ","マックス・ウェーバー","ジョナサン・ハイト"],"サンデルは「君の成功は努力か、運か?」と問いかけた。"],
+  ["世界人権宣言が国連総会で採択されたのは何年?",["1948年","1919年","1889年","1968年"],"第二次世界大戦の反省から1948年に採択された。"],
+  ["世界人権宣言第一条「すべての人間は、生れながらにして自由であり、かつ、○○と権利とについて平等である」",["尊厳","能力","財産","幸福"],"尊厳(Human Dignity)=生まれながらに持つ、侵してはならない絶対的な価値。"],
+  ["「尊厳」の説明として正しいのは?",["能力に関係なく、存在そのものが持つ侵してはならない価値","努力によって獲得する社会的評価","役に立つことで得られる価値","地位の高い人だけが持つ名誉"],"「能力」に関係なく、「存在」はかけがえのないもの。"],
+  ["批判してよいのは相手の「行動」。では絶対に否定してはいけないのは?",["存在","意見","服装","成績"],"「人として終わってる」は正論っぽく見えて存在の否定=尊厳の侵害。"],
+  ["自分の失敗は環境のせい、他人の失敗はその人のせいにしがちな心のクセは?",["帰属のバイアス(行為者-観察者バイアス)","確証バイアス","正常性バイアス","ハロー効果"],"「なぜあの人は」ではなく「何があの人に影響したのか」と問おう。"],
+  ["「できること」は「人間の価値」ではない(立岩2018)。では能力主義と相性バツグンの経済システムは?",["資本主義","封建制","社会主義","重商主義"],"現代社会は「存在意義」まで「できること」で意味づけしがち。"],
+ ]},
+{id:"s2",no:"第3回",title:"自立と依存",
+ boss:{name:"コリツン",icon:"🐀",kana:"THE LONELY CAGE",glow:"#9aa2c8",
+   intro:"「ひとりぼっちの檻で、永遠に過ごすがいい…」",
+   attacks:["孤独のオリ","共依存バインド","「頼ったら負けだぞ」の囁き"],
+   defeat:"「つ、つながりの力…! 依存先は…多いほど強いのか…檻が、こわれるゥ…!」"},
+ q:[
+  ["熊谷晋一郎いわく「自立とは○○を増やすこと」",["依存先","貯金","筋肉","資格"],"1人に太く頼るのは危険。細い依存先をたくさん持つのが自立。"],
+  ["ラットパーク実験で、仲間と遊べる楽園のネズミは薬物入りの水を?",["ほとんど飲まなかった","孤独なネズミより飲んだ","全部飲み干した","仲間に配った"],"孤立ケージのネズミだけが薬物に執着した。原因は薬物ではなく孤立。"],
+  ["ベトナム帰還兵の約何%が、施設に入らず自然にヘロインをやめた?",["約95%","約50%","約20%","約5%"],"帰国して日常のつながりが戻ると、大多数が自然にやめられた。"],
+  ["依存症(アディクション)の反対は?",["つながり(コネクション)","しらふ","自立","禁欲"],"人とつながれないとき、人の代わりに何かと結びつくのが依存症。"],
+  ["「アルコール依存症」は「アルコールによる○○」と言い換えられる(桜井2020)。○○に入るのは?",["支配・コントロール","快楽","洗脳","契約"],"問題の本質は「依存」ではなく「支配」。〇〇依存症=〇〇による支配・コントロール。"],
+  ["日本の成年年齢、2022年からは何歳?",["18歳","20歳","16歳","22歳"],"約150年間つづいた「20歳」から引き下げ。「大人」の線引きは時代で変わる。"],
+  ["「相手にとって必要な存在になりたい」という喜び、信田さよ子いわくその正体は?",["「支配」の快楽","ケアの本質","愛情の証","プロ意識"],"相手の人生の主人公に、私がなってはならない。"],
+  ["山岳救助隊も夜は捜索をしない。これが教えるケアの心得は?",["最善のケアには「限界の了解」が必要","夜は危険だから諦めるべき","救助はコスト次第","自己責任の原則"],"最善を尽くしたい気持ちと、\"最善\"の限界の了解はセット(久保2021)。"],
+ ]},
+{id:"s3",no:"第4回",title:"自己決定と自己責任",
+ boss:{name:"オシツケール",icon:"🎩",kana:"GRAND DUKE PATERNALISM",glow:"#b48cff",
+   intro:"「悪いことは言わん、ワシの言う通りにしておけ。あなたのためじゃよ?」",
+   attacks:["善意の押し付け","「あなたのため」ビーム","勝手に決めちゃうぞ攻撃"],
+   defeat:"「押し付けでも…丸投げでもなく…\"ともに\"…じゃと…? ぐ、ぐふっ、良い支援者になるのじゃぞ…」"},
+ q:[
+  ["支援者の判断を相手に押し付けるかかわりを何という?",["パターナリズム","ナルシシズム","ポピュリズム","リアリズム"],"pater=父。「父親的温情主義」。良かれと思って、が押し付けになる。"],
+  ["「心からやりたい!」という動機づけは?",["内発的動機づけ","外発的動機づけ","強制的動機づけ","金銭的動機づけ"],"内発的動機づけは理解・創造性・問題解決に効果大。自己決定はこれを生みやすい。"],
+  ["ある実験によると、学習内容をいちばん深く理解できたのは、どんなつもりで学んだグループ?",["「あとで人に教える」つもりで学んだ組","「あとでテストされる」つもりで学んだ組","「ごほうびがもらえる」と言われて学んだ組","「罰がある」と言われて学んだ組"],"「人に教えるつもり」で学ぶと取り組み方が変わり、テスト対策よりも理解が深まった(1995・1999の実験)。"],
+  ["ケアで大事な関係のイメージは、to でも for でもなく?",["with(ともに)","by(によって)","against(対抗して)","under(下で)"],"「相手に向かって」「相手のために」ではなく「相手とともに」。"],
+  ["「あなたの気持ちを尊重します」とだけ言う態度が陥る罠は?",["「尊重」という名の責任放棄","過保護","パターナリズム","越権行為"],"揉めず、イイ人でいられ、責任も問われない——それは丸投げかも。"],
+  ["支援の優先順位ピラミッドで、最優先(頂点)とされるのは?",["命の保護","経済効率","多数決","上司の指示"],"優先順位は「命の保護 > 社会正義 > 自己決定」。自己決定は大事だが、命より優先はされない。"],
+  ["三井(2013)いわく、よいケアをしている人ほど?",["失敗を感じることが多い","失敗を全く感じない","給料が高い","悩みがない"],"迷い悩むこと自体がケアの本質。悩まない支援者の方が危ない。"],
+  ["ケアの仕事で支援者と相手が完全に対等になれない理由は?",["権力の非対称性があるから","年齢が違うから","資格の有無があるから","給料をもらっているから"],"情報・知識・管理する立場の差。優位性を自覚して、それでも「ともに」を目指す。"],
+ ]},
+{id:"s4",no:"第5回",title:"ノーマライゼーション",
+ boss:{name:"バリゴン",icon:"🧱",kana:"BARRIER GOLEM",glow:"#d97742",
+   intro:"「物理・制度・文化情報・こころ…4つの壁がお前を阻む!」",
+   attacks:["見えない壁","心のバリア","「かわいそう」の呪い"],
+   defeat:"「壁は…本人の中ではなく…社会の側に…あったのか…ゴゴゴ…(崩壊)」"},
+ q:[
+  ["ノーマライゼーションの考えを生んだデンマークの人物は?",["バンク=ミケルセン","ニィリエ","ベヴァリッジ","ヘックマン"],"劣悪な施設の状況に心を痛め、親の会の運動を支えた。"],
+  ["ノーマライゼーションを8つの原則に深めて広めたスウェーデンの人物は?",["ニィリエ","バンク=ミケルセン","ウェッブ","サンデル"],"1日・1週間・1年のリズム、尊厳と自己決定など8原則。"],
+  ["1959年、世界で初めてノーマライゼーションを法律に盛り込んだ国は?",["デンマーク","スウェーデン","イギリス","日本"],"バンク=ミケルセンが1959年デンマーク法に盛り込んだ。"],
+  ["4つのバリア=物理・制度・文化情報と、もう1つは?",["こころ(意識)","お金","時間","距離"],"「かわいそう」という偏見や「特別扱い」の思い込みも立派なバリア。"],
+  ["「障害があるのにすごいね」という褒め言葉、実は?",["マイクロアグレッション","合理的配慮","インクルージョン","アドボカシー"],"悪意のない無意識の言動が人を傷つける「見えにくい傷つけ」。"],
+  ["障害の原因を社会や環境の側に見るモデルは?",["社会モデル","医学モデル","統合モデル","個人モデル"],"金魚が苦しそうなら、金魚ではなく水を疑え。"],
+  ["「異なる個人として、異なるまま承認される」状態は?",["インクルージョン(包摂)","インテグレーション(統合)","セグリゲーション(分離)","エクスクルージョン(排除)"],"NG3パターンは排除・分離・統合。鍵は\"「私たち」の1人\"と思えるか。"],
+  ["合理的配慮(Reasonable Accommodation)の法律上の位置づけは?",["義務","努力目標","ボランティア","マナー"],"思いやりではなく、社会的バリアを除去する法的義務。"],
+ ]},
+{id:"s5",no:"第6回",title:"社会福祉の視角",
+ boss:{name:"ジレンマ",icon:"⚖️",kana:"THE WARRING GODS",glow:"#7dd8ff",
+   intro:"「公平! 効率! 自由! 平等! すべての神を同時に満たしてみよ!」",
+   attacks:["価値観シャッフル","ジレンマの雷","「で、どっちを優先するの?」"],
+   defeat:"「争いは終わらぬ…だが汝は、自らの軸で選ぶことを学んだ…見事なり…」"},
+ q:[
+  ["広義の福祉=「目指す理念」を表す英語は?",["Well-being","Welfare","Wellness","Will"],"Well-being=幸福・安寧な状態。Welfareは手段(制度・実践)。"],
+  ["戦後の社会福祉学の大論争といえば?",["政策論 vs 技術論","与党 vs 野党","施設 vs 在宅","理論 vs 実践"],"制度・構造を問う政策論と、援助を問う技術論。今も2つの系譜に生きている。"],
+  ["落とし穴のたとえで「穴の周りに柵を作り、看板を立てる」のは?",["政策論","技術論","構築主義","家族主義"],"落ちた人を引き上げ手当てするのが技術論。どちらも欠かせない。"],
+  ["「必要な人に、必要なだけ」配るのは?",["公平性","平等性","効率性","自由"],"平等性は「みんなに同じだけ」。似て非なる2つの正義。"],
+  ["資力調査(ミーンズテスト)で対象を絞って配るのは?",["選別主義","普遍主義","楽観主義","温情主義"],"困っている人を選んで集中支援。公平性重視の配り方。"],
+  ["ベーシック・インカムの配り方は?",["普遍主義","選別主義","成果主義","縁故主義"],"選ばず全員に同じ量。スティグマが生じにくい利点がある。"],
+  ["「最も苦しい人々の状況改善」を条件に格差を認めるのは、誰の何原理?",["ロールズの格差原理","ウェーバーの官僚制","マルクスの唯物史観","ベンサムの功利原理"],"『正義論』。功利主義「最大多数の最大幸福」への対抗として構想された。"],
+  ["公平・効率・自由・平等が衝突して同時に満たせないことをウェーバーは何と呼んだ?",["神々の争い","万人の万人に対する闘争","見えざる手","囚人のジレンマ"],"どの価値(神)に仕えるかは、最後は自分で選ぶしかない。"],
+ ]},
+{id:"s6",no:"第7回",title:"構築主義",
+ boss:{name:"ラベラー",icon:"🏷️",kana:"THE LABELER",glow:"#ffb14d",
+   intro:"「フン、お前にもレッテルを貼ってやろう…『どうせ無理』とな!」",
+   attacks:["レッテル貼り","決めつけの札","「そういう人だと思ってた」"],
+   defeat:"「ぐぬぬ…ワードがワールドをつくると、バレてしまった…ラベルが…剥がれるゥ…!」"},
+ q:[
+  ["「これは問題だ!」と主張することを構築主義で何という?",["クレイム申し立て","パブリックコメント","アジテーション","ロビイング"],"社会問題は言葉によって「つくられる」。claimは苦情より広く「正当な要求・主張」。"],
+  ["物理的には緑色なのに「青信号」。これが示すのは?",["言葉が現実の見え方をつくる","日本人は色覚が特殊","昔の信号は青かった","法律の誤り"],"色そのもの+呼び方=「青信号」という現実。言葉が変わると見え方も変わる。"],
+  ["児童虐待の相談対応件数、1992年度1,372件→2024年度は?",["約22万件","約2万件","約5万件","約223万件"],"223,691件。ただし「相談が増えた」ことと「虐待が増えた」ことは別問題。"],
+  ["児童虐待の相談対応件数は32年で163倍に増えた——このデータ「だけ」では、ただちに言えないことは?",["虐待そのものが増えた","社会の関心が高まった","通告が増えた","制度が知られるようになった"],"統計の増加=実態の増加とは限らない。社会の認知や通告の変化も件数を押し上げる。"],
+  ["令和6年度、児童虐待で最も多い種類は?",["心理的虐待","身体的虐待","ネグレクト","性的虐待"],"最多は心理的虐待で約6割(59.5%)。面前DVなども含まれる。"],
+  ["人種×性別など、複数の属性が交差する地点の差別を捉える概念は?",["インターセクショナリティ","ダイバーシティ","アイデンティティ","マイノリティ"],"黒人男性も白人女性も採用されるのに黒人女性だけ不採用——重ねて見ないと見えない差別。"],
+  ["社会問題の「個人化」3パターン=教育化・心理主義化と、もう1つは?",["医療化","商業化","政治化","高齢化"],"能力・こころ・からだの問題にされると、社会の構造が見えなくなる。"],
+  ["「ワードが、ワールドをつくる」と言った臨床社会学者は?",["中村正","落合恵美子","小林武彦","美馬達哉"],"「〇〇ハラ」「〇〇系」…新しい言葉が新しい世界の見え方をつくる。"],
+ ]},
+{id:"s7",no:"第8回",title:"家族主義",
+ boss:{name:"シンワン",icon:"👻",kana:"THE MYTH PHANTOM",glow:"#bfeaff",
+   intro:"「母親なんだから…ぜんぶ、家族でやるのが当たり前でしょう…?」",
+   attacks:["「母親なんだから」の呪い","ワンオペの重圧","セカンドシフト強制"],
+   defeat:"「私は…科学的事実ではなく…神話に、すぎなかった…成仏、します…」"},
+ q:[
+  ["夫が稼ぎ手・妻は主婦という性別役割分業で、子に強い愛情と教育関心を注ぐ家族モデルは?(落合2023)",["近代家族","拡大家族","伝統家族","武家家族"],"「昔ながらの家族」に見えて、実は歴史的には新しい形。"],
+  ["日本で近代家族が「あたりまえ」だったのはいつ?",["1945年〜1990年代","江戸時代から","明治〜大正まで","縄文時代から"],"人類約700万年の歴史の中の、ごく短い一時期にすぎない。"],
+  ["仕事のあとに家事・育児という「もうひと仕事」をすることを?",["セカンドシフト","オーバータイム","ダブルワーク","サードプレイス"],"負担は一方(多くは女性)にかたよりやすい。"],
+  ["6歳未満の子がいる家庭、妻の育児219分/日に対して夫は?",["65分","219分","130分","12分"],"家事は夫30分/妻187分。「意識」は変わっても「行動」の差は大きい。"],
+  ["「三歳までは母親が子育てに専念すべき」という考えの正体は?",["神話(三歳児神話)","科学的事実","法律","発達心理学の定説"],"賛成率は2008年86.7%→2022年61.0%に低下。それでもまだ6割。"],
+  ["「ケアは家族がみるのが当たり前」という考え方を?",["家族主義","個人主義","脱家族化","温情主義"],"家族の犠牲と協力を美しいとみなす〈ケアの家族責任規範〉(齋藤2024)。"],
+  ["スウェーデン・デンマークなど「家族への支援も脱家族化も強い」型は?(ライトナー)",["選択的家族主義","積極的家族主義","消極的家族主義","脱家族主義"],"家族で見ても、サービスに頼っても選べる。だから「選択的」。"],
+  ["福祉レジーム(自由主義・保守主義・社会民主主義)の3類型で有名なのは?",["エスピン=アンデルセン","ライトナー","ロールズ","ブース"],"国・市場・家族の誰が生活を支えるかで各国を分類した。"],
+ ]},
+{id:"s8",no:"第9回",title:"社会保障とお金",
+ boss:{name:"テンビキング",icon:"🐉",kana:"FISCAL DRAGON 122",glow:"#4ade80",
+   intro:"「我が名は122兆…国家予算の重み、その身で味わうがいい!」",
+   attacks:["保険料ブレス","天引きクラッシュ","インフレの咆哮"],
+   defeat:"「ギャオオ…社会保障に39兆…それは弱さではなく、支え合いの証だったか…」"},
+ q:[
+  ["社会保障の4部門=社会保険・公的扶助・保健医療&公衆衛生と、もう1つは?",["社会福祉","民間保険","教育","防衛"],"社会福祉は社会保障の「一部」。この関係図はテストの超頻出ポイント。"],
+  ["社会保障の根拠となる日本国憲法の条文は?",["第25条","第9条","第1条","第96条"],"「健康で文化的な最低限度の生活を営む権利」=生存権。"],
+  ["令和8年度の国の一般会計歳出総額は約?",["122兆円","39兆円","12兆円","500兆円"],"122兆3,092億円。1万円札を積み上げたら大変なことになる額。"],
+  ["国家予算に占める社会保障関係費の割合は約?",["3分の1","10分の1","2分の1","20分の1"],"39兆559億円=31.9%。毎年増え続けている。"],
+  ["社会保険5種類(医療・年金・介護・雇用・労災)に入らないのは?",["がん保険(民間保険)","医療保険","雇用保険","労災保険"],"アフラックやソニー損保は民間保険。社会保険は強制加入が原則。"],
+  ["給与から保険料・税金があらかじめ差し引かれることを俗に?",["天引き","中抜き","源泉狩り","仕送り"],"給与明細の「控除」欄。額面35万円→手取り約27万円の例も。"],
+  ["日本の公的年金の構造は?",["2階建て","平屋","3階建て","タワーマンション"],"1階=国民年金(全員)、2階=厚生年金(会社員・公務員)。"],
+  ["老齢基礎年金(満額)は月およそ?",["7.1万円","14.5万円","23万円","3万円"],"国民年金だけだと月約7.1万円。厚生年金込みの平均で約14.5万円。"],
+ ]},
+{id:"s9",no:"第10-11回",title:"高齢化と子育て",
+ boss:{name:"カタグルマン",icon:"🗿",kana:"THE PIGGYBACK GIANT",glow:"#9aa2c8",
+   intro:"「1965年は9.1人で支えた…2065年、お前はたった1.3人で我を支えるのだ…」",
+   attacks:["少子化ウェーブ","肩車プレス","8050の重圧"],
+   defeat:"「支え手が減っても…施設ではなく、地域で支え合う道が…あるのだな…ズウウン」"},
+ q:[
+  ["「超高齢社会」の基準は、65歳以上人口が総人口の?",["21%以上","7%以上","14%以上","50%以上"],"7%=高齢化社会、14%=高齢社会、21%=超高齢社会。"],
+  ["日本が超高齢社会に突入した年は?",["2007年","1970年","1994年","2020年"],"1970年高齢化社会→1994年高齢社会→2007年超高齢社会。世界最速級。"],
+  ["2024年の日本の高齢化率は?",["29.3%","19.3%","39.3%","9.3%"],"約3.4人に1人が65歳以上。2070年推計は38.7%。"],
+  ["「8050問題」の8050が意味するのは?",["80代の親が50代の子を支える","昭和80年と50年","80歳まで50万円","時速80kmと50km"],"ひきこもりの長期化と親の高齢化。次は「9060」へ。"],
+  ["地域包括ケアシステムの圏域の目安は、自宅から?",["30分圏内(おおむね中学校区)","3時間圏内","徒歩5分","県内全域"],"住み慣れた町で最後まで。「本人が家にいたい」+「施設を増やすお金がない」。"],
+  ["幼児教育で上がった学力(認知能力)が学年とともに消えていく現象は?",["フェードアウト","バーンアウト","ドロップアウト","ノックアウト"],"Head StartもテネシーVPKもRCTで効果消失を確認。"],
+  ["ヘックマンが「大人になっても残る」と主張した能力は?",["非認知能力","IQ","偏差値","記憶力"],"実行機能・自制心・社会情緒など。学力は消えても、これは残る。"],
+  ["子育てと親の介護が同時に重なることを?",["ダブルケア","ツインケア","ペアケア","セカンドケア"],"晩産化で増加中。家族だけで背負うのはもう限界——だから脱家族化。"],
+ ]},
+{id:"s10",no:"第12回",title:"生活保護",
+ boss:{name:"スティグマ",icon:"😈",kana:"STIGMA THE DEVIL",glow:"#ff5d7a",
+   intro:"「申請などしてみろ…『恥』のラベルを貼りつけてやる…世間の目は怖いぞぉ?」",
+   attacks:["世間の目","扶養照会の鎖","「タダ乗り」の烙印"],
+   defeat:"「保護は恥ではなく…憲法25条の権利…だと…!? ひ、光がまぶしい…消えるうぅ…!」"},
+ q:[
+  ["生活保護の4つの原理=国家責任・無差別平等・最低生活保障と、もう1つは?",["補足性","効率性","選別性","快適性"],"足りない分だけ補う。収入+保護費=最低生活費。"],
+  ["生活保護は何によって始まる?",["申請","推薦","抽選","招待"],"申請保護の原則。だから「申請できない空気」が最大の壁になる。"],
+  ["日本の生活保護の捕捉率(利用する資格がある人のうち、実際に利用している人の割合)は約?",["22.6%","91.6%","64.0%","82.0%"],"5人に1人しか使えていない。フランス91.6%・米国82%・独64%・英63%。"],
+  ["捕捉率が最も高い国(91.6%)は?",["フランス","日本","アメリカ","ドイツ"],"日本の22.6%は先進国で突出して低い。"],
+  ["不正受給は保護費総額の?",["0.4%未満","約10%","約30%","約半分"],"99.6%は正規受給。イメージと実態のギャップこそ試験の狙い目。"],
+  ["生活保護受給世帯のうち日本国籍世帯は?",["97%","67%","3%","50%"],"「3分の1は外国人」というSNS情報は誤報(実際は2.87%)。記事は削除・謝罪済み。"],
+  ["2025年6月27日、最高裁が「違法」と初判断したのは?",["生活扶助基準のデフレ調整引き下げ","扶養照会","外国人への支給","申請主義"],"2013〜15年の最大10%・670億円引き下げ。ただし国の賠償責任は認めず。"],
+  ["「周囲と比べて、みんなが当たり前にできることができない」貧困は?",["相対的貧困","絶対的貧困","精神的貧困","一時的貧困"],"日本の相対的貧困率は15.4%(2021)。子どもの貧困は9人に1人。"],
+ ]},
+{id:"s11",no:"第13回",title:"福祉の歴史",
+ boss:{name:"レットウ",icon:"💀",kana:"LORD LESS-ELIGIBILITY",glow:"#b48cff",
+   intro:"「救済は、最下層の労働者より惨めであるべし…ワークハウスへ来い…」",
+   attacks:["劣等処遇の鞭","ワークハウスの闇","「施しに感謝せよ」"],
+   defeat:"「施しの時代は…終わった…福祉は、恩恵ではなく…権利になったのだ…ガラガラ(崩れ落ちる)」"},
+ q:[
+  ["1601年、世界初の公的救貧制度は?",["エリザベス救貧法","新救貧法","救護法","ハンムラビ法典"],"国がはじめて貧しい人を助けるルールを作った。ただし浮浪者には懲罰的。"],
+  ["1834年新救貧法の「救済水準は最下層労働者より低く」という原則は?",["劣等処遇","応能負担","最低保障","水際作戦"],"「助けを甘くするとなまける」という発想。スティグマの原点。"],
+  ["世界初の社会保険(1883年)をつくった国は?",["ドイツ","イギリス","日本","フランス"],"みんなで少しずつ出し合い、病気やケガに「前もって備える」世界初のしくみ。"],
+  ["「ナショナル・ミニマム」を提唱したのは?",["ウェッブ夫妻","キュリー夫妻","ベヴァリッジ","ブース"],"1897年。「誰もが下回ってはならない最低限を国が保障せよ」。憲法25条に受け継がれた。"],
+  ["「ゆりかごから墓場まで」で有名な1942年の報告書は?",["ベヴァリッジ報告","チャーチル報告","ウェッブ報告","王立救貧報告"],"300ページの政府報告書なのに60万部超の大ヒット。発売日に行列ができた。"],
+  ["1874年、日本初の救貧制度は?",["恤救規則","救護法","生活保護法","十七条憲法"],"「まずは家族や近所で」。国が助けるのは身寄りのない人だけだった。"],
+  ["1929年の救護法、救済を受けると失ったものは?",["選挙権","戸籍","財産","苗字"],"恩恵的で市民権を奪う救済。「権利としての福祉」はまだ遠かった。"],
+  ["2000年、「措置から契約へ」の大転換となった改革は?",["社会福祉基礎構造改革","明治維新","構造改革特区","大化の改新"],"給食からレストランへ。利用者が「受ける側」から「選ぶ主役」に。"],
+ ]},
+];
+
+const FINAL={id:"final",no:"終章",title:"最終決戦",
+ boss:{name:"ムカンシン",icon:"👹",kana:"THE APATHY",glow:"#ff5d7a",
+   intro:"「クックック…よくぞここまで来た。我は『無関心』…すべての福祉を静かに殺す者…生半可な理解では、その先へは行かせぬ!!」",
+   attacks:["見て見ぬフリ","他人事ビーム","自己責任論の嵐","無関心の霧"],
+   defeat:"「ば、ばかな…無関心が、関心に変わっただと…!? 知り、語る者がいる限り、我は生きられぬ…おぬし、もう立派な福祉の語り部よ…グフーッ!!」"}};
+
+const CHAPTERS=[...STAGES,FINAL];
+
+const TRIVIA=[
+"ドイツで年金制度が生まれた当初、支給開始はなんと70歳。当時の平均寿命は約40歳だった…!",
+"ベヴァリッジ報告は300ページの政府報告書なのに60万部超の大ヒット。発売日に行列ができた。",
+"「青信号」は物理的には緑色。言葉が現実の見え方をつくる(構築主義)。",
+"日本の生活保護の捕捉率22.6%は、フランス(91.6%)の4分の1以下。",
+"扶養照会が実際に援助につながる割合は0.7〜1.45%程度と極めて低い。",
+"高齢者1人を支える現役世代:1965年9.1人(胴上げ)→2020年2.0人(騎馬戦)→2065年1.3人(肩車)。",
+"ラットパーク=楽園で暮らすネズミは、薬物入りの水にほぼ興味を示さなかった。",
+"児童虐待の相談対応件数は32年で約163倍。ただし「実態が163倍」とは別問題(構築主義)。",
+"「健常者」が健常者風に振る舞えるのは、そのニーズがすでに配慮され満たされているから(三井2018)。",
+"合理的配慮の英語は Reasonable Accommodation=「無理のない範囲での調整・変更」。「配慮=親切」ではない。",
+"認定こども園はこの10年で約3.7倍に増加。幼稚園の数を逆転した。",
+"大学生の自殺は21歳がピーク。原因1位は男女とも「進路に関する悩み」。ひとりで抱えず相談を。",
+"近代家族(夫は仕事・妻は家事)は人類700万年の歴史の中のごく短い一時期の形にすぎない。",
+"日本の公的年金は「2階建て」。1階=国民年金、2階=厚生年金。",
+"従業員300人未満企業の大卒求人倍率は8.98倍。大企業(0.34倍)とは別世界。",
+];
+
+const RANKS=[[0,"ふくし見習い"],[3,"ケアのたまご"],[9,"かけだし相談員"],[15,"いっぱしのソーシャルワーカー"],[21,"地域のたよれる人"],[27,"ケアマネ賢者"],[33,"福祉オーソリティ"],[36,"Well-beingの化身"]];
+
+/* ---------- SAVE ---------- */
+const SAVE_KEY="fukushi_quest_v2";
+let save={stars:{},best:{},hiscore:0,progress:0,tut:0};
+try{
+  const s=JSON.parse(localStorage.getItem(SAVE_KEY));
+  if(s&&typeof s==="object")save=Object.assign(save,s);
+}catch(e){}
+if(typeof save.progress!=="number"||save.progress<0)save.progress=0;
+save.progress=Math.min(save.progress,CHAPTERS.length);
+function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(save));}catch(e){}}
+
+/* ---------- UTIL ---------- */
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function show(id){$$(".screen").forEach(s=>s.classList.remove("on"));$("#"+id).classList.add("on");window.scrollTo({top:0});}
+function rankName(table,v){let n=table[0][1];for(const[min,name]of table){if(v>=min)n=name;}return n;}
+function totalStars(){return Object.values(save.stars).reduce((a,b)=>a+b,0);}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+function toast(msg){
+  const t=document.createElement("div");t.className="toast";t.textContent=msg;
+  document.body.appendChild(t);setTimeout(()=>t.remove(),1650);
+}
+
+/* ---------- TITLE ---------- */
+const QT=STAGES.reduce((a,s)=>a+s.q.length,0);
+$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド`;
+const paradeStr=CHAPTERS.map(c=>c.boss.icon).join("");
+$("#parade1").textContent=paradeStr;$("#parade2").textContent=paradeStr;
+
+function renderTitle(){
+  const p=save.progress;
+  const btn=$("#btn-story"),sub=$("#story-sub");
+  if(p<=0){
+    btn.childNodes[0].textContent="⚔️ ぼうけんに出る";
+    sub.textContent="全12章のクイズバトル。講義の魔物たちを討伐せよ!";
+    $("#btn-restart").hidden=true;
+  }else if(p<CHAPTERS.length){
+    const ch=CHAPTERS[p];
+    btn.childNodes[0].textContent=`⚔️ つづきから ─ ${p===CHAPTERS.length-1?"終章":`第${p+1}章`}`;
+    sub.textContent=`次なる敵:${ch.boss.name}(${ch.title})`;
+    $("#btn-restart").hidden=false;
+  }else{
+    btn.childNodes[0].textContent="⚔️ もういちど ぼうけんに出る";
+    sub.textContent="全章クリア済み! 語り部として、旅をもう一周。";
+    $("#btn-restart").hidden=true;
+  }
+  $("#records").innerHTML=
+    `<span>称号</span><b>${esc(rankName(RANKS,totalStars()))}</b>`+
+    `<span>ぼうけんの進み</span><b>${p>=CHAPTERS.length?"全章クリア!!":`${p} / ${CHAPTERS.length} 章`}</b>`+
+    `<span>あつめた星</span><b>★ ${totalStars()} / ${CHAPTERS.length*3}</b>`+
+    `<span>ハイスコア</span><b>${save.hiscore.toLocaleString()}</b>`;
+}
+renderTitle();
+
+$("#btn-story").addEventListener("click",()=>{
+  const start=save.progress>=CHAPTERS.length?0:save.progress;
+  maybeTut(()=>startBattle(start));
+});
+$("#btn-restart").addEventListener("click",()=>{
+  maybeTut(()=>startBattle(0));
+});
+$("#btn-howto").addEventListener("click",()=>{$("#tut").hidden=false;});
+$("#tut-close").addEventListener("click",()=>{$("#tut").hidden=true;save.tut=1;persist();if(tutNext){const f=tutNext;tutNext=null;f();}});
+let tutNext=null;
+function maybeTut(next){
+  if(save.tut){next();return;}
+  tutNext=next;$("#tut").hidden=false;
+}
+let resetArmed=false;
+$("#btn-reset").addEventListener("click",e=>{
+  if(!resetArmed){resetArmed=true;e.target.textContent="もう一度押すと全消去!";setTimeout(()=>{resetArmed=false;e.target.textContent="きろくを消す";},2500);return;}
+  save={stars:{},best:{},hiscore:0,progress:0,tut:0};
+  persist();renderTitle();resetArmed=false;e.target.textContent="消しました";
+  setTimeout(()=>{e.target.textContent="きろくを消す";},1500);
+});
+
+/* ---------- BATTLE STATE ---------- */
+const B={chapter:0,stage:null,boss:null,isFinal:false,queue:[],qi:0,asked:0,hearts:3,combo:0,maxCombo:0,score:0,
+  bossHP:0,bossMax:0,locked:true,autoT:null,over:false,angry:false,current:null,correctIdx:0};
+
+function allQuestions(){const all=[];STAGES.forEach(s=>s.q.forEach(q=>all.push(q)));return all;}
+
+function renderTrail(){
+  const t=$("#trail");t.innerHTML="";
+  CHAPTERS.forEach((c,i)=>{
+    const known=i<=B.chapter||i<save.progress;
+    const sp=document.createElement("span");
+    sp.className="tnode "+(i<B.chapter?"done":i===B.chapter?"now":"todo");
+    sp.textContent=known?c.boss.icon:"❓";
+    sp.title=known?`${i===CHAPTERS.length-1?"終章":`第${i+1}章`} ${c.title}`:"???";
+    t.appendChild(sp);
+    if(i<CHAPTERS.length-1){
+      const sep=document.createElement("span");sep.className="tsep px";sep.textContent="─";
+      t.appendChild(sep);
+    }
+  });
+}
+function chapterLabel(i){return i===CHAPTERS.length-1?"終章":`第${i+1}章`;}
+
+function startBattle(chIdx){
+  leaveBattle();
+  B.chapter=chIdx;
+  B.stage=CHAPTERS[chIdx];
+  B.isFinal=chIdx===CHAPTERS.length-1;
+  B.boss=B.stage.boss;
+  B.queue=B.isFinal?shuffle(allQuestions()):shuffle(B.stage.q.slice());
+  B.qi=0;B.asked=0;B.hearts=3;B.combo=0;B.maxCombo=0;B.score=0;
+  B.locked=true;B.over=false;B.angry=false;
+  const qn=B.isFinal?12:B.stage.q.length;
+  B.bossMax=Math.round(qn*110);
+  B.bossHP=B.bossMax;
+  fleeArmed=false;$("#btn-flee").textContent="◀ タイトル";
+  $("#battle-stage-name").textContent=`${chapterLabel(chIdx)} ${B.stage.title}`;
+  $("#foe-name").innerHTML=`${esc(B.boss.name)}<small class="px">${esc(B.boss.kana||"")}</small>`;
+  $("#foe-state").textContent="";
+  const sp=$("#foe-sprite");
+  sp.textContent=B.boss.icon;
+  sp.classList.remove("dead","hit","angry");
+  sp.style.filter=`drop-shadow(4px 5px 0 #000) drop-shadow(0 0 16px ${B.boss.glow}44)`;
+  $("#explain").classList.remove("on","good","bad");
+  $("#choices").innerHTML="";
+  $("#qwin").classList.remove("fever");
+  renderTrail();
+  updateHUD();
+  show("scr-battle");
+  /* chapter intro */
+  const ci=document.createElement("div");
+  ci.className="chapter-intro";
+  ci.innerHTML=`<span class="ch px">${chapterLabel(chIdx)}</span><span class="tt">${esc(B.stage.title)}</span><span class="bs">VS ${esc(B.boss.name)}</span>`;
+  document.body.appendChild(ci);
+  setTimeout(()=>ci.remove(),1750);
+  const myRun=B.chapter;
+  setTimeout(()=>{
+    if(B.over||B.chapter!==myRun)return;
+    msgType(B.boss.intro,()=>{setTimeout(()=>{if(!B.over)nextQuestion();},350);});
+  },900);
+}
+function leaveBattle(){
+  if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
+  if(typeTimer){clearInterval(typeTimer);typeTimer=null;}
+  B.over=true;
+}
+let fleeArmed=false;
+$("#btn-flee").addEventListener("click",()=>{
+  if(!fleeArmed){
+    fleeArmed=true;$("#btn-flee").textContent="本当にやめる?";
+    setTimeout(()=>{fleeArmed=false;if($("#scr-battle").classList.contains("on"))$("#btn-flee").textContent="◀ タイトル";},2500);
+    return;
+  }
+  fleeArmed=false;$("#btn-flee").textContent="◀ タイトル";
+  leaveBattle();renderTitle();show("scr-title");
+});
+
+/* ---------- HUD ---------- */
+function updateHUD(){
+  $("#hearts").innerHTML=`<small>ライフ</small>`+"❤".repeat(B.hearts)+"🖤".repeat(Math.max(0,3-B.hearts));
+  const fever=B.combo>=5;
+  $("#combo").innerHTML=B.combo>1
+    ?`COMBO <b>×${B.combo}</b>${fever?' <span class="fv">FEVER!!</span>':B.combo>=3?" 🔥":""}`
+    :`COMBO —`;
+  $("#battle-score").textContent=`SCORE ${B.score.toLocaleString()}`;
+  const r=B.bossMax?Math.max(0,B.bossHP)/B.bossMax:0;
+  $("#foe-hp").style.width=(r*100)+"%";
+  $("#foe-hp-num").textContent=`${Math.max(0,B.bossHP)} / ${B.bossMax}`;
+  if(!B.angry&&B.bossHP>0&&r<.3){
+    B.angry=true;
+    $("#foe-sprite").classList.add("angry");
+    $("#foe-state").textContent="!! 怒りに燃えている !!";
+  }
+}
+
+/* ---------- typewriter ---------- */
+let typeTimer=null;
+function msgType(text,done){
+  if(typeTimer){clearInterval(typeTimer);typeTimer=null;}
+  const el=$("#qtext");el.textContent="";let i=0;
+  const full=text;
+  typeTimer=setInterval(()=>{
+    i++;el.textContent=full.slice(0,i);
+    if(i>=full.length){clearInterval(typeTimer);typeTimer=null;if(done)done();}
+  },24);
+  el.onclick=()=>{if(typeTimer){clearInterval(typeTimer);typeTimer=null;el.textContent=full;if(done)done();}};
+}
+
+/* ---------- question flow ---------- */
+function nextQuestion(){
+  if(B.over)return;
+  if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
+  if(B.qi>=B.queue.length){B.queue=B.isFinal?shuffle(allQuestions()):shuffle(B.stage.q.slice());B.qi=0;}
+  const q=B.queue[B.qi];B.qi++;B.asked++;
+  B.current=q;
+  const correct=q[1][0];
+  const opts=shuffle(q[1]);
+  B.correctIdx=opts.indexOf(correct);
+  $("#qwin").classList.toggle("fever",B.combo>=5);
+  $("#explain").classList.remove("on","good","bad");
+  const box=$("#choices");box.innerHTML="";
+  const KEYS=["1","2","3","4"];
+  opts.forEach((c,idx)=>{
+    const b=document.createElement("button");
+    b.className="choice";b.disabled=true;
+    b.innerHTML=`<span class="key px">${KEYS[idx]}</span>${esc(c)}`;
+    b.addEventListener("click",()=>onAnswer(idx));
+    box.appendChild(b);
+  });
+  B.locked=true;
+  msgType(q[0],()=>{
+    if(B.over)return;
+    $$(".choice").forEach(b=>b.disabled=false);
+    B.locked=false;
+  });
+}
+function onAnswer(idx){
+  if(B.locked||B.over)return;
+  B.locked=true;
+  const btns=$$(".choice");
+  btns.forEach(b=>b.disabled=true);
+  const right=idx===B.correctIdx;
+  btns.forEach((b,i)=>{
+    if(i===B.correctIdx)b.classList.add("right");
+    else if(i===idx)b.classList.add("wrongpick");
+    else b.classList.add("faded");
+  });
+  const q=B.current;
+  if(right){
+    B.combo++;B.maxCombo=Math.max(B.maxCombo,B.combo);
+    const wasFeverStart=B.combo===5;
+    const fever=B.combo>=5;
+    const crit=B.combo>=3;
+    let dmg=70+Math.min(B.combo,5)*12;
+    if(crit)dmg=Math.round(dmg*1.4);
+    if(fever)dmg=Math.round(dmg*1.5);
+    B.score+=dmg;
+    if(wasFeverStart)toast("🌈 FEVER!! ダメージ1.5倍!");
+    if(crit){const f=document.createElement("div");f.className="crit-flash";document.body.appendChild(f);setTimeout(()=>f.remove(),320);}
+    hitBoss(dmg,crit,fever);
+    updateHUD();
+    if(B.bossHP<=0){
+      B.over=true;
+      showExplain(true,q,"finish");
+      setTimeout(victory,1300);
+      return;
+    }
+    showExplain(true,q,null);
+    B.autoT=setTimeout(()=>{B.autoT=null;if(!B.over){B.locked=false;nextQuestion();}},2300);
+  }else{
+    B.combo=0;
+    $("#qwin").classList.remove("fever");
+    const atk=pick(B.boss.attacks);
+    const banner=document.createElement("div");
+    banner.className="atk-banner";banner.textContent=`💢 ${atk}!!`;
+    $("#foe-win").appendChild(banner);
+    setTimeout(()=>banner.remove(),950);
+    setTimeout(()=>{
+      if(B.over)return;
+      $("#battle-wrap").classList.add("shake");
+      setTimeout(()=>$("#battle-wrap").classList.remove("shake"),450);
+      B.hearts--;updateHUD();
+      showExplain(false,q,atk);
+      if(B.hearts<=0)$("#btn-next").textContent="力尽きた… ▶";
+      else $("#btn-next").textContent="つづける ▶";
+    },550);
+  }
+}
+function showExplain(good,q,finishOrAtk){
+  const ex=$("#explain");
+  ex.classList.remove("good","bad");
+  ex.classList.add("on",good?"good":"bad");
+  if(good){
+    $("#ex-tag").textContent=finishOrAtk==="finish"?"⭕ せいかい! とどめの一撃!!":"⭕ せいかい!";
+    $("#ex-body").innerHTML=esc(q[2]);
+    $("#foe-say").textContent="";
+    $("#btn-next").textContent="すぐ次へ ▶";
+    $("#btn-next").style.display=finishOrAtk==="finish"?"none":"";
+  }else{
+    $("#ex-tag").textContent="❌ ミス!";
+    $("#ex-body").innerHTML=`正解は「<b style="color:var(--hp)">${esc(q[1][0])}</b>」。${esc(q[2])}`;
+    $("#foe-say").textContent=`${B.boss.name}の ${finishOrAtk}! 手痛い反撃を受けた!`;
+    $("#btn-next").style.display="";
+  }
+  ex.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+$("#btn-next").addEventListener("click",()=>{
+  const wasOn=$("#explain").classList.contains("on");
+  if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
+  $("#explain").classList.remove("on");
+  if(!wasOn||B.over)return;/* 二重発火ガード */
+  if(B.hearts<=0){gameOver();return;}
+  B.locked=false;nextQuestion();
+});
+function hitBoss(dmg,crit,fever){
+  const sp=$("#foe-sprite");
+  sp.classList.remove("hit");void sp.offsetWidth;sp.classList.add("hit");
+  B.bossHP-=dmg;
+  const d=document.createElement("div");
+  d.className="dmg"+(crit?" crit":"");
+  d.textContent=(fever?"FEVER ":crit?"会心! ":"")+dmg;
+  $("#foe-win").appendChild(d);
+  setTimeout(()=>d.remove(),1050);
+}
+
+/* ---------- victory / gameover ---------- */
+function victory(){
+  if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
+  const sp=$("#foe-sprite");sp.classList.remove("angry");sp.classList.add("dead");
+  const stars=B.hearts>=3?3:B.hearts===2?2:1;
+  const rank=stars===3?"S":stars===2?"A":"B";
+  const bonus=stars*300+B.hearts*100;
+  B.score+=bonus;
+  save.stars[B.stage.id]=Math.max(save.stars[B.stage.id]||0,stars);
+  save.best[B.stage.id]=Math.max(save.best[B.stage.id]||0,B.score);
+  save.hiscore=Math.max(save.hiscore,B.score);
+  save.progress=Math.max(save.progress,B.chapter+1);
+  persist();
+  const isEnding=B.isFinal;
+  setTimeout(()=>{
+    $("#stamp-area").innerHTML=`<span class="stamp px ${rank==="A"?"rA":rank==="B"?"rB":""}">RANK ${rank}</span>`;
+    $("#result-title").classList.remove("lose");
+    $("#result-stars").innerHTML="★".repeat(stars)+"<span class='off'>"+"★".repeat(3-stars)+"</span>";
+    $("#trivia").innerHTML=`<b>📖 まめちしき:</b>${esc(pick(TRIVIA))}`;
+    const btns=$("#result-btns");btns.innerHTML="";
+    if(isEnding){
+      $("#result-title").textContent="〜 エンディング 〜";
+      $("#defeat-quote").innerHTML=`${esc(B.boss.defeat)}<br><br>`+
+        `<span class="ending-parade">${paradeStr}</span><br>`+
+        `全12章、制覇おめでとう!<br>称号「<b style="color:var(--gold)">${esc(rankName(RANKS,totalStars()))}</b>」 ★${totalStars()}/${CHAPTERS.length*3}<br>`+
+        `キミはもう、福祉を自分の言葉で語れる。`;
+      $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span style="font-size:.75rem;color:var(--dim)">(クリア+${bonus} / 最大コンボ×${B.maxCombo})</span>`;
+      addBtn(btns,"タイトルへ",()=>{renderTitle();show("scr-title");},true);
+      addBtn(btns,"終章にもう一度挑む",()=>startBattle(B.chapter));
+    }else{
+      $("#result-title").textContent="ボス討伐!!";
+      $("#defeat-quote").textContent=B.boss.defeat;
+      $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span style="font-size:.75rem;color:var(--dim)">(クリア+${bonus} / 最大コンボ×${B.maxCombo})</span>`
+        +(stars<3?`<br><span style="font-size:.72rem;color:var(--dim)">💡 ノーダメージで倒すと RANK S(★3)!</span>`:"");
+      const nx=B.chapter+1;
+      addBtn(btns,`つぎの地へ ▶ ${chapterLabel(nx)}`,()=>startBattle(nx),true);
+      addBtn(btns,"この章をもう一度",()=>startBattle(B.chapter));
+      addBtn(btns,"タイトルへ",()=>{renderTitle();show("scr-title");});
+    }
+    show("scr-result");
+  },1300);
+}
+function gameOver(){
+  B.over=true;
+  if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
+  $("#stamp-area").innerHTML="";
+  $("#result-title").textContent="力尽きた…";
+  $("#result-title").classList.add("lose");
+  $("#result-stars").textContent="💤";
+  $("#defeat-quote").textContent=`${B.boss.name}「フハハ…出直してくるがよい。復習こそ最強の武器だぞ?」`;
+  $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b>`;
+  $("#trivia").innerHTML=`<b>📖 まめちしき:</b>${esc(pick(TRIVIA))}`;
+  const btns=$("#result-btns");btns.innerHTML="";
+  addBtn(btns,"リベンジ!",()=>startBattle(B.chapter),true);
+  addBtn(btns,"タイトルへ",()=>{renderTitle();show("scr-title");});
+  show("scr-result");
+}
+function addBtn(parent,label,fn,primary){
+  const b=document.createElement("button");
+  b.className=primary?"next-btn":"icon-btn";
+  b.textContent=label;
+  b.addEventListener("click",fn);
+  parent.appendChild(b);
+}
+
+/* ---------- keyboard ---------- */
+document.addEventListener("keydown",e=>{
+  if(!$("#scr-battle").classList.contains("on"))return;
+  if($("#tut").hidden===false)return;
+  if(e.key>="1"&&e.key<="4"){
+    const b=$$(".choice")[+e.key-1];
+    if(b&&!b.disabled){e.preventDefault();b.click();}
+  }else if(e.key==="Enter"||e.key===" "){
+    e.preventDefault();
+    if($("#explain").classList.contains("on")&&$("#btn-next").style.display!=="none"){$("#btn-next").click();}
+    else if(typeTimer){$("#qtext").click();}
+  }
+});
+
+/* ---------- SELF TEST (?selftest) ---------- */
+if(location.search.indexOf("selftest")>-1){
+  const LOG=[];
+  window.addEventListener("error",e=>LOG.push("ERR:"+e.message));
+  const finish=()=>{
+    const fails=LOG.filter(l=>/^(ERR|EX|QBAD|QLEN|DUPQ|TIMEOUT|STUCK)/.test(l));
+    document.title="ST:"+(fails.length===0?"OK":"FAIL")+"|"+LOG.join("|").slice(0,400);
+    const d=document.createElement("pre");d.id="selftest-log";d.textContent=LOG.join("\n")||"CLEAN";
+    d.style.cssText="position:fixed;bottom:0;left:0;z-index:99;background:#000;color:#0f0;font-size:10px;max-height:120px;overflow:auto;";
+    document.body.appendChild(d);
+  };
+  try{
+    STAGES.forEach(s=>{
+      if(s.q.length!==8)LOG.push("QLEN:"+s.id);
+      s.q.forEach((q,qi)=>{
+        if(!q[0]||q[1].length!==4||!q[2])LOG.push("QBAD:"+s.id+":"+qi);
+        if(new Set(q[1]).size!==4)LOG.push("DUPQ:"+s.id+":"+qi);
+      });
+    });
+    LOG.push("DATA:"+QT+"q/"+CHAPTERS.length+"ch");
+    save.tut=1;save.progress=0;
+    startBattle(0);
+    let steps=0,wrongDone=false,cleared=0;
+    const iv=setInterval(()=>{
+      steps++;
+      if(steps>30000){LOG.push("TIMEOUT:ch"+B.chapter);clearInterval(iv);finish();return;}
+      if($("#scr-result").classList.contains("on")){
+        const t=$("#result-title").textContent;
+        if(t.indexOf("エンディング")>-1){
+          LOG.push("ENDING:progress="+save.progress+":stars="+totalStars()+":cleared="+cleared);
+          clearInterval(iv);finish();return;
+        }
+        if(t.indexOf("力尽きた")>-1){LOG.push("STUCK:gameover-ch"+B.chapter);clearInterval(iv);finish();return;}
+        const nb=$("#result-btns .next-btn");
+        if(nb){cleared++;nb.click();}
+        return;
+      }
+      const exOn=$("#explain").classList.contains("on");
+      if(exOn&&B.locked&&$("#btn-next").style.display!=="none"&&B.combo===0&&B.hearts>0){$("#btn-next").click();return;}
+      if(!B.locked&&!B.over){
+        if(!wrongDone&&B.chapter===0&&B.asked>=3){
+          const btns=$$(".choice");
+          const wrongIdx=btns.findIndex((b,i)=>i!==B.correctIdx&&!b.disabled);
+          if(wrongIdx>=0){wrongDone=true;LOG.push("WRONGCLICK");btns[wrongIdx].click();return;}
+        }
+        const cb=$$(".choice")[B.correctIdx];
+        if(cb&&!cb.disabled){cb.click();return;}
+      }
+      if(typeTimer)$("#qtext").click();
+    },60);
+  }catch(e){LOG.push("EX:"+e.message);finish();}
+}
+
+/* boot */
+show("scr-title");
+</script>
+
+<script>
+if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("./sw.js").catch(function(){});}
+(function(){var f=document.getElementById("title-foot");if(f)f.textContent+=" / 📲 「ホーム画面に追加」でアプリになります";})();
+</script>
+</body>
+</html>
