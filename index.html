@@ -622,7 +622,7 @@ function toast(msg){
 
 /* ---------- TITLE ---------- */
 const QT=STAGES.reduce((a,s)=>a+s.q.length,0);
-$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド`;
+$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v1.9`;
 const paradeStr=CHAPTERS.map(c=>c.boss.icon).join("");
 $("#parade1").textContent=paradeStr;$("#parade2").textContent=paradeStr;
 
@@ -777,8 +777,9 @@ function msgType(text,done){
   typeTimer=setInterval(()=>{
     i++;el.textContent=full.slice(0,i);
     if(i>=full.length){clearInterval(typeTimer);typeTimer=null;if(done)done();}
-  },24);
-  el.onclick=()=>{if(typeTimer){clearInterval(typeTimer);typeTimer=null;el.textContent=full;if(done)done();}};
+  },17);
+  /* ウィンドウ全体タップで文字送りスキップ(スマホでも押しやすく) */
+  $("#qwin").onclick=()=>{if(typeTimer){clearInterval(typeTimer);typeTimer=null;el.textContent=full;if(done)done();}};
 }
 
 /* ---------- question flow ---------- */
@@ -848,7 +849,9 @@ function onAnswer(idx){
       return;
     }
     showExplain(true,q,null);
-    B.autoT=setTimeout(()=>{B.autoT=null;if(!B.over){B.locked=false;nextQuestion();}},2300);
+    /* 解説の長さに応じて読み時間を確保(1.5秒+55ms/字、最大6秒) */
+    const wait=Math.min(6000,1500+q[2].length*55);
+    B.autoT=setTimeout(()=>{B.autoT=null;if(!B.over){B.locked=false;nextQuestion();}},wait);
   }else{
     B.combo=0;
     $("#qwin").classList.remove("fever");
@@ -972,6 +975,11 @@ function addBtn(parent,label,fn,primary){
 
 /* ---------- keyboard ---------- */
 document.addEventListener("keydown",e=>{
+  if($("#scr-result").classList.contains("on")&&e.key==="Enter"){
+    const b=$("#result-btns .next-btn");
+    if(b){e.preventDefault();b.click();}
+    return;
+  }
   if(!$("#scr-battle").classList.contains("on"))return;
   if($("#tut").hidden===false)return;
   if(e.key>="1"&&e.key<="4"){
