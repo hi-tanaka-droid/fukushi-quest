@@ -785,7 +785,14 @@ function msgType(text,done){
 function nextQuestion(){
   if(B.over)return;
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
-  if(B.qi>=B.queue.length){B.queue=B.isFinal?shuffle(allQuestions()):shuffle(B.stage.q.slice());B.qi=0;}
+  if(B.qi>=B.queue.length){
+    /* 全問出題済み → 同じ問題は繰り返さず、戦い抜いた時点で討伐成立 */
+    B.over=true;
+    B.bossHP=0;
+    updateHUD();
+    setTimeout(victory,400);
+    return;
+  }
   const q=B.queue[B.qi];B.qi++;B.asked++;
   B.current=q;
   const correct=q[1][0];
