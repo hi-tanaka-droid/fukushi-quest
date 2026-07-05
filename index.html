@@ -314,7 +314,7 @@ body{
     <p class="logo-sub px">— ソーシャルワーカーの冒険 —</p>
     <p class="tagline">単位と関係ない戦いが、いま始まる。</p>
     <div class="modes">
-      <button class="mode-btn" id="btn-story">⚔️ ぼうけんに出る<small id="story-sub"></small></button>
+      <button class="mode-btn" id="btn-story">🗡️ ぼうけんに出る<small id="story-sub"></small></button>
     </div>
     <div class="title-tools">
       <button class="icon-btn" id="btn-restart" hidden>↩ 第1章から旅をやり直す</button>
@@ -382,7 +382,7 @@ body{
       <h3 class="px">— あそびかた —</h3>
       <ol>
         <li><span class="ico">🗺️</span>冒険は全12章。ボスを倒すと<b style="color:var(--gold)">次の地へ進む!</b> 進み具合は自動セーブ。</li>
-        <li><span class="ico">⚔️</span>クイズに正解するとボスにダメージ! <b style="color:var(--gold)">3コンボで会心の一撃</b>、<b style="color:#ff9de2">5コンボでフィーバー(1.5倍)!</b></li>
+        <li><span class="ico">🗡️</span>クイズに正解するとボスにダメージ! <b style="color:var(--gold)">3コンボで会心の一撃</b>、<b style="color:#ff9de2">5コンボでフィーバー(1.5倍)!</b></li>
         <li><span class="ico">❤️</span>まちがえるとボスの反撃でライフが減る。0になると敗北…でもすぐリベンジできる!</li>
         <li><span class="ico">💡</span>まちがえてもダイジョーブ。<b style="color:var(--hp)">解説で覚えれば</b>次は必ず勝てる!</li>
       </ol>
@@ -401,7 +401,7 @@ body{
 /* ---------- DATA ---------- */
 const STAGES=[
 {id:"s1",no:"第2回",title:"能力主義と尊厳",
- boss:{name:"メリトス",icon:"👑",kana:"MERITOCRACY LORD",glow:"#ffcf4d",
+ boss:{name:"ノーリョクシュギー",icon:"👑",kana:"MERITOCRACY LORD",glow:"#ffcf4d",
    intro:"「役に立たぬ者に、価値などない…!」",
    attacks:["偏差値プレッシャー","自己責任ビーム","「で、それ何の役に立つの?」"],
    defeat:"「ば、ばかな…『できること』は『人間の価値』ではない…だと…!? 存在そのものに…尊厳が…グフッ」"},
@@ -416,7 +416,7 @@ const STAGES=[
   ["「できること」は「人間の価値」ではない(立岩2018)。では能力主義と相性バツグンの経済システムは?",["資本主義","封建制","社会主義","重商主義"],"現代社会は「存在意義」まで「できること」で意味づけしがち。"],
  ]},
 {id:"s2",no:"第3回",title:"自立と依存",
- boss:{name:"コリツン",icon:"🐀",kana:"THE LONELY CAGE",glow:"#9aa2c8",
+ boss:{name:"ボッチラット",icon:"🐀",kana:"THE LONELY CAGE",glow:"#9aa2c8",
    intro:"「ひとりぼっちの檻で、永遠に過ごすがいい…」",
    attacks:["孤独のオリ","共依存バインド","「頼ったら負けだぞ」の囁き"],
    defeat:"「つ、つながりの力…! 依存先は…多いほど強いのか…檻が、こわれるゥ…!」"},
@@ -431,7 +431,7 @@ const STAGES=[
   ["山岳救助隊も夜は捜索をしない。これが教えるケアの心得は?",["最善のケアには「限界の了解」が必要","夜は危険だから諦めるべき","救助はコスト次第","自己責任の原則"],"最善を尽くしたい気持ちと、\"最善\"の限界の了解はセット(久保2021)。"],
  ]},
 {id:"s3",no:"第4回",title:"自己決定と自己責任",
- boss:{name:"オシツケール",icon:"🎩",kana:"GRAND DUKE PATERNALISM",glow:"#b48cff",
+ boss:{name:"アナタノタメー",icon:"🎩",kana:"GRAND DUKE PATERNALISM",glow:"#b48cff",
    intro:"「悪いことは言わん、ワシの言う通りにしておけ。あなたのためじゃよ?」",
    attacks:["善意の押し付け","「あなたのため」ビーム","勝手に決めちゃうぞ攻撃"],
    defeat:"「押し付けでも…丸投げでもなく…\"ともに\"…じゃと…? ぐ、ぐふっ、良い支援者になるのじゃぞ…」"},
@@ -446,7 +446,7 @@ const STAGES=[
   ["ケアの仕事で支援者と相手が完全に対等になれない理由は?",["権力の非対称性があるから","年齢が違うから","資格の有無があるから","給料をもらっているから"],"情報・知識・管理する立場の差。優位性を自覚して、それでも「ともに」を目指す。"],
  ]},
 {id:"s4",no:"第5回",title:"ノーマライゼーション",
- boss:{name:"バリゴン",icon:"🧱",kana:"BARRIER GOLEM",glow:"#d97742",
+ boss:{name:"バリアゴン",icon:"🧱",kana:"BARRIER GOLEM",glow:"#d97742",
    intro:"「物理・制度・文化情報・こころ…4つの壁がお前を阻む!」",
    attacks:["見えない壁","心のバリア","「かわいそう」の呪い"],
    defeat:"「壁は…本人の中ではなく…社会の側に…あったのか…ゴゴゴ…(崩壊)」"},
@@ -461,7 +461,7 @@ const STAGES=[
   ["合理的配慮(Reasonable Accommodation)の法律上の位置づけは?",["義務","努力目標","ボランティア","マナー"],"思いやりではなく、社会的バリアを除去する法的義務。"],
  ]},
 {id:"s5",no:"第6回",title:"社会福祉の視角",
- boss:{name:"ジレンマ",icon:"⚖️",kana:"THE WARRING GODS",glow:"#7dd8ff",
+ boss:{name:"エラベナイン",icon:"⚖️",kana:"THE WARRING GODS",glow:"#7dd8ff",
    intro:"「公平! 効率! 自由! 平等! すべての神を同時に満たしてみよ!」",
    attacks:["価値観シャッフル","ジレンマの雷","「で、どっちを優先するの?」"],
    defeat:"「争いは終わらぬ…だが汝は、自らの軸で選ぶことを学んだ…見事なり…」"},
@@ -476,7 +476,7 @@ const STAGES=[
   ["公平・効率・自由・平等が衝突して同時に満たせないことをウェーバーは何と呼んだ?",["神々の争い","万人の万人に対する闘争","見えざる手","囚人のジレンマ"],"どの価値(神)に仕えるかは、最後は自分で選ぶしかない。"],
  ]},
 {id:"s6",no:"第7回",title:"構築主義",
- boss:{name:"ラベラー",icon:"🏷️",kana:"THE LABELER",glow:"#ffb14d",
+ boss:{name:"キメツケール",icon:"🏷️",kana:"THE LABELER",glow:"#ffb14d",
    intro:"「フン、お前にもレッテルを貼ってやろう…『どうせ無理』とな!」",
    attacks:["レッテル貼り","決めつけの札","「そういう人だと思ってた」"],
    defeat:"「ぐぬぬ…ワードがワールドをつくると、バレてしまった…ラベルが…剥がれるゥ…!」"},
@@ -491,7 +491,7 @@ const STAGES=[
   ["「ワードが、ワールドをつくる」と言った臨床社会学者は?",["中村正","落合恵美子","小林武彦","美馬達哉"],"「〇〇ハラ」「〇〇系」…新しい言葉が新しい世界の見え方をつくる。"],
  ]},
 {id:"s7",no:"第8回",title:"家族主義",
- boss:{name:"シンワン",icon:"👻",kana:"THE MYTH PHANTOM",glow:"#bfeaff",
+ boss:{name:"オカアサンガー",icon:"👻",kana:"THE MYTH PHANTOM",glow:"#bfeaff",
    intro:"「母親なんだから…ぜんぶ、家族でやるのが当たり前でしょう…?」",
    attacks:["「母親なんだから」の呪い","ワンオペの重圧","セカンドシフト強制"],
    defeat:"「私は…科学的事実ではなく…神話に、すぎなかった…成仏、します…」"},
@@ -536,7 +536,7 @@ const STAGES=[
   ["子育てと親の介護が同時に重なることを?",["ダブルケア","ツインケア","ペアケア","セカンドケア"],"晩産化で増加中。家族だけで背負うのはもう限界——だから脱家族化。"],
  ]},
 {id:"s10",no:"第12回",title:"生活保護",
- boss:{name:"スティグマ",icon:"😈",kana:"STIGMA THE DEVIL",glow:"#ff5d7a",
+ boss:{name:"スティグマオー",icon:"😈",kana:"STIGMA THE DEVIL",glow:"#ff5d7a",
    intro:"「申請などしてみろ…『恥』のラベルを貼りつけてやる…世間の目は怖いぞぉ?」",
    attacks:["世間の目","扶養照会の鎖","「タダ乗り」の烙印"],
    defeat:"「保護は恥ではなく…憲法25条の権利…だと…!? ひ、光がまぶしい…消えるうぅ…!」"},
@@ -551,7 +551,7 @@ const STAGES=[
   ["「周囲と比べて、みんなが当たり前にできることができない」貧困は?",["相対的貧困","絶対的貧困","精神的貧困","一時的貧困"],"日本の相対的貧困率は15.4%(2021)。子どもの貧困は9人に1人。"],
  ]},
 {id:"s11",no:"第13回",title:"福祉の歴史",
- boss:{name:"レットウ",icon:"💀",kana:"LORD LESS-ELIGIBILITY",glow:"#b48cff",
+ boss:{name:"レットーショグー",icon:"💀",kana:"LORD LESS-ELIGIBILITY",glow:"#b48cff",
    intro:"「救済は、最下層の労働者より惨めであるべし…ワークハウスへ来い…」",
    attacks:["劣等処遇の鞭","ワークハウスの闇","「施しに感謝せよ」"],
    defeat:"「施しの時代は…終わった…福祉は、恩恵ではなく…権利になったのだ…ガラガラ(崩れ落ちる)」"},
@@ -630,16 +630,16 @@ function renderTitle(){
   const p=save.progress;
   const btn=$("#btn-story"),sub=$("#story-sub");
   if(p<=0){
-    btn.childNodes[0].textContent="⚔️ ぼうけんに出る";
+    btn.childNodes[0].textContent="🗡️ ぼうけんに出る";
     sub.textContent="全12章のクイズバトル。講義の魔物たちを討伐せよ!";
     $("#btn-restart").hidden=true;
   }else if(p<CHAPTERS.length){
     const ch=CHAPTERS[p];
-    btn.childNodes[0].textContent=`⚔️ つづきから ─ ${p===CHAPTERS.length-1?"終章":`第${p+1}章`}`;
+    btn.childNodes[0].textContent=`🗡️ つづきから ─ ${p===CHAPTERS.length-1?"終章":`第${p+1}章`}`;
     sub.textContent=`次なる敵:${ch.boss.name}(${ch.title})`;
     $("#btn-restart").hidden=false;
   }else{
-    btn.childNodes[0].textContent="⚔️ もういちど ぼうけんに出る";
+    btn.childNodes[0].textContent="🗡️ もういちど ぼうけんに出る";
     sub.textContent="全章クリア済み! 語り部として、旅をもう一周。";
     $("#btn-restart").hidden=true;
   }
