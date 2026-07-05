@@ -1,5 +1,5 @@
 /* 福祉クエスト Service Worker — ネットワーク優先+オフラインフォールバック */
-const CACHE = "fukushi-quest-v1";
+const CACHE = "fukushi-quest-v2";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", e => {
