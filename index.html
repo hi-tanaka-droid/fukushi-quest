@@ -127,6 +127,7 @@ body{
   box-shadow:0 4px 0 #8a6a10;
 }
 .next-btn:hover,.next-btn:focus-visible{transform:translateY(-2px);outline:none;}
+.next-btn:focus-visible{outline:3px solid var(--cyan);outline-offset:3px;}
 .next-btn:active{transform:translateY(2px);box-shadow:none;}
 .off{color:#333a5e;text-shadow:none;}
 
@@ -311,7 +312,7 @@ body{
   <section class="screen on" id="scr-title">
     <p class="logo-eyebrow px">社会福祉原論A 完全対応</p>
     <h1 class="logo px">福祉<span class="q">クエスト</span></h1>
-    <p class="logo-sub px">— ソーシャルワーカーの冒険 —</p>
+    <p class="logo-sub px">— 木曜4限の冒険 —</p>
     <p class="tagline">単位と関係ない戦いが、いま始まる。</p>
     <div class="modes">
       <button class="mode-btn" id="btn-story">🗡️ ぼうけんに出る<small id="story-sub"></small></button>
@@ -401,16 +402,16 @@ body{
 /* ---------- DATA ---------- */
 const STAGES=[
 {id:"s1",no:"第2回",title:"能力主義と尊厳",
- boss:{name:"デキルマウントゴリラ",icon:"🦍",kana:"MERITOCRACY GORILLA",glow:"#ffcf4d",
-   intro:"「ウホウホ…役に立たぬ者に、価値などない…!」",
-   attacks:["マウンティングプレス","自己責任ビーム","「で、それ何の役に立つの?」"],
-   defeat:"「ば、ばかな…『できること』は『人間の価値』ではない…だと…!? 存在そのものに…尊厳が…ウホォ…」"},
+ boss:{name:"デキルマウントクジャク",icon:"🦚",kana:"MERITOCRACY PEACOCK",glow:"#ffcf4d",
+   intro:"「ドヤァ…役に立たぬ者に、価値などない…!」",
+   attacks:["ドヤ羽ばたき","自己責任ビーム","「で、それ何の役に立つの?」"],
+   defeat:"「ば、ばかな…『できること』は『人間の価値』ではない…だと…!? 存在そのものに…尊厳が…シュルル…(羽がしぼむ)」"},
  q:[
   ["「能力によって社会的な地位が変わる仕組み」を何という?",["メリトクラシー(能力主義)","アリストクラシー(貴族制)","デモクラシー(民主制)","テクノクラシー(技術者支配)"],"Merit(功績)+cracy(支配)。生まれた身分ではなく能力で地位が決まる仕組み。"],
   ["『実力も運のうち 能力主義は正義か?』の著者は?",["マイケル・サンデル","ジョン・ロールズ","マックス・ウェーバー","ジョナサン・ハイト"],"サンデルは「君の成功は努力か、運か?」と問いかけた。"],
   ["教育基本法第一条が定める「教育の目的」は?",["人格の完成","経済発展への貢献","偏差値の向上","従順な労働力の育成"],"「教育は、人格の完成を目指し…」。成績や「役立つか」ではなく、人格の完成が目的とされている。"],
   ["世界人権宣言第一条「すべての人間は、生れながらにして自由であり、かつ、○○と権利とについて平等である」",["尊厳","能力","財産","幸福"],"尊厳(Human Dignity)=生まれながらに持つ、侵してはならない絶対的な価値。"],
-  ["「尊厳」の説明として正しいのは?",["能力に関係なく、存在そのものが持つ侵してはならない価値","努力によって獲得する社会的評価","役に立つことで得られる価値","地位の高い人だけが持つ名誉"],"「能力」に関係なく、「存在」はかけがえのないもの。"],
+  ["「尊厳」の説明として正しいのは?",["能力に関係なく存在そのものが持つ侵しえない価値","努力によって獲得される社会的な評価","役に立つことで初めて得られる価値","高い地位の人だけが持つ特別な名誉"],"「能力」に関係なく、「存在」はかけがえのないもの。"],
   ["批判してよいのは相手の「行動」。では絶対に否定してはいけないのは?",["存在","意見","服装","成績"],"「人として終わってる」は正論っぽく見えて存在の否定=尊厳の侵害。"],
   ["自分の失敗は環境のせい、他人の失敗はその人のせいにしがちな心のクセは?",["帰属のバイアス(行為者-観察者バイアス)","確証バイアス","正常性バイアス","ハロー効果"],"「なぜあの人は」ではなく「何があの人に影響したのか」と問おう。"],
   ["「できること」は「人間の価値」ではない(立岩2018)。では能力主義と相性バツグンの経済システムは?",["資本主義","封建制","社会主義","重商主義"],"現代社会は「存在意義」まで「できること」で意味づけしがち。"],
@@ -425,7 +426,7 @@ const STAGES=[
   ["ラットパーク実験で、仲間と遊べる楽園のネズミは薬物入りの水を?",["ほとんど飲まなかった","孤独なネズミより飲んだ","全部飲み干した","仲間に配った"],"孤立ケージのネズミだけが薬物に執着した。原因は薬物ではなく孤立。"],
   ["ベトナム帰還兵の約何%が、施設に入らず自然にヘロインをやめた?",["約95%","約50%","約20%","約5%"],"帰国して日常のつながりが戻ると、大多数が自然にやめられた。"],
   ["依存症(アディクション)の反対は?",["つながり(コネクション)","しらふ","自立","禁欲"],"人とつながれないとき、人の代わりに何かと結びつくのが依存症。"],
-  ["「アルコール依存症」は「アルコールによる○○」と言い換えられる(桜井2020)。○○に入るのは?",["支配・コントロール","快楽","洗脳","契約"],"問題の本質は「依存」ではなく「支配」。〇〇依存症=〇〇による支配・コントロール。"],
+  ["「アルコール依存症」は「アルコールによる○○」と言い換えられる(桜井2020)。○○に入るのは?",["支配・コントロール","快楽・多幸感","服従・洗脳","契約・約束"],"問題の本質は「依存」ではなく「支配」。〇〇依存症=〇〇による支配・コントロール。"],
   ["日本の成年年齢、2022年からは何歳?",["18歳","20歳","16歳","22歳"],"約150年間つづいた「20歳」から引き下げ。「大人」の線引きは時代で変わる。"],
   ["「相手にとって必要な存在になりたい」という喜び、信田さよ子いわくその正体は?",["「支配」の快楽","ケアの本質","愛情の証","プロ意識"],"相手の人生の主人公に、私がなってはならない。"],
   ["山岳救助隊も夜は捜索をしない。これが教えるケアの心得は?",["最善のケアには「限界の了解」が必要","夜は危険だから諦めるべき","救助はコスト次第","自己責任の原則"],"最善を尽くしたい気持ちと、\"最善\"の限界の了解はセット(久保2021)。"],
@@ -438,9 +439,9 @@ const STAGES=[
  q:[
   ["支援者の判断を相手に押し付けるかかわりを何という?",["パターナリズム","ナルシシズム","ポピュリズム","リアリズム"],"pater=父。「父親的温情主義」。良かれと思って、が押し付けになる。"],
   ["「心からやりたい!」という動機づけは?",["内発的動機づけ","外発的動機づけ","強制的動機づけ","金銭的動機づけ"],"内発的動機づけは理解・創造性・問題解決に効果大。自己決定はこれを生みやすい。"],
-  ["ある実験によると、学習内容をいちばん深く理解できたのは、どんなつもりで学んだグループ?",["「あとで人に教える」つもりで学んだ組","「あとでテストされる」つもりで学んだ組","「ごほうびがもらえる」と言われて学んだ組","「罰がある」と言われて学んだ組"],"「人に教えるつもり」で学ぶと取り組み方が変わり、テスト対策よりも理解が深まった(1995・1999の実験)。"],
+  ["ある実験によると、学習内容をいちばん深く理解できたのは、どんなつもりで学んだグループ?",["「あとで人に教える」つもりで学んだ組","「あとでテストされる」つもりで学んだ組","「ごほうびがもらえる」と言われて学んだ組","「罰がある」と言われて学んだ組"],"「人に教えるつもり」で学ぶと取り組み方が変わり、テスト対策よりも理解が深まった(心理学の実験より)。"],
   ["ケアで大事な関係のイメージは、to でも for でもなく?",["with(ともに)","by(によって)","against(対抗して)","under(下で)"],"「相手に向かって」「相手のために」ではなく「相手とともに」。"],
-  ["「あなたの気持ちを尊重します」とだけ言う態度が陥る罠は?",["「尊重」という名の責任放棄","過保護","パターナリズム","越権行為"],"揉めず、イイ人でいられ、責任も問われない——それは丸投げかも。"],
+  ["「あなたの気持ちを尊重します」とだけ言う態度が陥る罠は?",["「尊重」という名の責任放棄","よかれと思って決める押し付け","手を出しすぎる過干渉","本人の領分を越える越権行為"],"揉めず、イイ人でいられ、責任も問われない——それは丸投げかも。"],
   ["支援の優先順位ピラミッドで、最優先(頂点)とされるのは?",["命の保護","経済効率","多数決","上司の指示"],"優先順位は「命の保護 > 社会正義 > 自己決定」。自己決定は大事だが、命より優先はされない。"],
   ["三井(2013)いわく、よいケアをしている人ほど?",["失敗を感じることが多い","失敗を全く感じない","給料が高い","悩みがない"],"迷い悩むこと自体がケアの本質。悩まない支援者の方が危ない。"],
   ["ケアの仕事で支援者と相手が完全に対等になれない理由は?",["権力の非対称性があるから","年齢が違うから","資格の有無があるから","給料をもらっているから"],"情報・知識・管理する立場の差。優位性を自覚して、それでも「ともに」を目指す。"],
@@ -461,7 +462,7 @@ const STAGES=[
   ["合理的配慮(Reasonable Accommodation)の法律上の位置づけは?",["義務","努力目標","ボランティア","マナー"],"思いやりではなく、社会的バリアを除去する法的義務。"],
  ]},
 {id:"s5",no:"第6回",title:"社会福祉の視角",
- boss:{name:"カミノケンカー",icon:"⚖️",kana:"THE WARRING GODS",glow:"#7dd8ff",
+ boss:{name:"カミモケンカー",icon:"⚖️",kana:"THE WARRING GODS",glow:"#7dd8ff",
    intro:"「公平! 効率! 自由! 平等! すべての神を同時に満たしてみよ!」",
    attacks:["価値観シャッフル","ジレンマの雷","「で、どっちを優先するの?」"],
    defeat:"「争いは終わらぬ…だが汝は、自らの軸で選ぶことを学んだ…見事なり…」"},
@@ -491,13 +492,13 @@ const STAGES=[
   ["「学校に行かない子」の呼び名は「学校恐怖症」→「登校拒否」→「不登校」と変わってきた。呼び名とともに変わってきたのは?",["問題の見え方・扱われ方","学校の数","子どもの数","法律の罰則"],"「恐怖症」なら病気、「拒否」なら本人の意思、「不登校」なら状態。ワードが、ワールドをつくる(中村正)。"],
  ]},
 {id:"s7",no:"第8回",title:"家族主義",
- boss:{name:"ママフタン",icon:"👩‍🍼",kana:"MOM'S BURDEN",glow:"#bfeaff",
+ boss:{name:"ママフターン",icon:"🏋️",kana:"MOM'S BURDEN",glow:"#bfeaff",
    intro:"「母親なんだから…ぜんぶ、家族でやるのが当たり前でしょう…?」",
    attacks:["「母親なんだから」の呪い","ワンオペの重圧","セカンドシフト強制"],
    defeat:"「そんな…三歳児神話は、ただの神話…ケアは家族だけで背負わなくていい…の…? 肩の荷が…おりていく…」"},
  q:[
   ["夫が稼ぎ手・妻は主婦という性別役割分業で、子に強い愛情と教育関心を注ぐ家族モデルは?(落合2023)",["近代家族","拡大家族","伝統家族","武家家族"],"「昔ながらの家族」に見えて、実は歴史的には新しい形。"],
-  ["「夫は仕事・妻は家事」という近代家族のかたち、歴史的に見ると実は?",["戦後のわずかな期間に広まった新しい形","縄文時代からつづく伝統","江戸時代の武家の発明","人類共通の自然な本能"],"人類約700万年の歴史のうち、日本で「あたりまえ」だったのは戦後〜1990年代ごろのごく短い期間だけ。"],
+  ["「夫は仕事・妻は家事」という家族のかたち、歴史的に見ると実は?",["戦後に広まった新しい形","縄文からつづく古い伝統","江戸の武家が広めた形","人類共通の自然な本能"],"人類約700万年の歴史のうち、日本で「あたりまえ」だったのは戦後〜1990年代ごろのごく短い期間だけ。"],
   ["仕事のあとに家事・育児という「もうひと仕事」をすることを?",["セカンドシフト","オーバータイム","ダブルワーク","サードプレイス"],"負担は一方(多くは女性)にかたよりやすい。"],
   ["6歳未満の子がいる家庭、妻の育児219分/日に対して夫は?",["65分","219分","130分","12分"],"家事は夫30分/妻187分。「意識」は変わっても「行動」の差は大きい。"],
   ["「三歳までは母親が子育てに専念すべき」という考えの正体は?",["神話(三歳児神話)","科学的事実","法律","発達心理学の定説"],"賛成率は2008年86.7%→2022年61.0%に低下。それでもまだ6割。"],
@@ -518,10 +519,10 @@ const STAGES=[
   ["社会保険5種類(医療・年金・介護・雇用・労災)に入らないのは?",["がん保険(民間保険)","医療保険","雇用保険","労災保険"],"アフラックやソニー損保は民間保険。社会保険は強制加入が原則。"],
   ["給与から保険料・税金があらかじめ差し引かれることを俗に?",["天引き","中抜き","源泉狩り","仕送り"],"給与明細の「控除」欄。額面35万円→手取り約27万円の例も。"],
   ["日本の公的年金の構造は?",["2階建て","平屋","3階建て","タワーマンション"],"1階=国民年金(全員)、2階=厚生年金(会社員・公務員)。"],
-  ["老齢基礎年金(満額)は月およそ?",["7.1万円","14.5万円","23万円","3万円"],"国民年金だけだと月約7.1万円。厚生年金込みの平均で約14.5万円。"],
+  ["老齢基礎年金(満額)は月およそ?",["7.1万円","14.5万円","23万円","3万円"],"国民年金の満額で月約7.1万円(令和8年度)。厚生年金込みの平均は約14.5万円。"],
  ]},
 {id:"s9",no:"第10-11回",title:"高齢化と子育て",
- boss:{name:"ローゴ・キッツー",icon:"👴",kana:"TOUGH OLD DAYS",glow:"#9aa2c8",
+ boss:{name:"ローゴ・キッツー",icon:"🏔️",kana:"TOUGH OLD DAYS",glow:"#9aa2c8",
    intro:"「1965年は9.1人で支えた…2065年、お前はたった1.3人で我を支えるのだ…」",
    attacks:["少子化ウェーブ","肩車プレス","8050の重圧"],
    defeat:"「支え手が減っても…施設ではなく、地域で支え合う道が…あるのだな…ほっ…よっこいしょ…」"},
@@ -568,7 +569,7 @@ const STAGES=[
 ];
 
 const FINAL={id:"final",no:"終章",title:"最終決戦",
- boss:{name:"ドウデモイイーン",icon:"🫥",kana:"THE APATHY",glow:"#ff5d7a",
+ boss:{name:"ドウデモイイーン",icon:"😶",kana:"THE APATHY",glow:"#ff5d7a",
    intro:"「クックック…よくぞここまで来た。我は『無関心』…すべての福祉を静かに殺す者…生半可な理解では、その先へは行かせぬ!!」",
    attacks:["見て見ぬフリ","他人事ビーム","自己責任論の嵐","無関心の霧"],
    defeat:"「ば、ばかな…無関心が、関心に変わっただと…!? 知り、語る者がいる限り、我は生きられぬ…おぬし、もう立派な福祉の語り部よ…グフーッ!!」"}};
@@ -604,6 +605,10 @@ try{
 }catch(e){}
 if(typeof save.progress!=="number"||save.progress<0)save.progress=0;
 save.progress=Math.min(save.progress,CHAPTERS.length);
+if(!save.stars||typeof save.stars!=="object")save.stars={};
+if(!save.best||typeof save.best!=="object")save.best={};
+if(typeof save.hiscore!=="number"||!isFinite(save.hiscore))save.hiscore=0;
+save.tut=save.tut?1:0;
 function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(save));}catch(e){}}
 
 /* ---------- UTIL ---------- */
@@ -613,7 +618,7 @@ function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
 function show(id){$$(".screen").forEach(s=>s.classList.remove("on"));$("#"+id).classList.add("on");window.scrollTo({top:0});}
 function rankName(table,v){let n=table[0][1];for(const[min,name]of table){if(v>=min)n=name;}return n;}
-function totalStars(){return Object.values(save.stars).reduce((a,b)=>a+b,0);}
+function totalStars(){return Object.values(save.stars||{}).reduce((a,b)=>a+(Number(b)||0),0);}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
 function toast(msg){
   const t=document.createElement("div");t.className="toast";t.textContent=msg;
@@ -622,9 +627,14 @@ function toast(msg){
 
 /* ---------- TITLE ---------- */
 const QT=STAGES.reduce((a,s)=>a+s.q.length,0);
-$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v1.9`;
+$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.0`;
 const paradeStr=CHAPTERS.map(c=>c.boss.icon).join("");
-$("#parade1").textContent=paradeStr;$("#parade2").textContent=paradeStr;
+/* オープニングの流れるアイコンは人型・人の顔(人間味のある絵文字)を除外。ending parade は全ボス維持 */
+const PARADE_SKIP=new Set(["🦸","🏋️","😇","😶"]);
+/* 除外した4つ(人型・顔)の代わりに、冒険・学びモチーフの装飾アイコンを補充 */
+const PARADE_ADD=["🗡️","🛡️","⭐","💡"];
+const paradeTitle=CHAPTERS.map(c=>c.boss.icon).filter(ic=>!PARADE_SKIP.has(ic)).concat(PARADE_ADD).join("");
+$("#parade1").textContent=paradeTitle;$("#parade2").textContent=paradeTitle;
 
 function renderTitle(){
   const p=save.progress;
@@ -675,7 +685,7 @@ $("#btn-reset").addEventListener("click",e=>{
 
 /* ---------- BATTLE STATE ---------- */
 const B={chapter:0,stage:null,boss:null,isFinal:false,queue:[],qi:0,asked:0,hearts:3,combo:0,maxCombo:0,score:0,
-  bossHP:0,bossMax:0,locked:true,autoT:null,over:false,angry:false,current:null,correctIdx:0};
+  bossHP:0,bossMax:0,locked:true,autoT:null,introT:null,hitT:null,resultT:null,over:false,angry:false,current:null,correctIdx:0};
 
 function allQuestions(){const all=[];STAGES.forEach(s=>s.q.forEach(q=>all.push(q)));return all;}
 
@@ -729,13 +739,17 @@ function startBattle(chIdx){
   document.body.appendChild(ci);
   setTimeout(()=>ci.remove(),1750);
   const myRun=B.chapter;
-  setTimeout(()=>{
+  B.introT=setTimeout(()=>{
+    B.introT=null;
     if(B.over||B.chapter!==myRun)return;
     msgType(B.boss.intro,()=>{setTimeout(()=>{if(!B.over)nextQuestion();},350);});
   },900);
 }
 function leaveBattle(){
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
+  if(B.introT){clearTimeout(B.introT);B.introT=null;}
+  if(B.hitT){clearTimeout(B.hitT);B.hitT=null;}
+  if(B.resultT){clearTimeout(B.resultT);B.resultT=null;}
   if(typeTimer){clearInterval(typeTimer);typeTimer=null;}
   B.over=true;
 }
@@ -752,7 +766,7 @@ $("#btn-flee").addEventListener("click",()=>{
 
 /* ---------- HUD ---------- */
 function updateHUD(){
-  $("#hearts").innerHTML=`<small>ライフ</small>`+"❤".repeat(B.hearts)+"🖤".repeat(Math.max(0,3-B.hearts));
+  $("#hearts").innerHTML=`<small>ライフ</small>`+"❤".repeat(B.hearts)+"🤍".repeat(Math.max(0,3-B.hearts));
   const fever=B.combo>=5;
   $("#combo").innerHTML=B.combo>1
     ?`COMBO <b>×${B.combo}</b>${fever?' <span class="fv">FEVER!!</span>':B.combo>=3?" 🔥":""}`
@@ -787,11 +801,11 @@ function nextQuestion(){
   if(B.over)return;
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
   if(B.qi>=B.queue.length){
-    /* 全問出題済み → 同じ問題は繰り返さず、戦い抜いた時点で討伐成立 */
+    /* 全問出題済み。最後が正解(combo>0)またはHP0なら戦い抜いた=討伐成立。
+       最後が誤答でボスがHPを残していたら、倒しきれず=敗北とする。 */
     B.over=true;
-    B.bossHP=0;
-    updateHUD();
-    setTimeout(victory,400);
+    if(B.combo>0||B.bossHP<=0){B.bossHP=0;updateHUD();B.autoT=setTimeout(victory,400);}
+    else{updateHUD();B.autoT=setTimeout(gameOver,400);}
     return;
   }
   const q=B.queue[B.qi];B.qi++;B.asked++;
@@ -845,7 +859,7 @@ function onAnswer(idx){
     if(B.bossHP<=0){
       B.over=true;
       showExplain(true,q,"finish");
-      setTimeout(victory,1300);
+      B.autoT=setTimeout(victory,1300);
       return;
     }
     showExplain(true,q,null);
@@ -860,8 +874,10 @@ function onAnswer(idx){
     banner.className="atk-banner";banner.textContent=`💢 ${atk}!!`;
     $("#foe-win").appendChild(banner);
     setTimeout(()=>banner.remove(),950);
-    setTimeout(()=>{
-      if(B.over)return;
+    const hitRun=B.chapter;
+    B.hitT=setTimeout(()=>{
+      B.hitT=null;
+      if(B.over||B.chapter!==hitRun)return;
       $("#battle-wrap").classList.add("shake");
       setTimeout(()=>$("#battle-wrap").classList.remove("shake"),450);
       B.hearts--;updateHUD();
@@ -922,7 +938,9 @@ function victory(){
   save.progress=Math.max(save.progress,B.chapter+1);
   persist();
   const isEnding=B.isFinal;
-  setTimeout(()=>{
+  B.resultT=setTimeout(()=>{
+    B.resultT=null;
+    if(!$("#scr-battle").classList.contains("on"))return;
     $("#stamp-area").innerHTML=`<span class="stamp px ${rank==="A"?"rA":rank==="B"?"rB":""}">RANK ${rank}</span>`;
     $("#result-title").classList.remove("lose");
     $("#result-stars").innerHTML="★".repeat(stars)+"<span class='off'>"+"★".repeat(3-stars)+"</span>";
