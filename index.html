@@ -13,7 +13,6 @@
 <meta name="apple-mobile-web-app-title" content="福祉クエスト">
 </head>
 <body>
-<title>福祉クエスト 〜社会福祉原論A〜</title>
 <style>
 :root{
   --ground:#0b0e2a;
@@ -603,8 +602,8 @@ try{
   const s=JSON.parse(localStorage.getItem(SAVE_KEY));
   if(s&&typeof s==="object")save=Object.assign(save,s);
 }catch(e){}
-if(typeof save.progress!=="number"||save.progress<0)save.progress=0;
-save.progress=Math.min(save.progress,CHAPTERS.length);
+/* 小数・NaN・負数のprogressはCHAPTERS[p]をundefinedにしrenderTitleで例外→全ボタン死亡となるため整数に正規化 */
+save.progress=(typeof save.progress==="number"&&isFinite(save.progress))?Math.max(0,Math.min(Math.floor(save.progress),CHAPTERS.length)):0;
 if(!save.stars||typeof save.stars!=="object")save.stars={};
 if(!save.best||typeof save.best!=="object")save.best={};
 if(typeof save.hiscore!=="number"||!isFinite(save.hiscore))save.hiscore=0;
@@ -627,7 +626,7 @@ function toast(msg){
 
 /* ---------- TITLE ---------- */
 const QT=STAGES.reduce((a,s)=>a+s.q.length,0);
-$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.0`;
+$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.1`;
 const paradeStr=CHAPTERS.map(c=>c.boss.icon).join("");
 /* オープニングの流れるアイコンは人型・人の顔(人間味のある絵文字)を除外。ending parade は全ボス維持 */
 const PARADE_SKIP=new Set(["🦸","🏋️","😇","😶"]);
@@ -728,6 +727,7 @@ function startBattle(chIdx){
   sp.style.filter=`drop-shadow(4px 5px 0 #000) drop-shadow(0 0 16px ${B.boss.glow}44)`;
   $("#explain").classList.remove("on","good","bad");
   $("#choices").innerHTML="";
+  $("#qtext").textContent="";/* 前バトルの問題文の残留表示を防ぐ(特にreduced-motionで章イントロ非表示のとき) */
   $("#qwin").classList.remove("fever");
   renderTrail();
   updateHUD();
@@ -742,7 +742,7 @@ function startBattle(chIdx){
   B.introT=setTimeout(()=>{
     B.introT=null;
     if(B.over||B.chapter!==myRun)return;
-    msgType(B.boss.intro,()=>{setTimeout(()=>{if(!B.over)nextQuestion();},350);});
+    msgType(B.boss.intro,()=>{B.introT=setTimeout(()=>{B.introT=null;if(!B.over)nextQuestion();},350);});
   },900);
 }
 function leaveBattle(){
@@ -755,6 +755,7 @@ function leaveBattle(){
 }
 let fleeArmed=false;
 $("#btn-flee").addEventListener("click",()=>{
+  if(B.over)return;/* 勝敗確定後は無効。とどめ直後の離脱でvictory予約が消え章クリアが失われるのを防ぐ */
   if(!fleeArmed){
     fleeArmed=true;$("#btn-flee").textContent="本当にやめる?";
     setTimeout(()=>{fleeArmed=false;if($("#scr-battle").classList.contains("on"))$("#btn-flee").textContent="◀ タイトル";},2500);
@@ -766,7 +767,7 @@ $("#btn-flee").addEventListener("click",()=>{
 
 /* ---------- HUD ---------- */
 function updateHUD(){
-  $("#hearts").innerHTML=`<small>ライフ</small>`+"❤".repeat(B.hearts)+"🤍".repeat(Math.max(0,3-B.hearts));
+  $("#hearts").innerHTML=`<small>ライフ</small>`+"❤️".repeat(B.hearts)+"🤍".repeat(Math.max(0,3-B.hearts));
   const fever=B.combo>=5;
   $("#combo").innerHTML=B.combo>1
     ?`COMBO <b>×${B.combo}</b>${fever?' <span class="fv">FEVER!!</span>':B.combo>=3?" 🔥":""}`
@@ -804,6 +805,7 @@ function nextQuestion(){
     /* 全問出題済み。最後が正解(combo>0)またはHP0なら戦い抜いた=討伐成立。
        最後が誤答でボスがHPを残していたら、倒しきれず=敗北とする。 */
     B.over=true;
+    $("#btn-next").style.display="none";/* 勝敗確定の待ち時間に「すぐ次へ」を押させない */
     if(B.combo>0||B.bossHP<=0){B.bossHP=0;updateHUD();B.autoT=setTimeout(victory,400);}
     else{updateHUD();B.autoT=setTimeout(gameOver,400);}
     return;
@@ -907,9 +909,9 @@ function showExplain(good,q,finishOrAtk){
 }
 $("#btn-next").addEventListener("click",()=>{
   const wasOn=$("#explain").classList.contains("on");
+  if(!wasOn||B.over)return;/* 二重発火ガード。B.over時に先にautoTを消すと予約済みのvictory/gameOverが死んで進行不能になるため、ガードを最初に判定する */
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
   $("#explain").classList.remove("on");
-  if(!wasOn||B.over)return;/* 二重発火ガード */
   if(B.hearts<=0){gameOver();return;}
   B.locked=false;nextQuestion();
 });
@@ -993,6 +995,9 @@ function addBtn(parent,label,fn,primary){
 
 /* ---------- keyboard ---------- */
 document.addEventListener("keydown",e=>{
+  if(e.repeat)return;/* 長押しリピートでリザルト画面を飛ばさない */
+  /* フォーカス中の有効なボタンはネイティブのEnter/Space動作に任せる(横取りすると別のボタンが押される) */
+  if((e.key==="Enter"||e.key===" ")&&document.activeElement&&document.activeElement.tagName==="BUTTON"&&!document.activeElement.disabled)return;
   if($("#scr-result").classList.contains("on")&&e.key==="Enter"){
     const b=$("#result-btns .next-btn");
     if(b){e.preventDefault();b.click();}
@@ -1010,9 +1015,14 @@ document.addEventListener("keydown",e=>{
   }
 });
 
+/* boot(セルフテストのstartBattleより先に実行しないと、末尾bootが画面をタイトルへ戻し、
+   v2.0のresultTガードがリザルト表示を抑止して selftest が TIMEOUT する) */
+show("scr-title");
+
 /* ---------- SELF TEST (?selftest) ---------- */
 if(location.search.indexOf("selftest")>-1){
   const LOG=[];
+  persist=function(){};/* セルフテストが実プレイヤーのlocalStorageセーブを上書きしないよう無効化 */
   window.addEventListener("error",e=>LOG.push("ERR:"+e.message));
   const finish=()=>{
     const fails=LOG.filter(l=>/^(ERR|EX|QBAD|QLEN|DUPQ|TIMEOUT|STUCK)/.test(l));
@@ -1063,8 +1073,6 @@ if(location.search.indexOf("selftest")>-1){
   }catch(e){LOG.push("EX:"+e.message);finish();}
 }
 
-/* boot */
-show("scr-title");
 </script>
 
 <script>

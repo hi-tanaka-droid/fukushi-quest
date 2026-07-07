@@ -1,5 +1,5 @@
 /* 福祉クエスト Service Worker — ネットワーク優先+オフラインフォールバック */
-const CACHE = "fukushi-quest-v11";
+const CACHE = "fukushi-quest-v12";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", e => {
@@ -17,8 +17,11 @@ self.addEventListener("fetch", e => {
   e.respondWith(
     fetch(e.request)
       .then(res => {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, copy));
+        /* 404/500等のエラーレスポンスで正常キャッシュを上書きしない */
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, copy));
+        }
         return res;
       })
       .catch(() =>
