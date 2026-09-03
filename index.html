@@ -302,6 +302,67 @@ body{
   .crit-flash{display:none;}
   .chapter-intro{display:none;}
 }
+
+/* ===== v3.0: title tools ===== */
+.icon-btn.hot{color:var(--foe);border-color:var(--foe);}
+.icon-btn.hot:hover,.icon-btn.hot:focus-visible{color:var(--gold);border-color:var(--gold);}
+.trail[hidden]{display:none;}
+
+/* ===== v3.0: journey map ===== */
+.map-lead{max-width:560px;margin:0 auto 12px;}
+.map-list{display:flex;flex-direction:column;gap:10px;max-width:560px;margin:0 auto;}
+.map-row{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;font-family:inherit;font-size:1rem;color:var(--frame);
+  background:var(--win);border:3px solid var(--frame);border-radius:12px;padding:10px 14px;
+  box-shadow:inset 0 0 0 3px #ffffff1c,0 3px 0 #000;cursor:pointer;position:relative;transition:transform .05s;line-height:1.5;
+}
+.map-row:hover,.map-row:focus-visible{color:var(--gold);border-color:var(--gold);outline:none;transform:translateY(-2px);}
+.map-row:active{transform:translateY(2px);box-shadow:inset 0 0 0 3px #ffffff1c,0 0 0 #000;}
+.map-row.now{border-color:var(--gold);}
+.map-row.lock{cursor:default;opacity:.5;border-style:dashed;box-shadow:none;}
+.map-row.lock:hover{color:var(--frame);border-color:var(--frame);transform:none;}
+.map-ico{font-size:2rem;line-height:1;filter:drop-shadow(2px 3px 0 #000);width:2.4rem;text-align:center;flex:none;}
+.map-body{flex:1;min-width:0;}
+.map-title{display:block;font-weight:bold;}
+.map-title small{color:var(--dim);font-weight:normal;font-size:.7rem;margin-left:8px;letter-spacing:.05em;}
+.map-boss{display:block;color:var(--dim);font-size:.78rem;}
+.map-right{text-align:right;flex:none;line-height:1.4;}
+.map-stars{display:block;color:var(--gold);letter-spacing:2px;font-size:1rem;text-shadow:1px 1px 0 #000;}
+.map-best{display:block;color:var(--dim);font-size:.7rem;}
+.map-next{color:var(--gold);font-size:.8rem;font-weight:bold;animation:blink 1.3s steps(2) infinite;}
+
+/* ===== v3.0: study notebook ===== */
+.note-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:560px;margin:0 auto 12px;}
+.icon-btn.tgl.on{color:#1a1408;background:var(--gold);border-color:var(--gold);}
+.note-ch{max-width:560px;margin:0 auto 12px;padding:14px 16px;}
+.note-h{display:flex;align-items:center;gap:8px;font-size:1rem;color:var(--gold);flex-wrap:wrap;margin-bottom:4px;}
+.note-h small{color:var(--dim);font-weight:normal;font-size:.7rem;}
+.note-prog{margin-left:auto;color:var(--dim);font-size:.72rem;font-weight:normal;}
+.note-q{border-top:1px dashed #333a5e;padding:10px 0 8px;font-size:.9rem;line-height:1.7;}
+.note-q .nq{font-weight:600;}
+.note-q .nb{display:inline-block;font-size:.66rem;padding:0 6px;border:1px solid;border-radius:5px;margin-right:6px;vertical-align:2px;font-weight:normal;white-space:nowrap;}
+.note-q.ok .nb{color:var(--hp);border-color:var(--hp);}
+.note-q.ng .nb{color:var(--foe);border-color:var(--foe);}
+.note-q.new .nb{color:var(--cyan);border-color:var(--cyan);}
+.note-q .na{color:var(--hp);margin-top:2px;}
+.note-q .ne{color:var(--dim);font-size:.85rem;margin-top:2px;}
+.note-q .nstat{color:#5c65a0;font-size:.66rem;margin-top:2px;}
+.note-more{border-top:1px dashed #333a5e;padding-top:8px;margin-top:4px;}
+.note-empty{max-width:560px;margin:0 auto;line-height:2;}
+
+/* ===== v3.0: result miss list ===== */
+.miss{margin:16px auto 0;text-align:left;border-top:1px dashed #333a5e;padding-top:12px;max-width:34em;font-size:.85rem;line-height:1.7;}
+.miss-h{color:var(--foe);font-weight:bold;}
+.miss-none{color:var(--hp);font-weight:bold;margin-top:14px;font-size:.9rem;}
+.miss-q{margin-top:8px;}
+.miss-q .mq{font-weight:600;}
+.miss-q .ma{color:var(--hp);}
+
+@media(hover:none){
+  .map-row:hover{color:var(--frame);border-color:var(--frame);transform:none;}
+  .map-row.now:hover{border-color:var(--gold);}
+  .icon-btn.hot:hover{color:var(--foe);border-color:var(--foe);}
+}
 </style>
 
 <div id="sky"></div>
@@ -317,13 +378,40 @@ body{
       <button class="mode-btn" id="btn-story">🗡️ ぼうけんに出る<small id="story-sub"></small></button>
     </div>
     <div class="title-tools">
-      <button class="icon-btn" id="btn-restart" hidden>↩ 第1章から旅をやり直す</button>
+      <button class="icon-btn" id="btn-map">🗺️ 旅の地図</button>
+      <button class="icon-btn" id="btn-note">📖 まなびの書</button>
+      <button class="icon-btn hot" id="btn-weak" hidden>🔥 にがて特訓</button>
       <button class="icon-btn" id="btn-howto">❓ あそびかた</button>
     </div>
     <div class="records" id="records"></div>
     <div class="parade" aria-hidden="true"><span id="parade1"></span><span id="parade2"></span></div>
     <p class="title-foot" id="title-foot"></p>
     <p class="title-foot"><button class="icon-btn" id="btn-reset" style="font-size:.68rem;padding:2px 8px;">きろくを消す</button></p>
+  </section>
+
+  <!-- ===== MAP (章えらび) ===== -->
+  <section class="screen" id="scr-map">
+    <div class="bar">
+      <button class="icon-btn" id="map-back">◀ タイトル</button>
+      <span class="mid">🗺️ 旅の地図</span>
+      <span class="sp"></span>
+    </div>
+    <p class="small-dim center map-lead" id="map-lead"></p>
+    <div class="map-list" id="map-list"></div>
+  </section>
+
+  <!-- ===== NOTE (まなびの書) ===== -->
+  <section class="screen" id="scr-note">
+    <div class="bar">
+      <button class="icon-btn" id="note-back">◀ もどる</button>
+      <span class="mid">📖 まなびの書</span>
+      <span class="sp"></span>
+    </div>
+    <div class="note-tools">
+      <button class="icon-btn tgl" id="note-weak">🔥 にがてだけ</button>
+      <span class="small-dim" id="note-count"></span>
+    </div>
+    <div id="note-list"></div>
   </section>
 
   <!-- ===== BATTLE ===== -->
@@ -353,7 +441,7 @@ body{
         <p class="qtext" id="qtext"></p>
       </div>
       <div class="choices" id="choices"></div>
-      <div class="win explain" id="explain">
+      <div class="win explain" id="explain" aria-live="polite">
         <span class="tag" id="ex-tag"></span>
         <p id="ex-body"></p>
         <p class="foe-say" id="foe-say"></p>
@@ -371,6 +459,7 @@ body{
       <div class="result-stars" id="result-stars"></div>
       <p class="defeat-quote" id="defeat-quote"></p>
       <p class="result-score px" id="result-score"></p>
+      <div class="miss" id="miss-area"></div>
       <p class="trivia" id="trivia"></p>
       <div class="result-btns" id="result-btns"></div>
     </div>
@@ -381,10 +470,10 @@ body{
     <div class="win tut-box">
       <h3 class="px">— あそびかた —</h3>
       <ol>
-        <li><span class="ico">🗺️</span>冒険は全12章。ボスを倒すと<b style="color:var(--gold)">次の地へ進む!</b> 進み具合は自動セーブ。</li>
+        <li><span class="ico">🗺️</span>冒険は全12章。ボスを倒すと<b style="color:var(--gold)">次の地へ進む!</b> 進み具合は自動セーブ。倒した章は「旅の地図」からいつでも再戦できる。</li>
         <li><span class="ico">🗡️</span>クイズに正解するとボスにダメージ! <b style="color:var(--gold)">3コンボで会心の一撃</b>、<b style="color:#ff9de2">5コンボでフィーバー(1.5倍)!</b></li>
         <li><span class="ico">❤️</span>まちがえるとボスの反撃でライフが減る。0になると敗北…でもすぐリベンジできる!</li>
-        <li><span class="ico">💡</span>まちがえてもダイジョーブ。<b style="color:var(--hp)">解説で覚えれば</b>次は必ず勝てる!</li>
+        <li><span class="ico">💡</span>まちがえてもダイジョーブ。出会った問いと解説は<b style="color:var(--hp)">「まなびの書」</b>に記録され、まちがえた問いは<b style="color:var(--foe)">「にがて特訓」</b>で克服できる!</li>
       </ol>
       <div class="center"><button class="next-btn" id="tut-close">わかった! ▶</button></div>
     </div>
@@ -395,7 +484,8 @@ body{
 <script>
 "use strict";
 /* =========================================================
-   福祉クエスト v4 — ひとすじの冒険(音・タイマー・アイテムなし)
+   福祉クエスト v3.0 — ひとすじの冒険(音・タイマー・アイテムなし)
+   + 旅の地図(章えらび) / まなびの書(問いと解説の記録) / にがて特訓(まちがえた問いだけ再戦)
    ========================================================= */
 
 /* ---------- DATA ---------- */
@@ -595,9 +685,17 @@ const TRIVIA=[
 
 const RANKS=[[0,"ふくし見習い"],[3,"ケアのたまご"],[9,"まなびの冒険者"],[15,"福祉のタビビト"],[21,"地域のたよれる人"],[27,"福祉の賢者"],[33,"福祉マスター"],[36,"Well-beingの化身"]];
 
+
+/* ---------- QUESTION INDEX ---------- */
+/* 問題文のハッシュを安定IDにする(並べ替えに強い。文面を変えれば別の問いとして扱われ、成績はリセットされる) */
+function qid(text){let h=5381;for(let i=0;i<text.length;i++){h=((h<<5)+h+text.charCodeAt(i))|0;}return (h>>>0).toString(36);}
+const QINDEX=new Map();/* id -> {q, si, stage} */
+STAGES.forEach((s,si)=>s.q.forEach(q=>{q._id=qid(q[0]);QINDEX.set(q._id,{q,si,stage:s});}));
+const QT=STAGES.reduce((a,s)=>a+s.q.length,0);
+
 /* ---------- SAVE ---------- */
 const SAVE_KEY="fukushi_quest_v2";
-let save={stars:{},best:{},hiscore:0,progress:0,tut:0};
+let save={stars:{},best:{},hiscore:0,progress:0,tut:0,q:{}};
 try{
   const s=JSON.parse(localStorage.getItem(SAVE_KEY));
   if(s&&typeof s==="object")save=Object.assign(save,s);
@@ -608,7 +706,29 @@ if(!save.stars||typeof save.stars!=="object")save.stars={};
 if(!save.best||typeof save.best!=="object")save.best={};
 if(typeof save.hiscore!=="number"||!isFinite(save.hiscore))save.hiscore=0;
 save.tut=save.tut?1:0;
+/* 問いごとの成績 {ok:正解回数, ng:誤答回数, last:"ok"|"ng"}。未知のIDや壊れた値は捨てる */
+{
+  const clean={};
+  if(save.q&&typeof save.q==="object"){
+    for(const k in save.q){
+      if(!QINDEX.has(k))continue;
+      const v=save.q[k];if(!v||typeof v!=="object")continue;
+      const ok=Math.max(0,Math.floor(Number(v.ok)||0)),ng=Math.max(0,Math.floor(Number(v.ng)||0));
+      clean[k]={ok,ng,last:v.last==="ng"?"ng":"ok"};
+    }
+  }
+  save.q=clean;
+}
 function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(save));}catch(e){}}
+function qstat(q){return save.q[q._id]||null;}
+function markQ(q,ok){
+  const s=save.q[q._id]||(save.q[q._id]={ok:0,ng:0,last:"ok"});
+  if(ok)s.ok++;else s.ng++;
+  s.last=ok?"ok":"ng";
+}
+/* にがて=最後に答えたとき間違えた問い。どのモードでも正解すれば外れる */
+function weakList(){const a=[];QINDEX.forEach(v=>{const s=save.q[v.q._id];if(s&&s.last==="ng")a.push(v.q);});return a;}
+function masteredCount(){let n=0;QINDEX.forEach(v=>{const s=save.q[v.q._id];if(s&&s.ok>0)n++;});return n;}
 
 /* ---------- UTIL ---------- */
 const $=s=>document.querySelector(s);
@@ -623,10 +743,10 @@ function toast(msg){
   const t=document.createElement("div");t.className="toast";t.textContent=msg;
   document.body.appendChild(t);setTimeout(()=>t.remove(),1650);
 }
+function chapterLabel(i){return i===CHAPTERS.length-1?"終章":`第${i+1}章`;}
 
 /* ---------- TITLE ---------- */
-const QT=STAGES.reduce((a,s)=>a+s.q.length,0);
-$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.1`;
+$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v3.0`;
 const paradeStr=CHAPTERS.map(c=>c.boss.icon).join("");
 /* オープニングの流れるアイコンは人型・人の顔(人間味のある絵文字)を除外。ending parade は全ボス維持 */
 const PARADE_SKIP=new Set(["🦸","🏋️","😇","😶"]);
@@ -641,22 +761,25 @@ function renderTitle(){
   if(p<=0){
     btn.childNodes[0].textContent="🗡️ ぼうけんに出る";
     sub.textContent="全12章のクイズバトル。講義の魔物たちを討伐せよ!";
-    $("#btn-restart").hidden=true;
   }else if(p<CHAPTERS.length){
     const ch=CHAPTERS[p];
-    btn.childNodes[0].textContent=`🗡️ つづきから ─ ${p===CHAPTERS.length-1?"終章":`第${p+1}章`}`;
+    btn.childNodes[0].textContent=`🗡️ つづきから ─ ${chapterLabel(p)}`;
     sub.textContent=`次なる敵:${ch.boss.name}(${ch.title})`;
-    $("#btn-restart").hidden=false;
   }else{
     btn.childNodes[0].textContent="🗡️ もういちど ぼうけんに出る";
     sub.textContent="全章クリア済み! 語り部として、旅をもう一周。";
-    $("#btn-restart").hidden=true;
   }
+  const weak=weakList().length;
+  const wb=$("#btn-weak");
+  wb.hidden=weak===0;
+  wb.textContent=`🔥 にがて特訓(${weak}問)`;
   $("#records").innerHTML=
     `<span>称号</span><b>${esc(rankName(RANKS,totalStars()))}</b>`+
     `<span>ぼうけんの進み</span><b>${p>=CHAPTERS.length?"全章クリア!!":`${p} / ${CHAPTERS.length} 章`}</b>`+
     `<span>あつめた星</span><b>★ ${totalStars()} / ${CHAPTERS.length*3}</b>`+
-    `<span>ハイスコア</span><b>${save.hiscore.toLocaleString()}</b>`;
+    `<span>ハイスコア</span><b>${save.hiscore.toLocaleString()}</b>`+
+    `<span>正解ずみの問い</span><b>${masteredCount()} / ${QT} 問</b>`+
+    `<span>にがての問い</span><b>${weak} 問</b>`;
 }
 renderTitle();
 
@@ -664,9 +787,14 @@ $("#btn-story").addEventListener("click",()=>{
   const start=save.progress>=CHAPTERS.length?0:save.progress;
   maybeTut(()=>startBattle(start));
 });
-$("#btn-restart").addEventListener("click",()=>{
-  maybeTut(()=>startBattle(0));
-});
+$("#btn-map").addEventListener("click",()=>{renderMap();show("scr-map");});
+$("#map-back").addEventListener("click",()=>{renderTitle();show("scr-title");});
+let noteFrom="scr-title";
+function openNote(from){noteFrom=from||"scr-title";renderNote();show("scr-note");}
+$("#btn-note").addEventListener("click",()=>openNote("scr-title"));
+$("#note-back").addEventListener("click",()=>{if(noteFrom==="scr-title")renderTitle();show(noteFrom);});
+$("#note-weak").addEventListener("click",()=>{noteWeakOnly=!noteWeakOnly;renderNote();});
+$("#btn-weak").addEventListener("click",()=>{maybeTut(()=>startReview());});
 $("#btn-howto").addEventListener("click",()=>{$("#tut").hidden=false;});
 $("#tut-close").addEventListener("click",()=>{$("#tut").hidden=true;save.tut=1;persist();if(tutNext){const f=tutNext;tutNext=null;f();}});
 let tutNext=null;
@@ -677,14 +805,83 @@ function maybeTut(next){
 let resetArmed=false;
 $("#btn-reset").addEventListener("click",e=>{
   if(!resetArmed){resetArmed=true;e.target.textContent="もう一度押すと全消去!";setTimeout(()=>{resetArmed=false;e.target.textContent="きろくを消す";},2500);return;}
-  save={stars:{},best:{},hiscore:0,progress:0,tut:0};
+  save={stars:{},best:{},hiscore:0,progress:0,tut:0,q:{}};
   persist();renderTitle();resetArmed=false;e.target.textContent="消しました";
   setTimeout(()=>{e.target.textContent="きろくを消す";},1500);
 });
 
+/* ---------- MAP (旅の地図) ---------- */
+function renderMap(){
+  const list=$("#map-list");list.innerHTML="";
+  const p=save.progress;
+  CHAPTERS.forEach((c,i)=>{
+    const cleared=i<p,isNext=i===p,locked=i>p;
+    const row=document.createElement(locked?"div":"button");
+    if(!locked)row.type="button";
+    row.className="map-row "+(cleared?"done":isNext?"now":"lock");
+    const stars=Math.max(0,Math.min(3,Math.floor(Number(save.stars[c.id])||0)));
+    const best=Math.max(0,Number(save.best[c.id])||0);
+    const isFinal=i===CHAPTERS.length-1;
+    const lec=(isFinal||locked)?"":`<small class="px">${esc(c.no)}</small>`;
+    let right="";
+    if(cleared)right=`<span class="map-stars">${"★".repeat(stars)}<span class="off">${"★".repeat(3-stars)}</span></span><span class="map-best px">${best.toLocaleString()}</span>`;
+    else if(isNext)right=`<span class="map-next px">▶ NEXT</span>`;
+    row.innerHTML=`<span class="map-ico">${locked?"❓":c.boss.icon}</span>`+
+      `<span class="map-body"><span class="map-title">${chapterLabel(i)} ${locked?"???":esc(c.title)}${lec}</span>`+
+      `<span class="map-boss">${locked?"🔒 前の章をクリアすると開く":esc(c.boss.name)}</span></span>`+
+      `<span class="map-right">${right}</span>`;
+    if(!locked)row.addEventListener("click",()=>maybeTut(()=>startBattle(i)));
+    list.appendChild(row);
+  });
+  $("#map-lead").textContent=p>=CHAPTERS.length
+    ?"全章クリア! どの章にも自由に再戦できる。"
+    :"クリア済みの章はいつでも再戦できる。★3はノーダメージ討伐のあかし。";
+}
+
+/* ---------- NOTE (まなびの書) ---------- */
+let noteWeakOnly=false;
+function renderNote(){
+  const list=$("#note-list");list.innerHTML="";
+  $("#note-weak").classList.toggle("on",noteWeakOnly);
+  let seen=0,shown=0,weak=0;
+  STAGES.forEach((s,si)=>{
+    const unlocked=(Number(save.stars[s.id])||0)>0;/* 討伐済みの章は全問を開示(試験対策の一覧として使える) */
+    const items=[];
+    s.q.forEach(q=>{
+      const st=qstat(q);
+      if(st){seen++;if(st.last==="ng")weak++;}
+      if(noteWeakOnly){if(st&&st.last==="ng")items.push(q);}
+      else if(st||unlocked)items.push(q);
+    });
+    if(items.length===0)return;
+    shown+=items.length;
+    const box=document.createElement("div");box.className="win note-ch";
+    const hidden=s.q.length-items.length;
+    box.innerHTML=`<h3 class="note-h"><span>${s.boss.icon}</span>${chapterLabel(si)} ${esc(s.title)}<small class="px">${esc(s.no)}</small>`+
+      `<span class="note-prog px">${noteWeakOnly?`にがて ${items.length}問`:`${items.length} / ${s.q.length} 問`}</span></h3>`;
+    items.forEach(q=>{
+      const st=qstat(q);
+      const cls=!st?"new":st.last==="ng"?"ng":"ok";
+      const badge=!st?"📘 未挑戦":st.last==="ng"?"🔥 にがて":"✅ 正解ずみ";
+      const d=document.createElement("div");d.className="note-q "+cls;
+      d.innerHTML=`<p class="nq"><span class="nb px">${badge}</span>${esc(q[0])}</p>`+
+        `<p class="na">答え: <b>${esc(q[1][0])}</b></p>`+
+        `<p class="ne">${esc(q[2])}</p>`+
+        (st?`<p class="nstat px">せいかい ${st.ok} 回 / ミス ${st.ng} 回</p>`:"");
+      box.appendChild(d);
+    });
+    if(hidden>0&&!noteWeakOnly)box.insertAdjacentHTML("beforeend",`<p class="note-more small-dim">…あと ${hidden} 問。ボスを倒すと章の全問が書き込まれる。</p>`);
+    list.appendChild(box);
+  });
+  if(shown===0){
+    list.innerHTML=`<div class="win center note-empty"><p>${noteWeakOnly?"🎉 にがての問いは、ひとつもない! すばらしい。":"まだ何も書かれていない。<br>冒険に出て、問いと解説を集めよう。"}</p></div>`;
+  }
+  $("#note-count").textContent=noteWeakOnly?`にがて ${weak} 問`:`挑戦ずみ ${seen} / ${QT} 問`;
+}
+
 /* ---------- BATTLE STATE ---------- */
-const B={chapter:0,stage:null,boss:null,isFinal:false,queue:[],qi:0,asked:0,hearts:3,combo:0,maxCombo:0,score:0,
-  bossHP:0,bossMax:0,locked:true,autoT:null,introT:null,hitT:null,resultT:null,over:false,angry:false,current:null,correctIdx:0};
+const B={mode:"story",chapter:0,stage:null,boss:null,isFinal:false,queue:[],qi:0,asked:0,hearts:3,combo:0,maxCombo:0,score:0,
+  bossHP:0,bossMax:0,locked:true,autoT:null,introT:null,hitT:null,resultT:null,over:false,angry:false,current:null,correctIdx:0,missed:[],run:0};
 
 function allQuestions(){const all=[];STAGES.forEach(s=>s.q.forEach(q=>all.push(q)));return all;}
 
@@ -695,7 +892,7 @@ function renderTrail(){
     const sp=document.createElement("span");
     sp.className="tnode "+(i<B.chapter?"done":i===B.chapter?"now":"todo");
     sp.textContent=known?c.boss.icon:"❓";
-    sp.title=known?`${i===CHAPTERS.length-1?"終章":`第${i+1}章`} ${c.title}`:"???";
+    sp.title=known?`${chapterLabel(i)} ${c.title}`:"???";
     t.appendChild(sp);
     if(i<CHAPTERS.length-1){
       const sep=document.createElement("span");sep.className="tsep px";sep.textContent="─";
@@ -703,47 +900,81 @@ function renderTrail(){
     }
   });
 }
-function chapterLabel(i){return i===CHAPTERS.length-1?"終章":`第${i+1}章`;}
-
+function setFoe(boss,sub){
+  $("#foe-name").innerHTML=`${esc(boss.name)}<small class="px">${sub?esc(sub)+" / ":""}${esc(boss.kana||"")}</small>`;
+  const sp=$("#foe-sprite");
+  sp.textContent=boss.icon;
+  sp.style.filter=`drop-shadow(4px 5px 0 #000) drop-shadow(0 0 16px ${boss.glow}44)`;
+}
+function resetBattleUI(){
+  B.qi=0;B.asked=0;B.hearts=3;B.combo=0;B.maxCombo=0;B.score=0;
+  B.locked=true;B.over=false;B.angry=false;B.missed=[];B.run++;
+  fleeArmed=false;$("#btn-flee").textContent="◀ タイトル";
+  $("#foe-state").textContent="";
+  $("#foe-sprite").classList.remove("dead","hit","angry");
+  $("#explain").classList.remove("on","good","bad");
+  $("#choices").innerHTML="";
+  $("#qtext").textContent="";/* 前バトルの問題文の残留表示を防ぐ(特にreduced-motionで章イントロ非表示のとき) */
+  $("#qwin").classList.remove("fever");
+}
+function chapterIntro(ch,tt,bs){
+  const ci=document.createElement("div");
+  ci.className="chapter-intro";
+  ci.innerHTML=`<span class="ch px">${esc(ch)}</span><span class="tt">${esc(tt)}</span><span class="bs">${esc(bs)}</span>`;
+  document.body.appendChild(ci);
+  setTimeout(()=>ci.remove(),1750);
+}
+function openWith(introText){
+  const myRun=B.run;
+  B.introT=setTimeout(()=>{
+    B.introT=null;
+    if(B.over||B.run!==myRun)return;
+    msgType(introText,()=>{B.introT=setTimeout(()=>{B.introT=null;if(!B.over&&B.run===myRun)nextQuestion();},350);});
+  },900);
+}
 function startBattle(chIdx){
   leaveBattle();
+  B.mode="story";
   B.chapter=chIdx;
   B.stage=CHAPTERS[chIdx];
   B.isFinal=chIdx===CHAPTERS.length-1;
   B.boss=B.stage.boss;
   B.queue=B.isFinal?shuffle(allQuestions()):shuffle(B.stage.q.slice());
-  B.qi=0;B.asked=0;B.hearts=3;B.combo=0;B.maxCombo=0;B.score=0;
-  B.locked=true;B.over=false;B.angry=false;
+  resetBattleUI();
   const qn=B.isFinal?12:B.stage.q.length;
   B.bossMax=Math.round(qn*110);
   B.bossHP=B.bossMax;
-  fleeArmed=false;$("#btn-flee").textContent="◀ タイトル";
   $("#battle-stage-name").textContent=`${chapterLabel(chIdx)} ${B.stage.title}`;
-  $("#foe-name").innerHTML=`${esc(B.boss.name)}<small class="px">${esc(B.boss.kana||"")}</small>`;
-  $("#foe-state").textContent="";
-  const sp=$("#foe-sprite");
-  sp.textContent=B.boss.icon;
-  sp.classList.remove("dead","hit","angry");
-  sp.style.filter=`drop-shadow(4px 5px 0 #000) drop-shadow(0 0 16px ${B.boss.glow}44)`;
-  $("#explain").classList.remove("on","good","bad");
-  $("#choices").innerHTML="";
-  $("#qtext").textContent="";/* 前バトルの問題文の残留表示を防ぐ(特にreduced-motionで章イントロ非表示のとき) */
-  $("#qwin").classList.remove("fever");
+  setFoe(B.boss,"");
+  $("#trail").hidden=false;
   renderTrail();
   updateHUD();
   show("scr-battle");
-  /* chapter intro */
-  const ci=document.createElement("div");
-  ci.className="chapter-intro";
-  ci.innerHTML=`<span class="ch px">${chapterLabel(chIdx)}</span><span class="tt">${esc(B.stage.title)}</span><span class="bs">VS ${esc(B.boss.name)}</span>`;
-  document.body.appendChild(ci);
-  setTimeout(()=>ci.remove(),1750);
-  const myRun=B.chapter;
-  B.introT=setTimeout(()=>{
-    B.introT=null;
-    if(B.over||B.chapter!==myRun)return;
-    msgType(B.boss.intro,()=>{B.introT=setTimeout(()=>{B.introT=null;if(!B.over)nextQuestion();},350);});
-  },900);
+  chapterIntro(chapterLabel(chIdx),B.stage.title,`VS ${B.boss.name}`);
+  openWith(B.boss.intro);
+}
+/* にがて特訓: まちがえたままの問いだけを最大8問、出典章のボスが順に現れる */
+function startReview(){
+  const pool=shuffle(weakList()).slice(0,8);
+  if(pool.length===0){toast("にがての問いはない!");return;}
+  leaveBattle();
+  B.mode="review";
+  B.chapter=-1;
+  B.isFinal=false;
+  B.stage={id:"review",no:"",title:"にがて特訓",boss:null};
+  B.queue=pool;
+  resetBattleUI();
+  B.bossMax=Math.round(pool.length*110);
+  B.bossHP=B.bossMax;
+  const first=QINDEX.get(pool[0]._id);
+  B.boss=first.stage.boss;
+  $("#battle-stage-name").textContent=`🔥 にがて特訓 ${pool.length}問`;
+  setFoe(B.boss,chapterLabel(first.si));
+  $("#trail").hidden=true;
+  updateHUD();
+  show("scr-battle");
+  chapterIntro("特訓","にがて特訓",`VS にがての問い ×${pool.length}`);
+  openWith("「フフフ…また会ったな。今度こそ、覚えて帰れ…!」");
 }
 function leaveBattle(){
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
@@ -802,16 +1033,22 @@ function nextQuestion(){
   if(B.over)return;
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
   if(B.qi>=B.queue.length){
-    /* 全問出題済み。最後が正解(combo>0)またはHP0なら戦い抜いた=討伐成立。
-       最後が誤答でボスがHPを残していたら、倒しきれず=敗北とする。 */
+    /* 全問を出し切った。生き残っていれば「戦い抜いた」=討伐成立。
+       (以前は最後の1問の正誤で勝敗が分かれ、出題順の運に左右されたため、
+        ライフが残っていれば勝ちに統一。ライフ0は btn-next 経由で先に gameOver へ行く) */
     B.over=true;
     $("#btn-next").style.display="none";/* 勝敗確定の待ち時間に「すぐ次へ」を押させない */
-    if(B.combo>0||B.bossHP<=0){B.bossHP=0;updateHUD();B.autoT=setTimeout(victory,400);}
+    if(B.hearts>0){B.bossHP=0;updateHUD();B.autoT=setTimeout(victory,400);}
     else{updateHUD();B.autoT=setTimeout(gameOver,400);}
     return;
   }
   const q=B.queue[B.qi];B.qi++;B.asked++;
   B.current=q;
+  if(B.mode==="review"){
+    const o=QINDEX.get(q._id);
+    B.boss=o.stage.boss;
+    setFoe(B.boss,chapterLabel(o.si));
+  }
   const correct=q[1][0];
   const opts=shuffle(q[1]);
   B.correctIdx=opts.indexOf(correct);
@@ -845,6 +1082,9 @@ function onAnswer(idx){
     else b.classList.add("faded");
   });
   const q=B.current;
+  markQ(q,right);
+  if(!right)B.missed.push(q);
+  persist();/* 途中離脱しても問いごとの成績は残す */
   if(right){
     B.combo++;B.maxCombo=Math.max(B.maxCombo,B.combo);
     const wasFeverStart=B.combo===5;
@@ -876,10 +1116,10 @@ function onAnswer(idx){
     banner.className="atk-banner";banner.textContent=`💢 ${atk}!!`;
     $("#foe-win").appendChild(banner);
     setTimeout(()=>banner.remove(),950);
-    const hitRun=B.chapter;
+    const myRun=B.run;
     B.hitT=setTimeout(()=>{
       B.hitT=null;
-      if(B.over||B.chapter!==hitRun)return;
+      if(B.over||B.run!==myRun)return;
       $("#battle-wrap").classList.add("shake");
       setTimeout(()=>$("#battle-wrap").classList.remove("shake"),450);
       B.hearts--;updateHUD();
@@ -926,6 +1166,15 @@ function hitBoss(dmg,crit,fever){
   setTimeout(()=>d.remove(),1050);
 }
 
+/* ---------- result: このバトルでまちがえた問い ---------- */
+function renderMiss(){
+  const m=$("#miss-area");
+  if(B.missed.length===0){m.innerHTML=`<p class="miss-none">🎯 このバトル、ミスなし!</p>`;return;}
+  m.innerHTML=`<p class="miss-h">📝 まちがえた問い(${B.missed.length})</p>`+
+    B.missed.map(q=>`<div class="miss-q"><p class="mq">${esc(q[0])}</p><p class="ma">→ ${esc(q[1][0])}</p></div>`).join("")+
+    `<p class="small-dim" style="margin-top:8px">📖 まなびの書に記録した。🔥 にがて特訓で克服しよう。</p>`;
+}
+
 /* ---------- victory / gameover ---------- */
 function victory(){
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
@@ -934,10 +1183,13 @@ function victory(){
   const rank=stars===3?"S":stars===2?"A":"B";
   const bonus=stars*300+B.hearts*100;
   B.score+=bonus;
-  save.stars[B.stage.id]=Math.max(save.stars[B.stage.id]||0,stars);
-  save.best[B.stage.id]=Math.max(save.best[B.stage.id]||0,B.score);
-  save.hiscore=Math.max(save.hiscore,B.score);
-  save.progress=Math.max(save.progress,B.chapter+1);
+  const review=B.mode==="review";
+  if(!review){
+    save.stars[B.stage.id]=Math.max(save.stars[B.stage.id]||0,stars);
+    save.best[B.stage.id]=Math.max(save.best[B.stage.id]||0,B.score);
+    save.hiscore=Math.max(save.hiscore,B.score);
+    save.progress=Math.max(save.progress,B.chapter+1);
+  }
   persist();
   const isEnding=B.isFinal;
   B.resultT=setTimeout(()=>{
@@ -947,8 +1199,19 @@ function victory(){
     $("#result-title").classList.remove("lose");
     $("#result-stars").innerHTML="★".repeat(stars)+"<span class='off'>"+"★".repeat(3-stars)+"</span>";
     $("#trivia").innerHTML=`<b>📖 まめちしき:</b>${esc(pick(TRIVIA))}`;
+    renderMiss();
     const btns=$("#result-btns");btns.innerHTML="";
-    if(isEnding){
+    if(review){
+      const left=weakList().length;
+      const won=B.queue.filter(q=>{const s=qstat(q);return s&&s.last==="ok";}).length;
+      $("#result-title").textContent="特訓クリア!!";
+      $("#defeat-quote").innerHTML=`「ぐぬぬ…もう、にがてではないのか…!」<br>にがての問いを <b style="color:var(--gold)">${won}問</b> 克服!`+
+        (left>0?`<br><span class="small-dim">のこりのにがて:${left}問</span>`:`<br><span style="color:var(--hp)">にがての問いは、もうひとつもない!</span>`);
+      $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span style="font-size:.75rem;color:var(--dim)">(特訓の得点は記録に残らない)</span>`;
+      if(left>0)addBtn(btns,"つづけて特訓 ▶",()=>startReview(),true);
+      addBtn(btns,"タイトルへ",()=>{renderTitle();show("scr-title");},left===0);
+      addBtn(btns,"📖 まなびの書",()=>openNote("scr-result"));
+    }else if(isEnding){
       $("#result-title").textContent="〜 エンディング 〜";
       $("#defeat-quote").innerHTML=`${esc(B.boss.defeat)}<br><br>`+
         `<span class="ending-parade">${paradeStr}</span><br>`+
@@ -957,6 +1220,7 @@ function victory(){
       $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span style="font-size:.75rem;color:var(--dim)">(クリア+${bonus} / 最大コンボ×${B.maxCombo})</span>`;
       addBtn(btns,"タイトルへ",()=>{renderTitle();show("scr-title");},true);
       addBtn(btns,"終章にもう一度挑む",()=>startBattle(B.chapter));
+      if(B.missed.length)addBtn(btns,"📖 まなびの書",()=>openNote("scr-result"));
     }else{
       $("#result-title").textContent="ボス討伐!!";
       $("#defeat-quote").textContent=B.boss.defeat;
@@ -966,6 +1230,7 @@ function victory(){
       addBtn(btns,`つぎの地へ ▶ ${chapterLabel(nx)}`,()=>startBattle(nx),true);
       addBtn(btns,"この章をもう一度",()=>startBattle(B.chapter));
       addBtn(btns,"タイトルへ",()=>{renderTitle();show("scr-title");});
+      if(B.missed.length)addBtn(btns,"📖 まなびの書",()=>openNote("scr-result"));
     }
     show("scr-result");
   },1300);
@@ -973,15 +1238,21 @@ function victory(){
 function gameOver(){
   B.over=true;
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
+  persist();
+  const review=B.mode==="review";
   $("#stamp-area").innerHTML="";
   $("#result-title").textContent="力尽きた…";
   $("#result-title").classList.add("lose");
   $("#result-stars").textContent="💤";
-  $("#defeat-quote").textContent=`${B.boss.name}「フハハ…出直してくるがよい。復習こそ最強の武器だぞ?」`;
+  $("#defeat-quote").textContent=review
+    ?"「フハハ…にがては、まだ にがてのままだ。まなびの書で見直してから来い」"
+    :`${B.boss.name}「フハハ…出直してくるがよい。復習こそ最強の武器だぞ?」`;
   $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b>`;
+  renderMiss();
   $("#trivia").innerHTML=`<b>📖 まめちしき:</b>${esc(pick(TRIVIA))}`;
   const btns=$("#result-btns");btns.innerHTML="";
-  addBtn(btns,"リベンジ!",()=>startBattle(B.chapter),true);
+  addBtn(btns,"リベンジ!",()=>review?startReview():startBattle(B.chapter),true);
+  addBtn(btns,"📖 まなびの書",()=>openNote("scr-result"));
   addBtn(btns,"タイトルへ",()=>{renderTitle();show("scr-title");});
   show("scr-result");
 }
@@ -998,6 +1269,11 @@ document.addEventListener("keydown",e=>{
   if(e.repeat)return;/* 長押しリピートでリザルト画面を飛ばさない */
   /* フォーカス中の有効なボタンはネイティブのEnter/Space動作に任せる(横取りすると別のボタンが押される) */
   if((e.key==="Enter"||e.key===" ")&&document.activeElement&&document.activeElement.tagName==="BUTTON"&&!document.activeElement.disabled)return;
+  if(e.key==="Escape"){
+    if($("#scr-map").classList.contains("on")){$("#map-back").click();}
+    else if($("#scr-note").classList.contains("on")){$("#note-back").click();}
+    return;
+  }
   if($("#scr-result").classList.contains("on")&&e.key==="Enter"){
     const b=$("#result-btns .next-btn");
     if(b){e.preventDefault();b.click();}
@@ -1019,13 +1295,15 @@ document.addEventListener("keydown",e=>{
    v2.0のresultTガードがリザルト表示を抑止して selftest が TIMEOUT する) */
 show("scr-title");
 
-/* ---------- SELF TEST (?selftest) ---------- */
+/* ---------- SELF TEST (?selftest) ----------
+   全12章を自動プレイ→エンディング後に 旅の地図/まなびの書 を描画検証→
+   にがて特訓を1回自動プレイし、にがてが0になることまで確認する */
 if(location.search.indexOf("selftest")>-1){
   const LOG=[];
   persist=function(){};/* セルフテストが実プレイヤーのlocalStorageセーブを上書きしないよう無効化 */
   window.addEventListener("error",e=>LOG.push("ERR:"+e.message));
   const finish=()=>{
-    const fails=LOG.filter(l=>/^(ERR|EX|QBAD|QLEN|DUPQ|TIMEOUT|STUCK)/.test(l));
+    const fails=LOG.filter(l=>/^(ERR|EX|QBAD|QLEN|DUPQ|QIDDUP|TIMEOUT|STUCK|MAPROWS|MAPLOCK|NOTEEMPTY|REVIEWNG|NOWEAK)/.test(l));
     document.title="ST:"+(fails.length===0?"OK":"FAIL")+"|"+LOG.join("|").slice(0,400);
     const d=document.createElement("pre");d.id="selftest-log";d.textContent=LOG.join("\n")||"CLEAN";
     d.style.cssText="position:fixed;bottom:0;left:0;z-index:99;background:#000;color:#0f0;font-size:10px;max-height:120px;overflow:auto;";
@@ -1039,20 +1317,36 @@ if(location.search.indexOf("selftest")>-1){
         if(new Set(q[1]).size!==4)LOG.push("DUPQ:"+s.id+":"+qi);
       });
     });
+    if(QINDEX.size!==QT)LOG.push("QIDDUP:"+QINDEX.size);
     LOG.push("DATA:"+QT+"q/"+CHAPTERS.length+"ch");
-    save.tut=1;save.progress=0;
+    save.tut=1;save.progress=0;save.stars={};save.best={};save.hiscore=0;save.q={};
     startBattle(0);
-    let steps=0,wrongDone=false,cleared=0;
+    let steps=0,wrongDone=false,wrongFinal=false,cleared=0,phase="story";
     const iv=setInterval(()=>{
       steps++;
-      if(steps>30000){LOG.push("TIMEOUT:ch"+B.chapter);clearInterval(iv);finish();return;}
+      if(steps>30000){LOG.push("TIMEOUT:"+phase+"-ch"+B.chapter);clearInterval(iv);finish();return;}
       if($("#scr-result").classList.contains("on")){
         const t=$("#result-title").textContent;
-        if(t.indexOf("エンディング")>-1){
-          LOG.push("ENDING:progress="+save.progress+":stars="+totalStars()+":cleared="+cleared);
+        if(t.indexOf("力尽きた")>-1){LOG.push("STUCK:gameover-"+phase+"-ch"+B.chapter);clearInterval(iv);finish();return;}
+        if(phase==="review"){
+          const left=weakList().length;
+          LOG.push(left===0?"REVIEWOK":"REVIEWNG:"+left);
           clearInterval(iv);finish();return;
         }
-        if(t.indexOf("力尽きた")>-1){LOG.push("STUCK:gameover-ch"+B.chapter);clearInterval(iv);finish();return;}
+        if(t.indexOf("エンディング")>-1){
+          LOG.push("ENDING:progress="+save.progress+":stars="+totalStars()+":cleared="+cleared);
+          renderMap();
+          const rows=$$("#map-list .map-row");
+          if(rows.length!==CHAPTERS.length)LOG.push("MAPROWS:"+rows.length);
+          if($$("#map-list .map-row.lock").length)LOG.push("MAPLOCK");
+          noteWeakOnly=false;renderNote();
+          const nq=$$("#note-list .note-q").length;
+          if(nq!==QT)LOG.push("NOTEEMPTY:"+nq);
+          const w=weakList().length;
+          LOG.push("WEAK:"+w+":mastered="+masteredCount());
+          if(w===0){LOG.push("NOWEAK");clearInterval(iv);finish();return;}
+          phase="review";startReview();return;
+        }
         const nb=$("#result-btns .next-btn");
         if(nb){cleared++;nb.click();}
         return;
@@ -1060,10 +1354,16 @@ if(location.search.indexOf("selftest")>-1){
       const exOn=$("#explain").classList.contains("on");
       if(exOn&&B.locked&&$("#btn-next").style.display!=="none"&&B.combo===0&&B.hearts>0){$("#btn-next").click();return;}
       if(!B.locked&&!B.over){
-        if(!wrongDone&&B.chapter===0&&B.asked>=3){
+        /* 第1章で1回、終章で1回わざと誤答して、ミス経路と「にがて」の記録を通す */
+        const wantWrong=(!wrongDone&&B.chapter===0&&B.asked>=3)||(!wrongFinal&&B.isFinal&&B.asked>=2);
+        if(wantWrong){
           const btns=$$(".choice");
           const wrongIdx=btns.findIndex((b,i)=>i!==B.correctIdx&&!b.disabled);
-          if(wrongIdx>=0){wrongDone=true;LOG.push("WRONGCLICK");btns[wrongIdx].click();return;}
+          if(wrongIdx>=0){
+            if(B.isFinal)wrongFinal=true;else wrongDone=true;
+            LOG.push("WRONGCLICK:"+(B.isFinal?"final":"ch0"));
+            btns[wrongIdx].click();return;
+          }
         }
         const cb=$$(".choice")[B.correctIdx];
         if(cb&&!cb.disabled){cb.click();return;}
