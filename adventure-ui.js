@@ -3,14 +3,14 @@
   const A=window.FQ_APP,P=window.FQ_PLAY,$=id=>document.getElementById(id);
   let tab='missions',puzzleId=null,message='',lastHint=null;
   const state=()=>A.state(),a=()=>state().adventure;
-  function header(text,sub){return `<div class="page-title"><div><p class="eyebrow">LANTERN FESTIVAL</p><h1>${text}</h1><p class="muted">${sub}</p></div><button class="secondary" data-action="world">3Dの街へ ↗</button></div>`;}
+  function header(text,sub){return `<div class="page-title"><div><p class="eyebrow">探検・パズル</p><h1>${text}</h1><p class="muted">${sub}</p></div><button class="secondary" data-action="world">3Dの街へ ↗</button></div>`;}
   function updateHUD(){
     $('shard-count').textContent=`${a().shards.length} / 12`;$('puzzle-count').textContent=`${a().solved.length} / 3`;
   }
   function hub(){
     puzzleId=null;
     const tabs=`<div class="toolbar ad-tabs" role="group" aria-label="探検メモの内容">${[['missions','寄り道パズル'],['collection','かけら図鑑'],['style','着替え・街づくり']].map(([id,name])=>`<button data-action="ad-tab" data-id="${id}" aria-pressed="${tab===id}">${name}</button>`).join('')}</div>`;
-    const hero=`<section class="ad-hero"><div class="ad-buddy" aria-hidden="true"><span>✧</span></div><div><p class="eyebrow">案内灯のランプより</p><h2>${P.festivalReady(state())?'まつりの準備、できたね！':'この街で、灯りのまつりを開こう。'}</h2><p>歩いて見つけるかけら、回してつなぐ光の道、8つの学び。<br>好きなところから、少しずつ集めてね。</p><div class="ad-meters"><span>✦ かけら <b>${a().shards.length}/12</b></span><span>◇ 回路 <b>${a().solved.length}/3</b></span><span>✧ 学び <b>${state().completed.length}/8</b></span></div>${P.festivalReady(state())?'<button class="primary" data-action="ad-festival">まつりの灯りをともす ✧</button>':'<button class="secondary" data-action="ad-guide" data-id="next">かけらを探しに行く →</button>'}</div></section>`;
+    const hero=`<section class="ad-hero"><div class="ad-buddy" aria-hidden="true"><span>✧</span></div><div><p class="eyebrow">案内灯のランプより</p><h2>${P.festivalReady(state())?'全部そろった！街の灯りを見に行こう。':'かけらを集め、パズルを解こう。'}</h2><p>光のかけら12個・パズル3つ・8か所の学習をすべて終えると、街に灯りが浮かぶ演出を見られるよ。</p><div class="ad-meters"><span>✦ かけら <b>${a().shards.length}/12</b></span><span>◇ 回路 <b>${a().solved.length}/3</b></span><span>✧ 学び <b>${state().completed.length}/8</b></span></div>${P.festivalReady(state())?'<button class="primary" data-action="ad-festival">街に浮かぶ灯りを見る ✧</button>':'<button class="secondary" data-action="ad-guide" data-id="next">かけらを探しに行く →</button>'}</div></section>`;
     let body='';
     if(tab==='missions')body=`<div class="ad-puzzles">${P.puzzles.map((p,i)=>`<article class="ad-puzzle-card"><div class="ad-puzzle-art art-${i}" aria-hidden="true">${['⌁','⌘','✧'][i]}</div><div><p class="eyebrow">寄り道 ${i+1} / ${p.size} × ${p.size}</p><h2>${p.name}</h2><p>${p.description}</p><p class="ad-reward">${a().solved.includes(p.id)?'✓ 光がつながった':'ごほうび：街づくりの選択肢が増える'}</p><div class="buttons"><button class="primary" data-action="ad-puzzle" data-id="${p.id}">${a().solved.includes(p.id)?'もう一度遊ぶ':'タイルをつなぐ'} →</button><button class="link-button" data-action="ad-travel" data-id="${p.id}">街で見に行く</button></div></div></article>`).join('')}</div><p class="ad-footnote">タイルのパズルは、自由に遊べる寄り道です。授業の確認問題は「旅の地図」から開けます。</p>`;
     if(tab==='collection')body=`<div class="ad-collection">${P.shards.map((s,i)=>`<button class="ad-shard ${a().shards.includes(s.id)?'found':''}" data-action="ad-guide" data-id="${s.id}"><span class="shard-art" aria-hidden="true">${a().shards.includes(s.id)?'✦':'◇'}</span><small>NO. ${String(i+1).padStart(2,'0')}</small><strong>${s.name}</strong><span>${a().shards.includes(s.id)?'✓ 見つけた':'道しるべをつける ↗'}</span></button>`).join('')}</div>`;
@@ -56,7 +56,7 @@
     } else if(action==='ad-travel'){
       const p=P.puzzles.find(p=>p.id===el.dataset.id);if(p){A.goWorld();window.dispatchEvent(new CustomEvent('fq:travel',{detail:{x:p.x,z:p.z+2}}));}
     } else if(action==='ad-festival'&&P.festivalReady(state())){
-      a().festival=true;a().sky='night';A.save();A.goWorld();window.dispatchEvent(new CustomEvent('fq:festival'));A.toast('灯りのまつり、はじまり！ 街の真ん中を見てみよう。');
+      a().festival=true;a().sky='night';A.save();A.goWorld();window.dispatchEvent(new CustomEvent('fq:festival'));A.toast('街の上に灯りが浮かんだよ。広場を見てみよう。');
     }
   });
   window.addEventListener('fq:state',updateHUD);

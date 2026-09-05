@@ -1,6 +1,6 @@
 /* Offline assets are versioned together and isolated to this app's scope. */
 const PREFIX = 'fq3d:' + self.registration.scope + ':';
-const CACHE = PREFIX + '4.1.0-r6';
+const CACHE = PREFIX + '4.1.0-r7';
 const ASSETS = ['index.html','style.css','adventure.css','content.js','adventure.js','engine.js','app.js','adventure-ui.js','world.js','world-play.js','vendor/three.module.min.js','vendor/three.core.min.js','manifest.webmanifest','icon-192.png','icon-512.png','apple-touch-icon.png'];
 const urls = new Set(ASSETS.map(path => new URL(path,self.registration.scope).href));
 self.addEventListener('install',event => {

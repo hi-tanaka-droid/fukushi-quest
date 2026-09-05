@@ -86,10 +86,10 @@ export function createPlayWorld({THREE,scene,camera,avatar,mesh,box,cylinder,mat
     const goal=P.shards.find(s=>s.id===targetId&&!a().shards.includes(s.id));
     pointer.visible=!!goal;
     if(goal){pointer.position.set(goal.x,2.8+(quiet?0:Math.sin(time*.003)*.12),goal.z);const distance=Math.round(Math.hypot(position.x-goal.x,position.z-goal.z));setGuide(`「${goal.name}」まで、あと ${distance} 歩くらい。金色の矢印を探そう！`);}
-    else if(a().festival)setGuide('灯りのまつり、はじまり！ 好きな景色で街を歩こう。');
-    else if(P.festivalReady(app.state()))setGuide('準備ができたよ！ 探検メモから、まつりを始めよう。');
+    else if(a().festival)setGuide('街の上に灯りが浮かんだよ。好きな景色で街を歩こう。');
+    else if(P.festivalReady(app.state()))setGuide('全部そろったよ！ 探検メモから、街に浮かぶ灯りを見に行こう。');
     else if(a().solved.length<3)setGuide('かけら、全部見つけたね！ 青い台座のパズルにも寄ってみよう。');
-    else setGuide('パズルもできたね。残りの学びを集めて、まつりの準備を進めよう！');
+    else setGuide('パズルもできたね。「旅の地図」から、まだ終えていない相談に進もう。');
     for(let i=bursts.length-1;i>=0;i--){const b=bursts[i];b.t+=dt;b.material.opacity=Math.max(0,1-b.t/1.2);for(const child of b.group.children){child.position.addScaledVector(child.userData.velocity,dt);child.userData.velocity.y-=dt*1.3;}if(quiet||b.t>1.2){scene.remove(b.group);b.geometry.dispose();b.material.dispose();bursts.splice(i,1);}}
     if(festival.visible&&!quiet)festivalLights.forEach((light,i)=>light.position.y=4+i%5*.8+Math.sin(time*.0005+i)*.35);
   }

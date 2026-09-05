@@ -18,7 +18,7 @@
     $('weak-count').textContent = E.weak(state, D).length;
     $('world-count').innerHTML = `${state.completed.length} <small>/ 8</small>`;
     $('world-pips').innerHTML = D.cases.map(c => `<span class="${state.completed.includes(c.id) ? 'done' : ''}"></span>`).join('');
-    $('continue-btn').textContent = state.completed.length === 8 ? '8つの灯りを振り返る ↗' : state.resume ? '途中の相談を続ける ↗' : state.completed.length ? '次の相談へ ↗' : '最初の相談へ ↗';
+    $('continue-btn').textContent = state.completed.length === 8 ? '8つの相談を振り返る ↗' : state.resume ? '途中の相談を続ける ↗' : state.completed.length ? '次の相談へ ↗' : '最初の相談へ ↗';
     $('motion-setting').checked = state.motion;
     window.dispatchEvent(new CustomEvent('fq:state'));
   }
