@@ -1,0 +1,76 @@
+{
+  "checked": "2026-09-05",
+  "note": "Source PDFs are not redistributed. Pages count from the PDF beginning.",
+  "files": [
+    {
+      "file": "Lectuer3.pdf",
+      "pages": 7,
+      "sha256": "5451683e395e8af08bba49c9bfb3c4668301ed0d51854169c8767c1f46c87399"
+    },
+    {
+      "file": "社会福祉原論A最終回.pdf",
+      "pages": 35,
+      "sha256": "9d37a6700564a4f778f1dc629496fb5c49b8a7f84018986af26787e4e6bd67a8"
+    },
+    {
+      "file": "第10回社会福祉原論A.pdf",
+      "pages": 38,
+      "sha256": "2f4159facc1e6de238ab6922bdef6875f4d1f4c9099f3eea771d3746af51a939"
+    },
+    {
+      "file": "第11回社会福祉原論A_スライド.pdf",
+      "pages": 26,
+      "sha256": "aada744270ab9f10623a0aeee1dfa181864e6f3932697533370bb3cfe33628a9"
+    },
+    {
+      "file": "第12回社会福祉原論A.pdf",
+      "pages": 22,
+      "sha256": "ef430fd8a80835b25a0126a4f57d3b12647800987943cc110cb861b64bf654f8"
+    },
+    {
+      "file": "第13回社会福祉原論A.pdf",
+      "pages": 17,
+      "sha256": "d6bbbe652e3548c909a3d2a5a6d7ff7688ca3938813dbf1dc7679bc239d4f0ad"
+    },
+    {
+      "file": "第14回社会福祉原論A.pdf",
+      "pages": 11,
+      "sha256": "c6140f51d7005fa9487eec804982cbeb89dd83e7ed91197d87d280dcd63aa1e0"
+    },
+    {
+      "file": "第4回社会福祉原論A.pdf",
+      "pages": 5,
+      "sha256": "178200619764b0c16f41c3a8b75a94557cddd20c3eb6be3b5e60329ee44924f7"
+    },
+    {
+      "file": "第5回社会福祉原論A.pdf",
+      "pages": 42,
+      "sha256": "4d14b933a4865e615ded40d72c78a0541c90eabc074b34bbc03af557e9e69802"
+    },
+    {
+      "file": "第6回社会福祉原論A.pdf",
+      "pages": 22,
+      "sha256": "7ac144d2e9013ca59c4c7ea0fe74b5ef0b96e5e870a50774a92189cf9813a241"
+    },
+    {
+      "file": "第7回社会福祉原論A.pdf",
+      "pages": 25,
+      "sha256": "1589c86802445764b27a098d591c3c4b6fce979e551581e41c273f8b64beb56f"
+    },
+    {
+      "file": "第8回社会福祉原論A（データ）.pdf",
+      "pages": 29,
+      "sha256": "46d6da9620f05a63470f637e9a17218596b1580d6b03fe887029d5c13d295e7a"
+    },
+    {
+      "file": "第9回社会福祉原論A.pdf",
+      "pages": 24,
+      "sha256": "d79f0ae7863978158d445e185b4d45675e3e7f6bf3292b54613e66665e0f0a57"
+    },
+    {
+      "file": "能力主義と尊厳  -  修復済み.pdf",
+      "pages": 5,
+      "sha256": "88459ce0c4cffca65238971f554b2d676e5318db4c07a4032443fdaf6a0cf142"
+    }
+  ]
+}
