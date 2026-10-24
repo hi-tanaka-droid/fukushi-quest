@@ -4,6 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>福祉クエスト 〜社会福祉原論A〜</title>
+<meta name="description" content="社会福祉原論Aの内容で戦うレトロRPG風クイズバトルゲーム">
+<meta name="color-scheme" content="dark">
+<link rel="icon" type="image/png" href="icon-192.png">
+<!-- LINE・Teams 等でURLを送ったときのカード -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="福祉クエスト">
+<meta property="og:title" content="福祉クエスト 〜社会福祉原論A〜">
+<meta property="og:description" content="社会福祉原論Aの内容で戦うレトロRPG風クイズバトルゲーム">
+<meta property="og:url" content="https://hi-tanaka-droid.github.io/fukushi-quest/">
+<meta property="og:image" content="https://hi-tanaka-droid.github.io/fukushi-quest/icon-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#0b0e2a">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -11,8 +25,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="福祉クエスト">
-</head>
-<body>
 <style>
 :root{
   --ground:#0b0e2a;
@@ -152,7 +164,7 @@ body{
 .chapter-intro .ch{color:var(--gold);font-size:1.05rem;letter-spacing:.5em;padding-left:.5em;}
 .chapter-intro .tt{color:#fff;font-size:1.9rem;font-weight:bold;letter-spacing:.14em;text-shadow:2px 2px 0 #000,0 0 24px #7dd8ff33;}
 .chapter-intro .bs{color:var(--dim);font-size:.85rem;margin-top:4px;}
-@keyframes chfade{0%{opacity:0;}15%{opacity:1;}75%{opacity:1;}100%{opacity:0;}}
+@keyframes chfade{0%{opacity:0;}12%{opacity:1;}64%{opacity:1;}78%{opacity:0;}100%{opacity:0;}}/* 1.33秒で明け切る(登場台詞の打ち始め1.35秒と重ならない) */
 
 /* ===== battle ===== */
 #battle-wrap.shake{animation:shake .4s steps(8);}
@@ -170,7 +182,10 @@ body{
   animation:hover 2.4s ease-in-out infinite;
 }
 @keyframes hover{50%{transform:translateY(-7px);}}
-.foe-sprite.angry{animation:angry .5s ease-in-out infinite;filter:drop-shadow(4px 5px 0 #000) drop-shadow(0 0 14px #ff5d7abb)!important;}
+.foe-sprite.angry{animation:angry .5s ease-in-out infinite;}
+.foe-sprite.angry:not(.hit){filter:drop-shadow(4px 5px 0 #000) drop-shadow(0 0 14px #ff5d7abb)!important;}/* 被弾中は白フラッシュ(foehitのbrightness)を通す */
+.foe-sprite.atk{animation:foeatk .55s steps(7);}
+@keyframes foeatk{0%{transform:none;}55%{transform:translateY(-8px) scale(.94);}85%{transform:translateY(12px) scale(1.28);}100%{transform:none;}}
 @keyframes angry{25%{transform:translate(-3px,-4px);}75%{transform:translate(3px,-2px);}}
 .foe-sprite.hit{animation:foehit .45s steps(6);}
 @keyframes foehit{
@@ -182,8 +197,9 @@ body{
 @keyframes foedead{to{transform:translateY(26px) scaleY(.1);opacity:0;filter:brightness(4) blur(3px);}}
 .hpwrap{max-width:360px;margin:2px auto 0;}
 .hplabel{display:flex;justify-content:space-between;font-size:.7rem;color:var(--dim);}
-.hpbar{height:15px;border:2px solid var(--frame);border-radius:8px;background:#1a1030;overflow:hidden;}
-.hpbar>i{display:block;height:100%;background:linear-gradient(#ff8ba0,var(--foe));width:100%;transition:width .5s steps(12);}
+.hpbar{height:15px;border:2px solid var(--frame);border-radius:8px;background:#1a1030;overflow:hidden;position:relative;}
+.hpbar>i{display:block;height:100%;background:linear-gradient(#ff8ba0,var(--foe));width:100%;transition:width .24s steps(4) .06s;position:relative;z-index:1;}
+.hpbar>b{position:absolute;left:0;top:0;bottom:0;width:100%;background:#fff6dc;transition:width .5s steps(10) .45s;}/* 削れた分が白く残って遅れて追う */
 .hplabel .cue{color:var(--gold);font-weight:bold;}
 .atk-banner{
   position:absolute;left:0;right:0;top:42%;font-size:1.15rem;font-weight:bold;color:#fff;
@@ -192,17 +208,17 @@ body{
 }
 @keyframes atkfly{0%{transform:translateX(60%);opacity:0;}20%{transform:translateX(0);opacity:1;}80%{transform:translateX(-4%);opacity:1;}100%{transform:translateX(-60%);opacity:0;}}
 .dmg{
-  position:absolute;left:50%;top:30%;font-size:2.1rem;font-weight:bold;color:#fff;
+  position:absolute;left:50%;top:44%;font-size:2.1rem;font-weight:bold;color:#fff;
   text-shadow:2px 2px 0 #000,0 0 12px #ff5d7a;pointer-events:none;font-variant-numeric:tabular-nums;
   animation:dmgpop 1s steps(10) forwards;white-space:nowrap;
 }
 .dmg.crit{color:var(--gold);font-size:2.7rem;text-shadow:2px 2px 0 #000,0 0 18px #ffcf4d;}
-@keyframes dmgpop{0%{transform:translate(-50%,0) scale(.4);opacity:0;}15%{transform:translate(-50%,-14px) scale(1.25);opacity:1;}
-  60%{transform:translate(-50%,-34px) scale(1);opacity:1;}100%{transform:translate(-50%,-58px) scale(.9);opacity:0;}}
+@keyframes dmgpop{0%{transform:translate(-50%,0) scale(.4);opacity:0;}12%{transform:translate(-50%,-22px) scale(1.3);opacity:1;}
+  24%{transform:translate(-50%,-8px) scale(1);}70%{transform:translate(-50%,-14px) scale(1);opacity:1;}100%{transform:translate(-50%,-30px) scale(.9);opacity:0;}}/* 跳ねて着地→とどまる。名前・英字副題に乗り上げない */
 .crit-flash{position:fixed;inset:0;background:#fff;z-index:50;pointer-events:none;animation:cflash .28s steps(3) forwards;}
 @keyframes cflash{from{opacity:.85;}to{opacity:0;}}
 .toast{
-  position:fixed;left:50%;top:18%;transform:translateX(-50%);z-index:55;pointer-events:none;
+  position:fixed;left:50%;top:max(10px,env(safe-area-inset-top));transform:translateX(-50%);z-index:55;pointer-events:none;/* 上端のバーの上に出す(ボス名・ダメージ数字・怒り状態名を隠さない) */
   background:var(--win);border:3px solid var(--gold);border-radius:10px;padding:8px 22px;
   color:var(--gold);font-weight:bold;font-size:1rem;box-shadow:0 6px 20px #000a;
   animation:toastpop 1.6s steps(12) forwards;white-space:nowrap;
@@ -212,8 +228,12 @@ body{
 .pstrip{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;font-size:.9rem;flex-wrap:wrap;}
 .pstrip .hearts{letter-spacing:3px;font-size:1.05rem;text-shadow:1px 1px 0 #000;}
 .pstrip .hearts small{color:var(--dim);font-size:.7rem;letter-spacing:0;margin-right:4px;}
+.hearts .broke{display:inline-block;animation:heartbreak .6s steps(6);}
+@keyframes heartbreak{0%{transform:scale(1.7);filter:drop-shadow(0 0 8px #ff5d7a);}30%{transform:scale(1.2) rotate(-12deg);}60%{transform:scale(1) rotate(8deg);}100%{transform:none;}}
 .combo{color:var(--cyan);font-weight:bold;}
-.combo b{color:var(--gold);font-size:1.1rem;}
+.combo b{color:var(--gold);font-size:1.1rem;display:inline-block;}
+.combo b.pop{animation:combopop .3s steps(4);}
+@keyframes combopop{0%{transform:scale(1.8);}100%{transform:none;}}
 .combo .fv{color:#ff9de2;animation:blink .5s steps(2) infinite;}
 .score{color:var(--gold);font-variant-numeric:tabular-nums;font-weight:bold;}
 
@@ -245,7 +265,7 @@ body{
 @keyframes wobble{25%{transform:translateX(-6px);}50%{transform:translateX(5px);}75%{transform:translateX(-3px);}}
 
 .explain{margin-top:12px;display:none;}
-.explain.on{display:block;}
+.explain.on{display:block;animation:fadein .18s steps(3);}
 .explain.good{border-color:var(--hp);}
 .explain.bad{border-color:var(--foe);}
 .explain .tag{font-size:.95rem;font-weight:bold;letter-spacing:.1em;}
@@ -297,9 +317,6 @@ body{
   .qwin{margin-top:8px;}
   .qtext{min-height:0;}
   .choices{margin-top:10px;gap:8px;}
-  .tsep{display:none;}
-  .trail{gap:4px;}
-  .tnode{font-size:1.05rem;}
 }
 .ending-parade{font-size:1.6rem;letter-spacing:10px;margin:10px 0 2px;filter:drop-shadow(2px 3px 0 #000);}
 
@@ -330,13 +347,97 @@ body{
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;}
   .crit-flash{display:none;}
-  .chapter-intro{display:none;}
+  .chapter-intro{animation:chfade 1.7s linear forwards!important;}/* 動きなしの溶暗・溶明だけで章題・VS・これまでの最高を見せる */
   .foe-sprite.dead{opacity:0;}/* 消滅はアニメーションだけで表現していたため、とどめ後もボスが残っていた */
-  .dmg{transform:translate(-50%,-30px);}/* translate(-50%)がキーフレーム内にしかなく右にずれていた */
+  .dmg{transform:translate(-50%,-14px);}/* translate(-50%)がキーフレーム内にしかなく右にずれていた */
 }
+/* ===== 見た目の仕上げ(v2.6): 日本語の改行・ボスの舞台・道のり・HUD・選択肢・リザルト・一覧・章カード ===== */
+.px{font-family:"ＭＳ ゴシック","MS Gothic","Osaka-Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;}
+/* 1 日本語の改行 */
+.qtext,.choice,.explain p,.defeat-quote,.trivia,.tut-box li,.mode-btn small,.result-score{word-break:auto-phrase;text-wrap:pretty;}
+.chapter-intro .tt{text-wrap:balance;}
+.qtext .ghost{visibility:hidden;}
+/* 2 道のり=一本の道 */
+.trail{flex-wrap:nowrap;gap:0;max-width:560px;margin-left:auto;margin-right:auto;padding:0 2px;}
+.tsep{display:block;flex:1 1 0;min-width:2px;height:2px;margin:0 2px;background:#2a3160;font-size:0;border-radius:1px;}
+.tnode.done+.tsep{background:#8a6a10;}
+.tnode{font-size:clamp(.9rem,3.9vw,1.3rem);flex:none;}
+@media(max-height:740px){.hpwrap::before{top:-11px;width:62px;height:10px;margin-left:-31px;}}
+.tnode.todo{filter:grayscale(1) brightness(1.7);opacity:.26;}
+/* 3 ボスの舞台 */
+.foe-win{background:radial-gradient(ellipse 44% 58% at 50% 58%,color-mix(in srgb,var(--stage,var(--glow,#7dd8ff)) 24%,transparent),transparent 72%),var(--win);}
+.foe-win:has(.foe-sprite.angry){--stage:#ff5d7a;}
+.dmg,.atk-banner{z-index:2;}/* ボス(z-index:1)より前に出す */
+.foe-sprite{position:relative;z-index:1;filter:drop-shadow(4px 5px 0 #000) drop-shadow(0 0 18px color-mix(in srgb,var(--glow,#7dd8ff) 40%,transparent));}
+.hpwrap{position:relative;}
+.hpwrap::before{content:"";position:absolute;left:50%;top:-15px;width:92px;height:14px;margin-left:-46px;border-radius:50%;background:radial-gradient(closest-side,#000d,#0000);pointer-events:none;}
+@media(min-height:741px){.foe-sprite{font-size:clamp(3.6rem,16vw,5.4rem);}}
+.hpbar{position:relative;}
+.hpbar>i{background:linear-gradient(#ffffff4d 0 34%,transparent 34%),linear-gradient(#ff8ba0,var(--foe));}
+.hpbar::after{content:"";position:absolute;inset:0;z-index:2;background:repeating-linear-gradient(90deg,transparent 0 calc(var(--seg,12.5%) - 2px),#0a0f2699 calc(var(--seg,12.5%) - 2px) var(--seg,12.5%));pointer-events:none;}/* 1目盛り≒1問ぶん */
+/* 4 HUD */
+.pstrip{padding:0 4px;align-items:baseline;}
+.pstrip small{color:var(--dim);font-size:.64rem;letter-spacing:.12em;font-weight:normal;margin-right:5px;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",system-ui,sans-serif;}
+.pstrip .hearts small{font-size:.64rem;}
+.combo{color:var(--frame);}
+/* 5 選択肢 */
+.choice{transition:transform .05s,opacity .2s,filter .2s;}
+.choice:disabled:not(.right):not(.wrongpick):not(.faded){filter:brightness(.55) saturate(.6);}
+.choice:nth-child(2){transition-delay:0s,0s,.06s;}.choice:nth-child(3){transition-delay:0s,0s,.12s;}.choice:nth-child(4){transition-delay:0s,0s,.18s;}/* 押せるようになると上から順に明るくなる */
+.choice:active:not(:disabled){transform:translateY(2px);box-shadow:inset 0 0 0 3px #ffffff1c,0 1px 0 #000;}
+.qwin.hold::after{content:"▼";position:absolute;right:14px;bottom:6px;color:var(--gold);font-size:.8rem;animation:blink .8s steps(2) infinite;}
+/* 6 解説 */
+.explain .foe-say:empty{display:none;}
+.explain .foe-say{border-top:1px dashed #333a5e;padding-top:8px;margin-top:10px;}
+/* 7 リザルト */
+@media(min-height:741px){.result-title{font-size:clamp(1.5rem,6.2vw,1.85rem);letter-spacing:.16em;}.result-score b{font-size:1.8rem;}}
+.result-stars .st{display:inline-block;animation:starpop .42s cubic-bezier(.2,2.2,.5,1) both;}
+.result-stars .st.off{color:#5a628f;animation:none;}
+@keyframes starpop{from{transform:scale(0) rotate(-40deg);opacity:0;}to{transform:none;opacity:1;}}
+
+.result-score .brk{display:inline-block;font-size:.8rem;color:var(--dim);font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",system-ui,sans-serif;}
+.result-score .grow{display:inline-block;margin-top:6px;padding:2px 12px;border:1px solid #7dd8ff55;border-radius:999px;background:#7dd8ff12;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",system-ui,sans-serif;}
+.result-btns .icon-btn{min-height:44px;padding:8px 16px;font-size:.88rem;border-radius:10px;}
+/* 8 一覧(ふりかえり/その後) */
+.trivia .li{display:block;padding-left:1.1em;text-indent:-1.1em;margin-top:5px;}
+.trivia .li.e{padding-left:1.7em;text-indent:-1.7em;}
+.trivia .ans{word-break:keep-all;overflow-wrap:anywhere;}
+/* 9 章イントロ */
+.chapter-intro{background:radial-gradient(ellipse 90% 45% at 50% 50%,#0b0e2af5,#000000f2);}
+.chapter-intro .ch{display:flex;align-items:center;gap:14px;}
+.chapter-intro .ch::before,.chapter-intro .ch::after{content:"";width:56px;height:2px;background:linear-gradient(90deg,transparent,var(--gold));}
+.chapter-intro .ch::after{transform:scaleX(-1);}
+.chapter-intro .tt{font-size:clamp(1.55rem,7.2vw,2.2rem);text-align:center;padding:0 16px;}
+.chapter-intro .bs{letter-spacing:.12em;}
+/* 10 エンディングの行列 */
+.ending-parade{display:inline-block;text-wrap:balance;letter-spacing:8px;line-height:1.6;}
+/* 11 タイトルの記録 */
+.records{max-width:300px;grid-template-columns:1fr auto;gap:0;}
+.records>*{padding:5px 2px;border-bottom:1px dotted #2a3160;}
+.records b{text-align:right;}
+/* ===== 使いやすさ(v2.6): 当たり判定・フォーカス・読み上げ・小さすぎる字 ===== */
+html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
+#qwin,#explain{touch-action:manipulation;}
+.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;}
+.icon-btn{position:relative;}
+.icon-btn::after{content:"";position:absolute;inset:-9px -4px;}/* 見た目はそのまま、指で押せる範囲を44px級に */
+.icon-btn:active{transform:translateY(1px);}
+.icon-btn:focus-visible,.choice:focus-visible,.mode-btn:focus-visible{outline:3px solid var(--cyan);outline-offset:2px;}
+#result-title:focus,#tut-title:focus{outline:none;}
+.hplabel{font-size:.78rem;}
+.hplabel .cue{font-size:.86rem;}
+.pstrip small,.pstrip .hearts small{font-size:.72rem;}
+.trivia{font-size:.88rem;}
+.small-dim{font-size:.82rem;}
+.title-foot{font-size:.78rem;}
+@media(hover:none){.kbd-hint{display:none;}}
+@media(max-height:500px){.choice.faded{display:none;}}/* 横向きのスマホでも、答えたあとは正解と自分の答えだけ残す */
 </style>
+</head>
+<body>
 
 <div id="sky"></div>
+<p id="sr" class="sr-only" aria-live="polite"></p>
 <div id="app">
 
   <!-- ===== TITLE ===== -->
@@ -373,11 +474,11 @@ body{
         <div class="foe-sprite" id="foe-sprite"></div>
         <div class="hpwrap">
           <div class="hplabel"><span id="foe-cue">てきのHP</span><span id="foe-hp-num" class="px"></span></div>
-          <div class="hpbar"><i id="foe-hp"></i></div>
+          <div class="hpbar"><b id="foe-hp-lag"></b><i id="foe-hp"></i></div>
         </div>
       </div>
       <div class="pstrip">
-        <span class="hearts" id="hearts"></span>
+        <span class="hearts" id="hearts" role="img"></span>
         <span class="combo" id="combo"></span>
         <span class="score px" id="battle-score"></span>
       </div>
@@ -399,7 +500,7 @@ body{
   <section class="screen" id="scr-result">
     <div class="win result-box">
       <div id="stamp-area"></div>
-      <h2 class="result-title px" id="result-title"></h2>
+      <h2 class="result-title px" id="result-title" tabindex="-1"></h2>
       <div class="result-stars" id="result-stars"></div>
       <p class="defeat-quote" id="defeat-quote"></p>
       <p class="result-score px" id="result-score"></p>
@@ -410,8 +511,8 @@ body{
 
   <!-- ===== TUTORIAL ===== -->
   <div class="overlay" id="tut" hidden>
-    <div class="win tut-box">
-      <h3 class="px">— あそびかた —</h3>
+    <div class="win tut-box" role="dialog" aria-modal="true" aria-labelledby="tut-title">
+      <h3 class="px" id="tut-title" tabindex="-1">— あそびかた —</h3>
       <ol>
         <li><span class="ico">🗺️</span>冒険は全12章。ボスを倒すと<b style="color:var(--gold)">次の地へ進む!</b> 進み具合は自動セーブ。</li>
         <li><span class="ico">🗡️</span>クイズに正解するとボスにダメージ! <b style="color:var(--gold)">3コンボで会心の一撃</b>、<b style="color:#ff9de2">5コンボでフィーバー(1.5倍)!</b></li>
@@ -427,7 +528,7 @@ body{
 <script>
 "use strict";
 /* =========================================================
-   福祉クエスト v4 — ひとすじの冒険(音・タイマー・アイテムなし)
+   福祉クエスト v2.6 — ひとすじの冒険(音・タイマー・アイテムなし)
    ========================================================= */
 
 /* ---------- DATA ---------- */
@@ -440,12 +541,12 @@ const STAGES=[
  q:[
   ["「能力によって社会的な地位が変わる仕組み」を何という?",["メリトクラシー(能力主義)","アリストクラシー(貴族制)","デモクラシー(民主制)","テクノクラシー(技術者支配)"],"Merit(功績)+cracy(支配)。生まれた身分ではなく能力で地位が決まる仕組み。"],
   ["『実力も運のうち 能力主義は正義か?』の著者は?",["マイケル・サンデル","ジョン・ロールズ","マックス・ウェーバー","ジョナサン・ハイト"],"表紙の問いかけは「君の成功は努力か、運か?」。能力主義そのものを問い直した一冊。"],
-  ["『実力も運のうち』の主張として正しいのは?",["成功は努力だけでなく、運や環境にも大きく左右される","成功者は努力したのだから、その報酬を誇ってよい","結局は運で決まるので、努力することに意味はない","機会が平等なら、結果の差は本人の努力の差だ"],"生まれ・時代・才能など、成功の多くは自分では選べない偶然に支えられている。だから『すべて自分の実力』という驕りは危うい。"],
+  ["『実力も運のうち』の主張として正しいのは?",["成功は努力だけでなく、運や環境にも大きく左右される","成功者は努力したのだから、その報酬を誇ってよい","結局は運で決まるので、努力することに意味はない","機会が平等なら、結果の差は本人の努力の差だ"],"塾やヴァイオリンに通える家庭Aと、「いいなぁ…」の家庭B。能力そのものが、生まれた環境という運の影響を受けている。"],
   ["世界人権宣言第一条「すべての人間は、生れながらにして自由であり、かつ、○○と権利とについて平等である」",["尊厳","能力","財産","幸福"],"尊厳(Human Dignity)=生まれながらに持つ、侵してはならない絶対的な価値。"],
-  ["「尊厳」の説明として正しいのは?",["能力に関係なく存在そのものが持つ侵しえない価値","努力によって獲得される社会的な評価","役に立つことで初めて得られる価値","高い地位の人だけが持つ特別な名誉"],"「能力」に関係なく、「存在」はかけがえのないもの。"],
+  ["「尊厳」の説明として正しいのは?",["能力に関係なく存在そのものが持つ侵しえない価値","努力によって獲得される社会的な評価","役に立つことで初めて得られる価値","高い地位の人だけが持つ特別な名誉"],"「能力」に関係なく、「存在」はかけがえのないもの。「役に立つから価値がある」は能力主義の見方で、尊厳とは別物。"],
   ["批判してよいのは相手の「行動」。では絶対に否定してはいけないのは?",["存在","意見","服装","成績"],"「人として終わってる」は正論っぽく見えて存在の否定=尊厳の侵害。"],
-  ["自分の失敗は環境のせい、他人の失敗はその人のせいにしがちな心のクセは?",["帰属のバイアス(行為者-観察者バイアス)","確証バイアス","正常性バイアス","ハロー効果"],"「なぜあの人は」ではなく「何があの人に影響したのか」と問おう。"],
-  ["立岩真也いわく「『できること』は、人間の『○○』ではない」。○○に入るのは?",["価値","責任","評価","成果"],"能力(できること)と存在の価値は別物。何ができるかに関わらず、人の価値は揺るがない。"],
+  ["自分の失敗は環境のせい、他人の失敗はその人のせいにしがちな心のクセは?",["帰属のバイアス(行為者-観察者バイアス)","確証バイアス","正常性バイアス","ハロー効果"],"自分が転べば「階段が滑るから」、他人なら「ドジだから」。「なぜあの人は」より「何があの人に影響したのか」と問おう。"],
+  ["立岩真也いわく「『できること』は、人間の『○○』ではない」。○○に入るのは?",["価値","責任","評価","成果"],"「できる」ようになるのはうれしい。でも現代社会は、「人間の価値」にまで「できること」の意味を与えてしまっている。"],
  ]},
 {id:"s2",no:"第3回",title:"自立と依存",
  boss:{name:"イゾンダーメン",icon:"🦸",kana:"NO-DEPENDENCE MAN",glow:"#9aa2c8",
@@ -453,13 +554,13 @@ const STAGES=[
    attacks:["孤独のオリ","つながり切断","「頼ったら負けだぞ」の囁き"],
    defeat:"「そんな…自立とは、依存先を増やすこと…だと…!? 我が『ひとりで生きろ』の教えが…砕けるゥ…!」"},
  q:[
-  ["熊谷晋一郎いわく「自立とは○○を増やすこと」",["依存先","貯金","筋肉","資格"],"1人に太く頼るのは危険。細い依存先をたくさん持つのが自立。"],
-  ["ラットパーク実験で、仲間と遊べる楽園のネズミは薬物入りの水を?",["ほとんど飲まなかった","孤独なネズミより飲んだ","全部飲み干した","仲間に配った"],"ひとりぼっちのケージのネズミは、多くの場合、薬物入りの水に執着した。一方、仲間と遊べる楽園のネズミはほとんど飲まなかった。講義のまとめは「環境の違いが行動に影響する」。"],
-  ["ベトナム戦争の戦地でヘロイン依存になった米兵。帰国後、施設に入らず自然にやめたのは約何%?",["約95%","約50%","約20%","約5%"],"帰国して家族や友人のいる暮らし(人間版のラットパーク)に戻ると、大多数が自然にやめられた。※95%は「戦地で依存になった兵士」のうちの割合で、帰還兵全体の割合ではない。"],
-  ["依存症(アディクション)の反対は?",["つながり","しらふ","自立","禁欲"],"「依存」の反対は「自立」とされがちだが、ラットパーク動画の結びは「依存症(アディクション)の反対は、つながり(コネクション)」。人とつながれないとき、人の代わりに何かと結びつくのが依存症。"],
+  ["熊谷晋一郎いわく「自立とは○○を増やすこと」",["依存先","貯金","筋肉","資格"],"「この人がいないと生きられない」太い1本より、細い依存先をたくさん。特定の誰かに頼らず生きていける=自立。"],
+  ["ラットパーク実験で、仲間と遊べる楽園のネズミは薬物入りの水を?",["ほとんど飲まなかった","孤独なネズミより飲んだ","全部飲み干した","仲間に配った"],"仲間と遊べる楽園では、薬物入りの水をほとんど飲まなかった。ひとりぼっちのケージとの差=「環境の違いが行動に影響する」。"],
+  ["ベトナム戦争の戦地でヘロイン依存になった米兵。帰国後、施設に入らず自然にやめたのは約何%?",["約95%","約50%","約20%","約5%"],"戦場の極度のストレスから、家族や友人のいる暮らし=人間版ラットパークへ。リハビリ施設に入らず、およそ95%が自然にやめた。"],
+  ["依存症(アディクション)の反対は?",["つながり","しらふ","自立","禁欲"],"「依存」の反対は「自立」と思われがち。でも動画の結びは「アディクションの反対はコネクション」。人とつながれないと、代わりに何かと結びつく。"],
   ["「アルコール依存症」は「アルコールによる○○」と言い換えられる(桜井2020)。○○に入るのは?",["支配・コントロール","快楽・多幸感","服従・洗脳","契約・約束"],"問題の本質は「依存」ではなく「支配」。〇〇依存症=〇〇による支配・コントロール。"],
   ["日本の成年年齢、2022年からは何歳?",["18歳","20歳","16歳","22歳"],"約150年間つづいた「20歳」から引き下げ。「大人」の線引きは時代で変わる。"],
-  ["「相手にとって必要な存在になりたい」という喜び、信田さよ子いわくその正体は?",["「支配」の快楽","ケアの本質","愛情の証","プロ意識"],"相手の人生の主人公に、私がなってはならない。"],
+  ["「相手にとって必要な存在になりたい」という喜び、信田さよ子いわくその正体は?",["「支配」の快楽","ケアの本質","愛情の証","プロ意識"],"頼られるのは嬉しい。でも「かけがえのない存在」である自分に喜ぶなら、それは自分の欲求。相手の人生の主人公に、私がなってはならない。"],
   ["山岳救助隊も夜は捜索をしない。これが教えるケアの心得は?",["最善のケアには「限界の了解」が必要","夜は危険だから諦めるべき","救助はコスト次第","自己責任の原則"],"最善を尽くしたい気持ちと、\"最善\"の限界の了解はセット(久保2021)。"],
  ]},
 {id:"s3",no:"第4回",title:"自己決定と自己責任",
@@ -468,13 +569,13 @@ const STAGES=[
    attacks:["善意の押し付け","「あなたのため」ビーム","勝手に決めちゃうぞ攻撃"],
    defeat:"「押し付けでも…丸投げでもなく…\"ともに\"…じゃと…? ぐ、ぐふっ、良い支援者になるのじゃぞ…」"},
  q:[
-  ["支援者の判断を相手に押し付けるかかわりを何という?",["パターナリズム","ナルシシズム","ポピュリズム","リアリズム"],"pater=父。「父親的温情主義」。良かれと思って、が押し付けになる。"],
-  ["「心からやりたい!」という動機づけは?",["内発的動機づけ","外発的動機づけ","強制的動機づけ","金銭的動機づけ"],"内発的動機づけは理解・創造性・問題解決に効果大。自己決定はこれを生みやすい。"],
+  ["支援者の判断を相手に押し付けるかかわりを何という?",["パターナリズム","ナルシシズム","ポピュリズム","リアリズム"],"「あなたには絶対ソーダ!」——「この人にはこれがピッタリ」と決めつける。良かれと思って、が押し付けになる。"],
+  ["「心からやりたい!」という動機づけは?",["内発的動機づけ","外発的動機づけ","強制的動機づけ","金銭的動機づけ"],"勉強なら「仕事で使いたい」が内発的、「単位のため」は外発的。内発的なほど理解が深まり、自己決定はこれを生みやすい。"],
   ["大学生を2組に分けたある実験。あとで両方の組にテストをしたとき、学習内容をより深く理解していたのは?",["「学んだことを人に教えてください」と言われた組","「あとでテストして成績をつけます」と言われた組","どちらの組も理解の深さに差はなかった","どちらの組も、ほとんど何も覚えていなかった"],"「人に教える」つもりで学んだ組のほうが深く理解していた。動機が変わると、学びへの取り組み方そのものが変わる。"],
   ["ケアで大事な関係のイメージは、to でも for でもなく?",["with(ともに)","by(によって)","against(対抗して)","under(下で)"],"「相手に向かって」「相手のために」ではなく「相手とともに」。"],
   ["「あなたの気持ちを尊重します」とだけ言う態度が陥る罠は?",["相手任せにする責任放棄","よかれと思って決める押し付け","手を出しすぎる過干渉","本人の領分を越える越権行為"],"「尊重」という名で、責任放棄・責任回避していないか? 揉めず、イイ人でいられ、責任も問われない——それは丸投げかも。"],
   ["支援の優先順位ピラミッドで、最優先(頂点)とされるのは?",["命の保護","経済効率","多数決","上司の指示"],"優先順位は「命の保護 > 社会正義 > 自己決定」。自己決定は大事だが、命より優先はされない。"],
-  ["三井(2013)いわく、よいケアをしている人ほど?",["失敗を感じることが多い","失敗を全く感じない","給料が高い","悩みがない"],"よいケアをしている人は「あの対応で良かったのか…」と失敗を感じる。よくないケアをしている人は、失敗したとすら思っておらず、悩みも少ない。迷い悩むこと自体がケアの本質。"],
+  ["三井(2013)いわく、よいケアをしている人ほど?",["失敗を感じることが多い","失敗を全く感じない","給料が高い","悩みがない"],"よいケアの人は「あの対応で良かったのか…」と失敗を感じる。よくないケアの人は、失敗したとすら思っていない。悩むこと自体がケアの本質。"],
   ["ケアの仕事で支援者と相手が完全に対等になれない理由は?",["権力の非対称性があるから","年齢が違うから","性格が合わないから","知り合ってまだ日が浅いから"],"情報や知識の多さ、管理する立場の差。優位性を自覚して、それでも「ともに」を目指す。"],
  ]},
 {id:"s4",no:"第5回",title:"ノーマライゼーション",
@@ -483,13 +584,13 @@ const STAGES=[
    attacks:["見えない壁","心のバリア","「かわいそう」の呪い"],
    defeat:"「壁は…本人の中ではなく…社会の側に…あったのか…ゴゴゴ…(崩壊)」"},
  q:[
-  ["ノーマライゼーションの考えを生んだ人物は?",["バンク=ミケルセン","ニィリエ","ベヴァリッジ","ヘックマン"],"デンマークの人。1950年代、劣悪な施設の状況に心を痛め、親の会の運動を支えた。"],
-  ["ノーマライゼーションを8つの原則に深めて広めたスウェーデンの人物は?",["ニィリエ","バンク=ミケルセン","ウェッブ","サンデル"],"1日・1週間・1年のリズム、尊厳と自己決定など8原則。"],
+  ["ノーマライゼーションの考えを生んだ人物は?",["バンク=ミケルセン","ニィリエ","ベヴァリッジ","ヘックマン"],"考えを「生んだ人」。1950年代、劣悪な施設に収容されていた知的障害者の状況に心を痛め、親の会の運動を支えた。"],
+  ["ノーマライゼーションを8つの原則に深めて広めたスウェーデンの人物は?",["ニィリエ","バンク=ミケルセン","ウェッブ","サンデル"],"考えを深めて「広めた人」。8原則は1日・1週間・1年のリズム、尊厳と自己決定など。"],
   ["1959年、ノーマライゼーションという言葉を法律に盛り込んだ国は?",["デンマーク","スウェーデン","イギリス","日本"],"1959年のデンマーク法。劣悪な施設に暮らす知的障害者の状況を変えようとした、親の会の運動が実を結んだ。"],
   ["4つのバリア=物理・制度・文化情報と、もう1つは?",["こころ(意識)","お金","時間","距離"],"「かわいそう」という偏見や「特別扱い」の思い込みも立派なバリア。"],
   ["「障害があるのにすごいね」という褒め言葉、実は?",["マイクロアグレッション","合理的配慮","インクルージョン","アドボカシー"],"悪意のない無意識の言動が人を傷つける「見えにくい傷つけ」。"],
-  ["障害の原因はその人の「外」にあると考え、「環境を変えよう」とするモデルは?",["社会モデル","医学モデル","統合モデル","個人モデル"],"医学モデル(個人モデル)は原因をその人の「中」に見て「障害を治そう」と考える。社会モデルは「外」に見る。金魚が苦しそうなら、金魚ではなく水を疑え。"],
-  ["「異なる個人として、異なるまま承認される」状態は?",["インクルージョン(包摂)","インテグレーション(統合)","セグリゲーション(分離)","エクスクルージョン(排除)"],"NG3パターンは排除・分離・統合。鍵は\"「私たち」の1人\"と思えるか。"],
+  ["障害の原因はその人の「外」にあると考え、「環境を変えよう」とするモデルは?",["社会モデル","医学モデル","統合モデル","個人モデル"],"医学モデルは原因を「中」に見て「障害を治そう」、社会モデルは「外」に見て「環境を変えよう」。金魚が苦しそうなら、水を疑う。"],
+  ["「異なる個人として、異なるまま承認される」状態は?",["インクルージョン(包摂)","インテグレーション(統合)","セグリゲーション(分離)","エクスクルージョン(排除)"],"「異なるまま承認される」は桜井(2021)の定義。NGは排除・分離・統合(無理やり、一緒)。鍵は「私たち」の1人と思えるかどうか。"],
   ["合理的配慮(Reasonable Accommodation)の法律上の位置づけは?",["義務","努力目標","ボランティア","マナー"],"思いやりではなく、社会的バリアを除去する法的義務。"],
  ]},
 {id:"s5",no:"第6回",title:"社会福祉の視角",
@@ -500,10 +601,10 @@ const STAGES=[
  q:[
   ["広義の福祉=「目指す理念」を表す英語は?",["Well-being","Welfare","Wellness","Will"],"Well-being=幸福・安寧な状態。Welfareは手段(制度・実践)。"],
   ["戦後の社会福祉学の大論争といえば?",["政策論 vs 技術論","与党 vs 野党","施設 vs 在宅","理論 vs 実践"],"制度・構造を問う政策論と、援助を問う技術論。今も2つの系譜に生きている。"],
-  ["落とし穴のたとえで「穴の周りに柵を作り、看板を立てる」のは?",["政策論","技術論","構築主義","家族主義"],"落ちた人を引き上げ手当てするのが技術論。どちらも欠かせない。"],
-  ["「必要な人に、必要なだけ」配るのは?",["公平性","平等性","効率性","自由"],"平等性は「みんなに同じだけ」。似て非なる2つの正義。"],
+  ["落とし穴のたとえで「穴の周りに柵を作り、看板を立てる」のは?",["政策論","技術論","構築主義","家族主義"],"穴そのもの=社会の構造に手を打つのが政策論。落ちた人を引き上げ、ケガを手当てするのが技術論。両者は切り離せない。"],
+  ["「必要な人に、必要なだけ」配るのは?",["公平性","平等性","効率性","自由"],"塀ごしの野球観戦の絵で、全員に1箱ずつ配るのが平等性。背の低い子ほど多くの箱を配るのが公平性。"],
   ["資力調査(ミーンズテスト)で対象を絞って配るのは?",["選別主義","普遍主義","楽観主義","温情主義"],"困っている人を選んで集中支援。公平性重視の配り方。"],
-  ["ベーシック・インカムの配り方は?",["普遍主義","選別主義","成果主義","縁故主義"],"選ばず全員に同じ量。スティグマが生じにくい利点がある。"],
+  ["ベーシック・インカムの配り方は?",["普遍主義","選別主義","成果主義","縁故主義"],"「配る相手を選ぶか?」に「選ばない」(効率性重視)、配り方は「全員に同じ量」。この組み合わせが普遍主義。"],
   ["「ある程度の格差は認められるが、最も苦しい人々の状況改善が条件である」——この格差原理を唱えたのは?",["ジョン・ロールズ","ジェレミー・ベンサム","マックス・ウェーバー","カール・マルクス"],"ロールズ『正義論』の格差原理。『正義論』は、功利主義の「最大多数の最大幸福」に取って代わる「公正としての正義」を構想した。"],
   ["公平・効率・自由・平等が衝突して同時に満たせないことをウェーバーは何と呼んだ?",["神々の争い","万人の万人に対する闘争","見えざる手","囚人のジレンマ"],"どの価値(神)に仕えるかは、最後は自分で選ぶしかない。"],
  ]},
@@ -517,9 +618,9 @@ const STAGES=[
   ["物理的には緑色なのに「青信号」。これが示すのは?",["言葉が現実の見え方をつくる","日本人は色覚が特殊","昔の信号は青かった","法律の誤り"],"色そのもの+呼び方=「青信号」という現実。言葉が変わると見え方も変わる。"],
   ["令和6年度(2024年度)の児童虐待の相談対応件数は約何件?",["約22万件","約2万件","約5万件","約223万件"],"223,691件。1992年度の1,372件から、32年で約163倍になった。ただし「相談が増えた」ことと「虐待が増えた」ことは別問題。"],
   ["児童虐待の相談対応件数は32年で163倍に増えた——このデータ「だけ」では、ただちに言えないことは?",["虐待そのものが増えた","相談対応件数が増えた","1992年度より2024年度の件数が多い","件数は100倍以上に増えた"],"統計の増加=実態の増加とは限らない。社会の認知や通告の変化も件数を押し上げる。"],
-  ["令和6年度の児童虐待相談対応件数で、最も多い虐待の種類は?",["心理的虐待","身体的虐待","ネグレクト","性的虐待"],"心理的虐待が約6割(59.5%)で最多。子どもの前での配偶者への暴力(面前DV)も心理的虐待に含まれる。ただしこれは「相談対応件数」の内訳で、実態の割合そのものではない。"],
+  ["令和6年度の児童虐待相談対応件数で、最も多い虐待の種類は?",["心理的虐待","身体的虐待","ネグレクト","性的虐待"],"令和6年度は心理的虐待が59.5%で最多。ただしこれは「相談対応件数」の内訳で、実態の割合そのものではない。"],
   ["人種×性別など、複数の属性が交差する地点の差別を捉える概念は?",["インターセクショナリティ","ダイバーシティ","アイデンティティ","マイノリティ"],"黒人男性も白人女性も採用されるのに黒人女性だけ不採用——重ねて見ないと見えない差別。"],
-  ["社会問題の「個人化」3パターン=教育化・心理主義化と、もう1つは?",["医療化","商業化","政治化","高齢化"],"能力・こころ・からだの問題にされると、社会の構造が見えなくなる。"],
+  ["社会問題の「個人化」3パターン=教育化・心理主義化と、もう1つは?",["医療化","商業化","政治化","高齢化"],"教育化=能力、心理主義化=こころ、医療化=からだ。問題が個人の中に置かれると、社会の構造が見えにくくなる。"],
   ["「学校に行かない子」の呼び名は「学校恐怖症」→「登校拒否」→「不登校」と移り変わった。同じ状況でも、呼び名によって変わるのは?",["問題の見え方・扱われ方","学校の数","教室の広さ","法律の罰則"],"「恐怖症」なら病気、「拒否」なら本人の意思、「不登校」なら状態。ワードが、ワールドをつくる(中村正)。"],
  ]},
 {id:"s7",no:"第8回",title:"家族主義",
@@ -528,14 +629,14 @@ const STAGES=[
    attacks:["「母親なんだから」の呪い","ワンオペの重圧","セカンドシフト強制"],
    defeat:"「そんな…三歳児神話は、ただの神話…ケアは家族だけで背負わなくていい…の…? 肩の荷が…おりていく…」"},
  q:[
-  ["夫が稼ぎ手・妻は主婦という性別役割分業で、子に強い愛情と教育関心を注ぐ家族モデルは?(落合2023)",["近代家族","拡大家族","伝統家族","武家家族"],"「昔ながらの家族」に見えて、実は歴史的には新しい形。"],
+  ["夫が稼ぎ手・妻は主婦という性別役割分業で、子に強い愛情と教育関心を注ぐ家族モデルは?(落合2023)",["近代家族","拡大家族","伝統家族","武家家族"],"落合(2023)の「近代家族」の定義。ほかに家族愛の絆とプライバシー重視も特徴。夫は「主人」、妻は「家内」と呼ばれた。"],
   ["「夫は仕事・妻は家事」という家族のかたち、歴史的に見ると実は?",["戦後に広まった新しい形","縄文からつづく古い伝統","江戸の武家が広めた形","人類共通の自然な本能"],"人類約700万年の歴史のうち、日本で「あたりまえ」だったのは戦後〜1990年代ごろのごく短い期間だけ。"],
-  ["仕事のあとに家事・育児という「もうひと仕事」をすることを?",["セカンドシフト","オーバータイム","ダブルワーク","サードプレイス"],"負担は一方(多くは女性)にかたよりやすい。"],
+  ["仕事のあとに家事・育児という「もうひと仕事」をすることを?",["セカンドシフト","オーバータイム","ダブルワーク","サードプレイス"],"仕事のあと家で始まる「2つ目の勤務」が家事・育児。仕事の掛け持ち(ダブルワーク)とは別物。負担は女性にかたよりやすい。"],
   ["6歳未満の子がいる夫婦。妻の育児は1日3時間以上。では夫は1日何分?(令和3年社会生活基本調査)",["65分","12分","130分","300分"],"夫は育児65分・家事30分。妻は家事も育児も、夫の数倍の時間を担っている。「意識」は変わっても「行動」の差は大きい。"],
-  ["「三歳までは母親が子育てに専念すべき」という考えの正体は?",["神話","科学的事実","法律","発達心理学の定説"],"その名も「三歳児神話」。妻(有配偶女性)の賛成率は2008年86.7%→2022年61.0%に低下。それでもまだ6割。"],
+  ["「三歳までは母親が子育てに専念すべき」という考えの正体は?",["神話","科学的事実","法律","発達心理学の定説"],"「本当のように思われていた」だけの考え=三歳児神話。有配偶女性の賛成は2008年86.7%→2022年61.0%と減ったが、まだ6割。"],
   ["「ケアは家族がみるのが当たり前」という考え方を?",["家族主義","個人主義","脱家族化","温情主義"],"家族の犠牲と協力を美しいとみなす〈ケアの家族責任規範〉(齋藤2024)。"],
   ["スウェーデン・デンマークなど「家族への支援も脱家族化も強い」型は?(ライトナー)",["選択的家族主義","積極的家族主義","消極的家族主義","脱家族主義"],"家族で見ても、サービスに頼っても選べる。だから「選択的」。"],
-  ["福祉レジーム(自由主義・保守主義・社会民主主義)の3類型で有名なのは?",["エスピン=アンデルセン","ライトナー","ロールズ","ブース"],"国・市場・家族の誰が生活を支えるかで各国を分類した。"],
+  ["福祉レジーム(自由主義・保守主義・社会民主主義)の3類型で有名なのは?",["エスピン=アンデルセン","ライトナー","ロールズ","ブース"],"国・市場・家族のだれが生活を支えるかで3つに分けた。この考えをもとに家族ケアを4つに分けたのがライトナー。"],
  ]},
 {id:"s8",no:"第9回",title:"社会保障とお金",
  boss:{name:"テドリヘルシー",icon:"💸",kana:"THE PAYCHECK EATER",glow:"#4ade80",
@@ -543,7 +644,7 @@ const STAGES=[
    attacks:["保険料ラッシュ","天引きクラッシュ","インフレの波"],
    defeat:"「そんな…天引きは搾取ではなく…みんなで備える支え合いだった…だと…チャリーン…」"},
  q:[
-  ["社会保障の4部門=社会保険・公的扶助・保健医療&公衆衛生と、もう1つは?",["社会福祉","民間保険","教育","防衛"],"社会福祉は社会保障の「一部」。この関係図はテストの超頻出ポイント。"],
+  ["社会保障の4部門=社会保険・公的扶助・保健医療&公衆衛生と、もう1つは?",["社会福祉","民間保険","教育","防衛"],"社会福祉は高齢者・子ども・障害のある人などへの支援サービスで、税金で支える部門。社会保障の「一部」であって、イコールではない。"],
   ["社会保障の根拠となる日本国憲法の条文は?",["第25条","第9条","第1条","第96条"],"「健康で文化的な最低限度の生活を営む権利」=生存権。"],
   ["令和8年度の国の一般会計歳出総額は約?",["122兆円","39兆円","12兆円","500兆円"],"122兆3,092億円。1万円札を積み上げたら大変なことになる額。"],
   ["国家予算に占める社会保障関係費の割合は約?",["3分の1","10分の1","2分の1","20分の1"],"39兆559億円=31.9%。毎年増え続けている。"],
@@ -559,13 +660,13 @@ const STAGES=[
    defeat:"「支え手が減っても…施設ではなく、地域で支え合う道が…あるのだな…ほっ…よっこいしょ…」"},
  q:[
   ["「超高齢社会」の基準は、65歳以上人口が総人口の?",["21%以上","7%以上","14%以上","50%以上"],"7%=高齢化社会、14%=高齢社会、21%=超高齢社会。"],
-  ["高齢者1人を支える現役世代の人数のたとえ。「胴上げ型」「騎馬戦型」ときて、2065年ごろの予想は?",["肩車型","おんぶ型","綱引き型","二人三脚型"],"高齢者1人を支える現役世代は、1965年ごろ約9人(胴上げ)→2020年ごろ約2人(騎馬戦)→2065年ごろは1人あまり(肩車)。支え手がどんどん減っていく。"],
+  ["高齢者1人を支える現役世代の人数のたとえ。「胴上げ型」「騎馬戦型」ときて、2065年ごろの予想は?",["肩車型","おんぶ型","綱引き型","二人三脚型"],"高齢者1人を支える現役世代は、1965年ごろ約9人(胴上げ)→2020年ごろ約2人(騎馬戦)→2065年ごろは1人あまり(肩車)。"],
   ["2024年の日本の高齢化率は?",["29.3%","19.3%","39.3%","9.3%"],"約3.4人に1人が65歳以上。2070年推計は38.7%。"],
   ["「8050問題」の8050が意味するのは?",["80代の親が50代の子を支える","昭和80年と50年","80歳まで50万円","時速80kmと50km"],"ひきこもりの長期化と親の高齢化。次は「9060」へ。"],
-  ["地域包括ケアシステムの圏域の目安は、自宅から?",["30分圏内","3時間圏内","徒歩5分","県内全域"],"おおむね30分以内に必要なサービスが届く範囲=だいたい中学校区。住み慣れた町で最後まで暮らすための仕組みで、理由は「本人が家にいたい」+「施設や病院を増やすお金が国にない」の2つ。"],
-  ["保育と教育を一体化し、この10年で約3.7倍に急増した施設は?",["認定こども園","幼稚園","保育所","学童保育"],"幼稚園は減少、保育所は横ばいのなか、認定こども園が急増して幼稚園の数を逆転した。"],
-  ["ヘックマンが「大人になっても残る」と主張した能力は?",["非認知能力","IQ","偏差値","記憶力"],"実行機能・自制心・社会情緒など。学力は消えても、これは残る。"],
-  ["子育てと親の介護が同時に重なることを?",["ダブルケア","ツインケア","ペアケア","セカンドケア"],"講義の例は「35歳で出産した人が、子どもと82歳の親の両方をケア」。晩婚・晩産で、2つのケアの時期が重なりやすい。家族だけで背負うのはもう限界——だから脱家族化。"],
+  ["地域包括ケアシステムの圏域の目安は、自宅から?",["30分圏内","3時間圏内","徒歩5分","県内全域"],"自宅から30分圏内=おおむね中学校区。施設でなく家で支える理由は「本人は住み慣れた家にいたい」「施設や病院を増やすお金が国にない」の2つ。"],
+  ["保育と教育を一体化し、この10年で約3.7倍に急増した施設は?",["認定こども園","幼稚園","保育所","学童保育"],"保育所の「保育」+幼稚園の「教育」を一つにした施設。幼稚園が減り、保育所が横ばいのなかで急増し、2022年ごろ幼稚園の数を上回った。"],
+  ["ヘックマンが「大人になっても残る」と主張した能力は?",["非認知能力","IQ","偏差値","記憶力"],"実行機能・自制心・社会情緒など。幼児教育によるIQ・学力の効果は小学校中学年でほぼ消える(fadeout)が、こちらは成人期まで残るとされる。"],
+  ["子育てと親の介護が同時に重なることを?",["ダブルケア","ツインケア","ペアケア","セカンドケア"],"講義の例は「35歳で出産した人が、子どもと82歳の親の両方をケア」。だから、ケアを家族だけで背負わない「脱家族化」が課題になる。"],
  ]},
 {id:"s10",no:"第12回",title:"生活保護",
  boss:{name:"ヘン・ケーン",icon:"👁️",kana:"EYE OF PREJUDICE",glow:"#ff5d7a",
@@ -574,13 +675,13 @@ const STAGES=[
    defeat:"「保護は恥ではなく…憲法25条の権利…だと…!? ひ、光がまぶしい…消えるうぅ…!」"},
  q:[
   ["生活保護の4つの原理=国家責任・無差別平等・最低生活保障と、もう1つは?",["補足性","効率性","選別性","快適性"],"足りない分だけ補う。収入+保護費=最低生活費。"],
-  ["生活保護は何によって始まる?",["申請","推薦","抽選","招待"],"申請保護の原則。だから「申請できない空気」が最大の壁になる。"],
-  ["日本の生活保護の捕捉率(使える人のうち、実際に使っている人の割合)は、厚労省の推計(2018年公表・所得のみで判定)で約何割?",["約2割","約9割","約6割","約8割"],"使える人のうち、実際に使っているのは4〜5人に1人ほど。「申請できない空気」がその壁になっている。"],
+  ["生活保護は何によって始まる?",["申請","推薦","抽選","招待"],"申請保護の原則。困っていても申請しなければ始まらないので、扶養照会のように申請をためらわせる壁が問題になる。"],
+  ["日本の生活保護の捕捉率(使える人のうち、実際に使っている人の割合)は、厚労省の推計(2018年公表・所得のみで判定)で約何割?",["約2割","約9割","約6割","約8割"],"使える人のうち、実際に使っているのは4〜5人に1人ほど。「能力で見られる」「タダ乗りと見られる」とためらう空気が壁になっている。"],
   ["日本の子どもの貧困率は、およそ何人に1人?",["9人に1人","3人に1人","30人に1人","100人に1人"],"約9人に1人。40人のクラスなら4〜5人いる計算。講義では、NPO・ボランティア・企業・地域の寄付で運営される学習支援や居場所づくりも紹介された。"],
-  ["不正受給は保護費総額の?",["0.4%未満","約10%","約30%","約半分"],"2022年度は0.4%未満(厚労省データ)。裏返せば99.6%以上は正規の受給。イメージと実態のギャップこそ試験の狙い目。"],
-  ["生活保護受給世帯のうち日本国籍世帯は?",["97%","67%","3%","50%"],"外国籍世帯は2.87%(2023年度)。SNSで広がった「生活保護の3分の1は外国人」は、月ごとの数を12か月分足した「延べ数」を実数と取り違えた記事がもとの誤情報で、その記事は削除・おわび済み。"],
-  ["2025年6月27日、最高裁が「違法」と初判断したのは?",["生活扶助基準のデフレ調整による引き下げ","ケースワーカーによる家庭訪問","在留外国人への保護費の支給","医療費を自己負担なしにする医療扶助"],"2013〜15年の生活扶助引き下げ(最大10%・計670億円)のうち、物価下落を理由にした「デフレ調整」(580億円)の部分を違法とした。ただし国の賠償責任は認めず。"],
-  ["「周囲と比べて、みんなが当たり前にできることができない」貧困は?",["相対的貧困","絶対的貧困","精神的貧困","一時的貧困"],"日本の相対的貧困率は15.4%(2021)。子どもの貧困は9人に1人。"],
+  ["不正受給は保護費総額の?",["0.4%未満","約10%","約30%","約半分"],"保護費約2.8兆円のうち不正は約106億円=0.4%未満(2022年度)。6割は働いた収入の申告漏れで、悪意ある不正は「ごくわずか」と専門家も指摘。"],
+  ["生活保護受給世帯のうち日本国籍世帯は?",["97%","67%","3%","50%"],"外国籍世帯は2.87%(2023年度)。「3分の1は外国人」は、12か月分を足した延べ数を実数と取り違えた誤報で、記事は削除・謝罪済み。"],
+  ["2025年6月27日、最高裁が「違法」と初判断したのは?",["生活扶助基準のデフレ調整による引き下げ","ケースワーカーによる家庭訪問","在留外国人への保護費の支給","医療費を自己負担なしにする医療扶助"],"2013〜15年の生活扶助引き下げ(計670億円)のうち、物価下落を理由にした「デフレ調整」(580億円)を違法とした。賠償責任は否定。"],
+  ["「周囲と比べて、みんなが当たり前にできることができない」貧困は?",["相対的貧困","絶対的貧困","精神的貧困","一時的貧困"],"スマホがない・塾に行けないなど、周りの「当たり前」ができない貧困。食べ物やきれいな水など、生きるのに最低限必要なものがないのは絶対的貧困。"],
  ]},
 {id:"s11",no:"第13回",title:"福祉の歴史",
  boss:{name:"シタデアーレ",icon:"📜",kana:"CHARITY, NOT RIGHTS",glow:"#b48cff",
@@ -590,12 +691,12 @@ const STAGES=[
  q:[
   ["1601年、イギリスで制定され、公的な救貧制度の出発点とされる法律は?",["エリザベス救貧法","新救貧法","救護法","ハンムラビ法典"],"国が貧しい人を助けるルールをつくった。ただし教区まかせで水準に地域差があり、浮浪者には懲罰的だった。"],
   ["1834年新救貧法の「救済水準は最下層労働者より低く」という原則は?",["劣等処遇","応能負担","最低保障","水際作戦"],"「助けを甘くするとなまける」と、わざと厳しくした。救済を受けること自体に「劣等」の烙印(スティグマ)が押され、ワークハウスも過酷だった。"],
-  ["世界初の社会保険(1883年)をつくった国は?",["ドイツ","イギリス","日本","フランス"],"みんなで少しずつ出し合い、病気やケガに「前もって備える」世界初のしくみ。"],
-  ["「ナショナル・ミニマム」を提唱したのは?",["ウェッブ夫妻","キュリー夫妻","ベヴァリッジ","ブース"],"1897年。「だれもが下回ってはならない最低限の生活水準を国が保障せよ」。この考えがベヴァリッジ報告と日本国憲法25条に受け継がれた。"],
-  ["「ゆりかごから墓場まで」で有名な1942年の報告書は?",["ベヴァリッジ報告","チャーチル報告","ウェッブ報告","王立救貧報告"],"300ページの政府報告書なのに60万部超の大ヒット。発売日に行列ができた。"],
+  ["世界初の社会保険(1883年)をつくった国は?",["ドイツ","イギリス","日本","フランス"],"ドイツが始めた、みんなで少しずつ出し合い、病気やケガに前もって備えるしくみ。"],
+  ["「ナショナル・ミニマム」を提唱したのは?",["ウェッブ夫妻","キュリー夫妻","ベヴァリッジ","ブース"],"1897年。「だれもが下回ってはならない最低限の生活水準を国が保障せよ」。この考えは日本国憲法25条にも受け継がれた。"],
+  ["「ゆりかごから墓場まで」で有名な1942年の報告書は?",["ベヴァリッジ報告","チャーチル報告","ウェッブ報告","王立救貧報告"],"国が生活を支えるイギリス福祉国家の青写真。300ページの政府報告書なのに60万部超の大ヒットで、発売日には行列ができた。"],
   ["1874年、明治政府が定めた全国的な救貧制度は?",["恤救規則","救護法","生活保護法","十七条憲法"],"「まずは家族や近所で」。国が助けるのは身寄りのない人だけで、公的責任は弱かった。"],
   ["1929年の救護法、救済を受けると失ったものは?",["選挙権","戸籍","財産","苗字"],"給付は限定的で恩恵的。救済を受けると選挙権を失った。「権利としての福祉」はまだ遠かった。"],
-  ["2000年、「措置から契約へ」の大転換となった改革は?",["社会福祉基礎構造改革","明治維新","構造改革特区","大化の改新"],"給食からレストランへ。利用者が「受ける側」から「選ぶ主役」に。"],
+  ["2000年、「措置から契約へ」の大転換となった改革は?",["社会福祉基礎構造改革","明治維新","構造改革特区","大化の改新"],"措置＝行政が決めて与える「給食」、契約＝自分でメニューを選ぶ「レストラン」。約50年続いたしくみを根っこから作りかえ、利用者が主役に。"],
  ]},
 ];
 
@@ -647,29 +748,41 @@ function talk(k){const t=TALK[B.stage&&B.stage.id];return t&&t[k];}
 
 /* ---------- SAVE ---------- */
 const SAVE_KEY="fukushi_quest_v2";
-let save={stars:{},best:{},hiscore:0,progress:0,tut:0};
-try{
-  const s=JSON.parse(localStorage.getItem(SAVE_KEY));
-  if(s&&typeof s==="object")save=Object.assign(save,s);
-}catch(e){}
-/* 小数・NaN・負数のprogressはCHAPTERS[p]をundefinedにしrenderTitleで例外→全ボタン死亡となるため整数に正規化 */
-save.progress=(typeof save.progress==="number"&&isFinite(save.progress))?Math.max(0,Math.min(Math.floor(save.progress),CHAPTERS.length)):0;
-if(!save.stars||typeof save.stars!=="object")save.stars={};
-if(!save.best||typeof save.best!=="object")save.best={};
-if(typeof save.hiscore!=="number"||!isFinite(save.hiscore))save.hiscore=0;
-save.tut=save.tut?1:0;
+/* セーブの正規化: 章IDごとに★0〜3の整数・スコアは0以上の整数・progressは0〜章数。未知のキー(v3.0のqなど)は残す */
+function normalizeSave(s){
+  const num=v=>{const n=Number(v);return isFinite(n)?n:0;};
+  const src=s&&typeof s==="object"&&!Array.isArray(s)?s:{};
+  const o=Object.assign({},src,{stars:{},best:{},hiscore:Math.max(0,Math.floor(num(src.hiscore))),
+    progress:Math.max(0,Math.min(Math.floor(num(src.progress)),CHAPTERS.length)),tut:src.tut?1:0});
+  const st=src.stars&&typeof src.stars==="object"?src.stars:{},bs=src.best&&typeof src.best==="object"?src.best:{};
+  CHAPTERS.forEach(c=>{const a=Math.min(3,Math.floor(num(st[c.id])));if(a>0)o.stars[c.id]=a;const b=Math.floor(num(bs[c.id]));if(b>0)o.best[c.id]=b;});
+  return o;
+}
+let save=normalizeSave(null);
+try{save=normalizeSave(JSON.parse(localStorage.getItem(SAVE_KEY)));}catch(e){}
+window.addEventListener("storage",e=>{if(e.key!==SAVE_KEY)return;try{save=normalizeSave(JSON.parse(e.newValue));}catch(_){}if($("#scr-title").classList.contains("on"))renderTitle();});
 function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(save));}catch(e){}}
 
 /* ---------- UTIL ---------- */
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
+/* iOS Safari は touchstart のリスナーがないと :active(押した手応え)を出さない */
+document.addEventListener("touchstart",function(){},{passive:true});
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
 let resultAt=0;/* 結果画面を出した時刻。直後のタップ(「討伐! 結果へ」の二度押しなど)が結果画面のボタンに当たるのを防ぐ */
-function show(id){$$(".screen").forEach(s=>s.classList.remove("on"));$("#"+id).classList.add("on");window.scrollTo({top:0});if(id==="scr-result")resultAt=performance.now();}
+function show(id){$$(".screen").forEach(s=>s.classList.remove("on"));$("#"+id).classList.add("on");window.scrollTo({top:0});if(id==="scr-result"){resultAt=performance.now();
+  /* 結果画面: 見出しへフォーカスを移し、読み上げは見出しから始まる(Enterはこれまでどおり主ボタン) */
+  try{$("#result-title").focus({preventScroll:true});}catch(e){}}}
 function rankName(table,v){let n=table[0][1];for(const[min,name]of table){if(v>=min)n=name;}return n;}
 function totalStars(){return Object.values(save.stars||{}).reduce((a,b)=>a+(Number(b)||0),0);}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+/* 読み上げ用(画面には出ない)。同じ文言の連続でも読まれるよう、いったん空にしてから入れる */
+let srT=null;
+/* 動きを減らす設定ではスクロールも瞬時に */
+const reduceMotion=()=>!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
+const scrollBeh=()=>reduceMotion()?"auto":"smooth";
+function say(t){const s=$("#sr");if(!s)return;s.textContent="";if(srT)clearTimeout(srT);srT=setTimeout(()=>{srT=null;s.textContent=t;},80);}
 function toast(msg){
   const t=document.createElement("div");t.className="toast";t.textContent=msg;
   document.body.appendChild(t);setTimeout(()=>t.remove(),1650);
@@ -677,7 +790,7 @@ function toast(msg){
 
 /* ---------- TITLE ---------- */
 const QT=STAGES.reduce((a,s)=>a+s.q.length,0);
-$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.5`;
+$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.6`;
 const paradeStr=CHAPTERS.map(c=>c.boss.icon).join("");
 /* オープニングの流れるアイコンは人型・人の顔(人間味のある絵文字)を除外。ending parade は全ボス維持 */
 const PARADE_SKIP=new Set(["🦸","🏋️","😇","😶"]);
@@ -718,16 +831,22 @@ $("#btn-story").addEventListener("click",()=>{
 $("#btn-restart").addEventListener("click",()=>{
   maybeTut(()=>startBattle(0));
 });
-$("#btn-howto").addEventListener("click",()=>{$("#tut").hidden=false;});
-$("#tut-close").addEventListener("click",()=>{$("#tut").hidden=true;save.tut=1;persist();if(tutNext){const f=tutNext;tutNext=null;f();}});
+/* あそびかた: 開いている間は背後の画面を inert にし(Tabで背後のボタンへ行かない)、閉じたら開いたボタンへ戻す */
+let tutOpener=null;
+function openTut(){tutOpener=document.activeElement;$("#tut").hidden=false;$$(".screen").forEach(s=>s.inert=true);$("#tut-title").focus({preventScroll:true});}
+function closeTut(){$("#tut").hidden=true;$$(".screen").forEach(s=>s.inert=false);save.tut=1;persist();
+  if(tutNext){const f=tutNext;tutNext=null;f();}else if(tutOpener&&tutOpener.focus)tutOpener.focus();tutOpener=null;}
+$("#btn-howto").addEventListener("click",openTut);
+$("#tut-close").addEventListener("click",closeTut);
 let tutNext=null;
 function maybeTut(next){
   if(save.tut){next();return;}
-  tutNext=next;$("#tut").hidden=false;
+  tutNext=next;openTut();
 }
-let resetArmed=false;
+let resetArmed=false,resetArmedAt=0;
 $("#btn-reset").addEventListener("click",e=>{
-  if(!resetArmed){resetArmed=true;e.target.textContent="もう一度押すと全消去!";setTimeout(()=>{resetArmed=false;e.target.textContent="きろくを消す";},2500);return;}
+  if(resetArmed&&performance.now()-resetArmedAt<600)return;/* ダブルタップ1回で全消去まで行かない(◀ タイトルと同じガード) */
+  if(!resetArmed){resetArmed=true;resetArmedAt=performance.now();e.target.textContent="もう一度押すと全消去!";setTimeout(()=>{resetArmed=false;e.target.textContent="きろくを消す";},2500);return;}
   save={stars:{},best:{},hiscore:0,progress:0,tut:0};
   persist();renderTitle();resetArmed=false;e.target.textContent="消しました";
   setTimeout(()=>{e.target.textContent="きろくを消す";},1500);
@@ -781,6 +900,7 @@ function startBattle(chIdx){
   B.locked=true;B.over=false;B.angry=false;
   B.retry=new Set();B.isRetry=false;B.requeued=false;B.miss=0;
   B.misses=[];B.redeemed=new Set();/* ふりかえり用のミス一覧 / おかわりで取り返した問い */
+  B.heartsShown=3;B.comboShown=0;
   const qn=B.isFinal?12:B.stage.q.length;
   B.bossMax=Math.round(qn*110);
   B.bossHP=B.bossMax;
@@ -790,8 +910,9 @@ function startBattle(chIdx){
   $("#foe-state").textContent="";
   const sp=$("#foe-sprite");
   sp.textContent=B.boss.icon;
-  sp.classList.remove("dead","hit","angry");
-  sp.style.filter=`drop-shadow(4px 5px 0 #000) drop-shadow(0 0 16px ${B.boss.glow}44)`;
+  sp.classList.remove("dead","hit","angry","atk");
+  sp.style.filter="";/* 光り方は CSS 側で章の色(--glow)から作る */
+  $("#foe-win").style.setProperty("--glow",B.boss.glow);$("#foe-win").style.setProperty("--seg",(100/qn)+"%");
   $("#explain").classList.remove("on","good","bad");
   $("#choices").innerHTML="";
   $("#qtext").textContent="";/* 前バトルの問題文の残留表示を防ぐ(特にreduced-motionで章イントロ非表示のとき) */
@@ -808,6 +929,7 @@ function startBattle(chIdx){
   document.body.appendChild(ci);
   setTimeout(()=>ci.remove(),1750);
   const line=(lastLost===chIdx&&talk("again"))||B.boss.intro;
+  say(`${chapterLabel(chIdx)} ${B.stage.title}。VS ${B.boss.name}。${line}`);
   lastLost=-1;
   /* 登場セリフは章イントロの暗幕が明けてから打ち始め、読む時間をとってから1問目へ(タップ/Enterで先へ)。
      以前は暗幕の下で打ち終わり、0.35秒で問題文に置き換わって読めなかった */
@@ -818,20 +940,20 @@ function startBattle(chIdx){
     if(B.over||B.run!==myRun)return;
     msgType(line,()=>{
       if(B.over||B.run!==myRun)return;
-      B.introHold=true;
+      B.introHold=true;$("#qwin").classList.add("hold");
       const go=()=>{
         if(!B.introHold)return;
-        B.introHold=false;
+        B.introHold=false;$("#qwin").classList.remove("hold");
         if(B.introT){clearTimeout(B.introT);B.introT=null;}
         if(!B.over&&B.run===myRun)nextQuestion();
       };
       B.introT=setTimeout(go,Math.min(4000,1200+line.length*40));
       $("#qwin").onclick=go;
     });
-  },reduce?300:1350);
+  },1350);/* reduced-motion でも章題の暗幕(溶暗・溶明のみ)を見せるので同じ待ち */
 }
 function leaveBattle(){
-  B.introHold=false;B.finishReady=false;B.pendingResult=null;
+  B.introHold=false;$("#qwin").classList.remove("hold");B.finishReady=false;B.pendingResult=null;
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
   if(B.introT){clearTimeout(B.introT);B.introT=null;}
   if(B.hitT){clearTimeout(B.hitT);B.hitT=null;}
@@ -854,18 +976,28 @@ $("#btn-flee").addEventListener("click",()=>{
 /* マウス/タップで押したらフォーカスを外す。残ると次の Enter(「Enterで先へ」)で離脱が確定してしまう */
 $("#btn-flee").addEventListener("pointerup",e=>e.currentTarget.blur());
 /* 被弾アニメ(.hit)が終わったら外す。付けっぱなしだと浮遊も「怒り」の震えも止まっていた */
-$("#foe-sprite").addEventListener("animationend",e=>{if(e.animationName==="foehit")e.currentTarget.classList.remove("hit");});
+$("#foe-sprite").addEventListener("animationend",e=>{
+  if(e.animationName==="foehit")e.currentTarget.classList.remove("hit");
+  if(e.animationName==="foeatk")e.currentTarget.classList.remove("atk");
+});
 
 /* ---------- HUD ---------- */
 function updateHUD(){
-  $("#hearts").innerHTML=`<small>ライフ</small>`+"❤️".repeat(B.hearts)+"🤍".repeat(Math.max(0,3-B.hearts));
-  const fever=B.combo>=5;
+  /* いま減ったハートだけ割れる演出。コンボは増えた瞬間だけ数字が弾む(再描画のたびには動かさない) */
+  const broke=B.hearts<B.heartsShown;B.heartsShown=B.hearts;
+  $("#hearts").setAttribute("aria-label",`ライフ ${B.hearts} / 3`);
+  $("#hearts").innerHTML=`<small>ライフ</small>`+"❤️".repeat(B.hearts)+(broke?'<span class="broke">🤍</span>':"")+"🤍".repeat(Math.max(0,3-B.hearts-(broke?1:0)));
+  const fever=B.combo>=5,up=B.combo>B.comboShown;B.comboShown=B.combo;
   $("#combo").innerHTML=B.combo>1
-    ?`COMBO <b>×${B.combo}</b>${fever?' <span class="fv">FEVER!!</span>':B.combo>=3?" 🔥":""}`
-    :`COMBO —`;
-  $("#battle-score").textContent=`SCORE ${B.score.toLocaleString()}`;
+    ?`<small>COMBO</small><b${up?' class="pop"':""}>×${B.combo}</b>${fever?' <span class="fv">FEVER!!</span>':B.combo>=3?" 🔥":""}`
+    :`<small>COMBO</small>—`;
+  $("#battle-score").innerHTML=`<small>SCORE</small>${B.score.toLocaleString()}`;
   const r=B.bossMax?Math.max(0,B.bossHP)/B.bossMax:0;
   $("#foe-hp").style.width=(r*100)+"%";
+  /* 白い残像は減るときだけ遅れて追う。増える(章の始め)ときは即座に合わせる */
+  const lag=$("#foe-hp-lag"),lw=r*100;
+  if(lw>=(parseFloat(lag.style.width)||100)){lag.style.transition="none";lag.style.width=lw+"%";void lag.offsetWidth;lag.style.transition="";}
+  else lag.style.width=lw+"%";
   $("#foe-hp-num").textContent=`${Math.max(0,B.bossHP)} / ${B.bossMax}`;
   if(!B.angry&&B.bossHP>0&&r<.3){
     B.angry=true;
@@ -884,9 +1016,12 @@ function msgType(text,done){
   if(typeTimer){clearInterval(typeTimer);typeTimer=null;}
   const el=$("#qtext");el.textContent="";let i=0;
   const full=text;
+  /* 未表示の残りを透明で先に置く: 改行位置が最初から確定し、打ち込み中に窓の高さも変わらない */
+  const shown=document.createTextNode(""),ghost=document.createElement("span");
+  ghost.className="ghost";ghost.textContent=full;el.append(shown,ghost);
   typeTimer=setInterval(()=>{
-    i++;el.textContent=full.slice(0,i);
-    if(i>=full.length){clearInterval(typeTimer);typeTimer=null;if(done)done();}
+    i++;shown.data=full.slice(0,i);ghost.textContent=full.slice(i);
+    if(i>=full.length){clearInterval(typeTimer);typeTimer=null;el.textContent=full;if(done)done();}
   },17);
   /* ウィンドウ全体タップで文字送りスキップ(スマホでも押しやすく) */
   $("#qwin").onclick=()=>{if(typeTimer){clearInterval(typeTimer);typeTimer=null;el.textContent=full;if(done)done();}};
@@ -921,7 +1056,7 @@ function nextQuestion(){
   opts.forEach((c,idx)=>{
     const b=document.createElement("button");
     b.className="choice";b.disabled=true;
-    b.innerHTML=`<span class="key px">${KEYS[idx]}</span>${esc(c)}`;
+    b.innerHTML=`<span class="key px" aria-hidden="true">${KEYS[idx]}</span>${esc(c)}`;
     b.addEventListener("click",()=>onAnswer(idx));
     box.appendChild(b);
   });
@@ -930,6 +1065,7 @@ function nextQuestion(){
     if(B.over)return;
     $$(".choice").forEach(b=>b.disabled=false);
     B.locked=false;
+    say(`${B.isRetry?"再挑戦。":""}第${B.asked}問。${q[0]}`);/* 打ち終わってから全文を1回だけ読み上げる */
   });
 }
 function onAnswer(idx){
@@ -939,8 +1075,9 @@ function onAnswer(idx){
   btns.forEach(b=>b.disabled=true);
   const right=idx===B.correctIdx;
   btns.forEach((b,i)=>{
-    if(i===B.correctIdx)b.classList.add("right");
-    else if(i===idx)b.classList.add("wrongpick");
+    const k=b.querySelector(".key");
+    if(i===B.correctIdx){b.classList.add("right");if(k)k.textContent="○";b.setAttribute("aria-label","正解: "+B.current[1][0]);}/* 正誤を色だけでなく形でも(○×) */
+    else if(i===idx){b.classList.add("wrongpick");if(k)k.textContent="×";b.setAttribute("aria-label","選んだ答え(不正解): "+b.textContent.slice(1));}
     else b.classList.add("faded");
   });
   const q=B.current;
@@ -984,6 +1121,7 @@ function onAnswer(idx){
     const banner=document.createElement("div");
     banner.className="atk-banner";banner.textContent=`💢 ${src?src.icon+" ":""}${atk}!!`;
     $("#foe-win").appendChild(banner);
+    {const sp=$("#foe-sprite");sp.classList.remove("atk");void sp.offsetWidth;sp.classList.add("atk");}/* ボスが身を引いて→踏みこむ。踏みこみの頂点(0.47秒)が画面ゆれ(0.55秒)の直前 */
     setTimeout(()=>banner.remove(),950);
     const hitRun=B.run;
     B.hitT=setTimeout(()=>{
@@ -995,6 +1133,8 @@ function onAnswer(idx){
       showExplain(false,q,atk,src);
       if(B.hearts<=0)$("#btn-next").textContent="力尽きた… ▶";
       else $("#btn-next").textContent="つづける ▶";
+      /* 解説へのスクロールは画面ゆれ(0.4秒)が収まってから。ゆれとスクロールが重なると被弾が読めない */
+      B.hitT=setTimeout(()=>{B.hitT=null;if(B.run===hitRun&&$("#explain").classList.contains("on"))$("#explain").scrollIntoView({behavior:scrollBeh(),block:"nearest"});},420);
     },550);
   }
 }
@@ -1021,8 +1161,14 @@ function showExplain(good,q,finishOrAtk,src){
     $("#foe-say").textContent=src?`${B.boss.name}は ${src.name}の${a}を呼びさました! 手痛い反撃を受けた!`:`${B.boss.name}の ${finishOrAtk}! 手痛い反撃を受けた!`;
     $("#btn-next").style.display="";
   }
-  ex.scrollIntoView({behavior:"smooth",block:"nearest"});
+  say(good?$("#ex-tag").textContent:`ミス。正解は ${q[1][0]}。${q[2]} ライフ のこり${B.hearts}。`);/* 読み上げ(画面には出ない) */
+  if(good)ex.scrollIntoView({behavior:scrollBeh(),block:"nearest"});/* ミスのときは onAnswer 側でゆれの後に送る */
 }
+/* キーボードで解説(すぐ次へ)にフォーカスが入ったら、タップと同じく自動送りを止める */
+$("#explain").addEventListener("focusin",()=>{
+  if(B.over||!B.autoT||performance.now()-(B.exAt||0)<350)return;
+  clearTimeout(B.autoT);B.autoT=null;$("#btn-next").textContent="つづける ▶";
+});
 /* 正解後の自動送り中に解説をタップすると止まる(じっくり読みたいとき用)。再開は「つづける」 */
 $("#explain").addEventListener("click",e=>{
   if(e.target.closest("#btn-next")||B.over||!B.autoT||performance.now()-(B.exAt||0)<350)return;
@@ -1042,7 +1188,8 @@ $("#btn-next").addEventListener("click",()=>{
 });
 function hitBoss(dmg,crit,fever){
   const sp=$("#foe-sprite");
-  sp.classList.remove("hit");void sp.offsetWidth;sp.classList.add("hit");
+  /* 動きを減らす設定では animationend が来ず .hit が残って怒りの赤い光を止めてしまうので付けない */
+  if(!reduceMotion()){sp.classList.remove("hit");void sp.offsetWidth;sp.classList.add("hit");}
   B.bossHP-=dmg;
   const d=document.createElement("div");
   const kill=B.bossHP<=0;
@@ -1085,7 +1232,8 @@ function victory(delay){
     if(!$("#scr-battle").classList.contains("on"))return;
     $("#stamp-area").innerHTML=`<span class="stamp px ${rank==="A"?"rA":rank==="B"?"rB":""}">RANK ${rank}</span>`;
     $("#result-title").classList.remove("lose");
-    $("#result-stars").innerHTML="★".repeat(stars)+"<span class='off'>"+"★".repeat(3-stars)+"</span>";
+    $("#result-stars").innerHTML=[0,1,2].map(i=>`<span class="st${i<stars?"":" off"}" style="animation-delay:${(.3+i*.14).toFixed(2)}s">${i<stars?"★":"☆"}</span>`).join("");/* 取った星が1つずつ押される。空き星は☆で形でも区別 */
+    $("#result-stars").setAttribute("role","img");$("#result-stars").setAttribute("aria-label",`星 ${stars} / 3`);
     renderReview();
     const btns=$("#result-btns");btns.innerHTML="";
     if(isEnding){
@@ -1094,19 +1242,19 @@ function victory(delay){
         `<span class="ending-parade">${paradeStr}</span><br>`+
         `全12章、制覇おめでとう!<br>称号「<b style="color:var(--gold)">${esc(rankName(RANKS,totalStars()))}</b>」 ★${totalStars()}/${CHAPTERS.length*3}<br>`+
         `キミはもう、福祉を自分の言葉で語れる。`;
-      $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span style="font-size:.75rem;color:var(--dim)">(クリア+${bonus} / 最大コンボ×${B.maxCombo})</span>`+growHtml;
+      $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span class="brk">(クリア+${bonus} / 最大コンボ×${B.maxCombo})</span>`+growHtml;
       /* エンディングだけ、まめちしきの代わりに改心したボスたちの「その後」 */
       const un=B.misses.filter(q=>!B.redeemed.has(q));/* 取り返していないミスがあれば、ふりかえりを先に残す */
       $("#trivia").innerHTML=(un.length?$("#trivia").innerHTML+"<br><br>":"")+`<b>— その後のボスたち —</b><br>`+
-        CHAPTERS.filter(c=>TALK[c.id]&&TALK[c.id].after).map(c=>`${c.boss.icon} ${esc(c.boss.name)}:${esc(TALK[c.id].after)}`).join("<br>");
+        CHAPTERS.filter(c=>TALK[c.id]&&TALK[c.id].after).map(c=>`<span class="li e">${c.boss.icon} ${esc(c.boss.name)}:${esc(TALK[c.id].after)}</span>`).join("");
       addBtn(btns,"タイトルへ",()=>{renderTitle();show("scr-title");},true);
       addBtn(btns,"終章にもう一度挑む",()=>startBattle(B.chapter));
     }else{
       $("#result-title").textContent="ボス討伐!!";
       $("#defeat-quote").textContent=B.boss.defeat;
-      $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span style="font-size:.75rem;color:var(--dim)">(クリア+${bonus} / 最大コンボ×${B.maxCombo})</span>`
+      $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span class="brk">(クリア+${bonus} / 最大コンボ×${B.maxCombo})</span>`
         +growHtml
-        +(stars<3?`<br><span style="font-size:.72rem;color:var(--dim)">💡 ノーダメージで倒すと RANK S(★3)!</span>`:"");
+        +(stars<3?`<br><span style="font-size:.8rem;color:var(--dim)">💡 ノーダメージで倒すと RANK S(★3)!</span>`:"");
       const nx=B.chapter+1;
       addBtn(btns,`つぎの地へ ▶ ${chapterLabel(nx)}`,()=>startBattle(nx),true);
       addBtn(btns,"この章をもう一度",()=>startBattle(B.chapter));
@@ -1115,15 +1263,22 @@ function victory(delay){
     show("scr-result");
   };
   B.resultT=setTimeout(flushResult,delay||1300);
-  if(delay){B.finishReady=true;const b=$("#btn-next");b.textContent="討伐! 結果へ ▶";b.style.display="";b.scrollIntoView({behavior:"smooth",block:"nearest"});}
+  if(delay){B.finishReady=true;const b=$("#btn-next");b.textContent="討伐! 結果へ ▶";b.style.display="";b.scrollIntoView({behavior:scrollBeh(),block:"nearest"});}
+}
+const ansCore=s=>s.replace(/[(（][^)）]*[)）]/g,"").replace(/[「」『』]/g,"").trim();
+/* まめちしき: まだ倒していない先の章の正解語を含むものは出さない(先に答えを見せない) */
+function safeTrivia(){
+  const ahead=STAGES.filter((s,i)=>i>B.chapter&&!(save.stars[s.id]>0)).flatMap(s=>s.q.map(q=>ansCore(q[1][0]))).filter(a=>a.length>=2);
+  const ok=TRIVIA.filter(t=>!ahead.some(a=>t.indexOf(a)>-1));
+  return pick(ok.length?ok:TRIVIA);
 }
 /* 結果画面の下段: まちがえたまま取り返せなかった問いがあれば「ふりかえり」(問いと正解)、なければまめちしき。
    負けたときは、おかわりで取り返した問い(🔁済)も含めて並べる */
 function renderReview(lost){
   const list=lost?B.misses:B.misses.filter(q=>!B.redeemed.has(q));
-  if(!list.length){$("#trivia").innerHTML=`<b>📖 まめちしき:</b>${esc(pick(TRIVIA))}`;return;}
+  if(!list.length){$("#trivia").innerHTML=`<b>📖 まめちしき:</b>${esc(safeTrivia())}`;return;}
   $("#trivia").innerHTML=`<b>📝 ふりかえり:</b>`+list.slice(0,3).map(q=>
-    `<br>・${esc(q[0])} → <b style="color:var(--hp)">${esc(q[1][0])}</b>${B.redeemed.has(q)?" 🔁済":""}`).join("");
+    `<span class="li">・${esc(q[0])} → <b class="ans" style="color:var(--hp)">${esc(q[1][0])}</b>${B.redeemed.has(q)?" 🔁済":""}</span>`).join("");
 }
 function flushResult(){
   if(B.resultT){clearTimeout(B.resultT);B.resultT=null;}
@@ -1138,7 +1293,7 @@ function gameOver(){
   $("#stamp-area").innerHTML="";
   $("#result-title").textContent="力尽きた…";
   $("#result-title").classList.add("lose");
-  $("#result-stars").textContent="💤";
+  $("#result-stars").textContent="💤";$("#result-stars").removeAttribute("role");$("#result-stars").removeAttribute("aria-label");
   const lose=talk("lose");
   $("#defeat-quote").innerHTML=lose
     ?`${esc(B.boss.name)}「${esc(lose)}」<br><span class="small-dim">— 復習こそ最強の武器だぞ?</span>`
@@ -1162,6 +1317,7 @@ function addBtn(parent,label,fn,primary){
 
 /* ---------- keyboard ---------- */
 document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&$("#tut").hidden===false){e.preventDefault();closeTut();return;}
   if(e.repeat)return;/* 長押しリピートでリザルト画面を飛ばさない */
   /* フォーカス中の有効なボタンはネイティブのEnter/Space動作に任せる(横取りすると別のボタンが押される) */
   if((e.key==="Enter"||e.key===" ")&&document.activeElement&&document.activeElement.tagName==="BUTTON"&&!document.activeElement.disabled)return;
@@ -1193,7 +1349,8 @@ if(location.search.indexOf("selftest")>-1){
   window.addEventListener("error",e=>LOG.push("ERR:"+e.message));
   const finish=()=>{
     const fails=LOG.filter(l=>/^(ERR|EX|QBAD|QLEN|DUPQ|TIMEOUT|STUCK|BAD|NO|DMGBAD|TALKBAD|FINQ|LEAK)/.test(l));
-    document.title="ST:"+(fails.length===0?"OK":"FAIL")+"|"+LOG.join("|").slice(0,400);
+    /* title には合否と主な項目だけ(WARN=既知の答え漏れ候補・TRIV=まめちしきの出せる数 は下のログにだけ出す) */
+    document.title="ST:"+(fails.length===0?"OK":"FAIL")+"|"+LOG.filter(l=>!/^(WARN|TRIV)/.test(l)).join("|").slice(0,400);
     const d=document.createElement("pre");d.id="selftest-log";d.textContent=LOG.join("\n")||"CLEAN";
     d.style.cssText="position:fixed;bottom:0;left:0;z-index:99;background:#000;color:#0f0;font-size:10px;max-height:120px;overflow:auto;";
     document.body.appendChild(d);
@@ -1218,9 +1375,20 @@ if(location.search.indexOf("selftest")>-1){
       const t=TALK[c.id]||{},txt=[c.boss.intro,t.rage,t.again,t.lose].join("|");
       (c===FINAL?allQuestions():c.q).forEach(q=>{const a=core(q[1][0]);if(a.length>=2&&txt.indexOf(a)>-1)LOG.push("LEAK:"+c.id+":"+a);});
     });
+    /* 画面に常時出る章題・ボス名・英字副題は警告(LEAKWARN)として列挙。同じ章の別の問いの問題文/選択肢に正解語が出るものも警告 */
+    CHAPTERS.forEach(c=>{(c===FINAL?[]:c.q).forEach((q,qi)=>{const a=core(q[1][0]);if(a.length<2)return;
+      [["title",c.title],["name",c.boss.name],["kana",c.boss.kana]].forEach(([k,v])=>{if(v.indexOf(a)>-1)LOG.push("WARN:LEAK:"+c.id+":"+k+":"+a);});
+      c.q.forEach((o,oi)=>{if(oi!==qi&&(o[0]+o[1].join("")).indexOf(a)>-1)LOG.push("WARN:LEAK:"+c.id+":q"+oi+">q"+qi+":"+a);});});});
+    for(let ch=0;ch<STAGES.length;ch++){B.chapter=ch;const ahead=STAGES.slice(ch+1).flatMap(s=>s.q.map(q=>ansCore(q[1][0]))).filter(a=>a.length>=2);
+      const n=TRIVIA.filter(t=>!ahead.some(a=>t.indexOf(a)>-1)).length;LOG.push("TRIV"+ch+":"+n);}
+    B.chapter=0;
+    const fx=[[null,0,0],[[3,3,3],0,0],[{progress:"5",stars:{s1:"3"}},5,3],[{progress:2.7,stars:{s1:99,zz:50}},2,3],[{stars:{s1:"abc"},hiscore:"x"},0,0],[{progress:-4,stars:null},0,0]];
+    const keep=save;fx.forEach(([v,p,st],i)=>{save=normalizeSave(v);if(save.progress!==p||totalStars()!==st)LOG.push("SAVEBAD:"+i+":"+save.progress+"/"+totalStars());});save=keep;
+    STAGES.forEach(c=>c.q.forEach((q,qi)=>c.q.forEach((o,oi)=>{const a=core(o[1][0]);if(oi!==qi&&a.length>=2&&q[2].indexOf(a)>-1)LOG.push("WARN:EXPL:"+c.id+":q"+qi+">q"+oi+":"+a);})));/* 解説が同じ章の別の問いの答えを書いていないか(警告) */
     const fq=finalQueue();
     if(fq.length!==QT||new Set(fq).size!==QT)LOG.push("FINQ:"+fq.length);
     if(new Set(fq.slice(0,STAGES.length).map(q=>SRC.get(q))).size!==STAGES.length)LOG.push("FINQ:spread");
+    if(![...PARADE_SKIP].every(ic=>CHAPTERS.some(c=>c.boss.icon===ic)))LOG.push("BAD:parade");/* VS16の付け忘れで除外が外れていないか */
     LOG.push("DATA:"+QT+"q/"+CHAPTERS.length+"ch");
     /* 台本: 第1章=1回ミス→おかわり再出題で取り返す / 第2章=とどめ後「討伐! 結果へ」を押す / 第3章=4問目と8問目でミス→ラスト1問の一撃でとどめ(★1)
        第4章=3連続ミスで力尽きる→捨て台詞とふりかえり→「リベンジ!」→再戦台詞 / 終章=2問目でミス→他章ボスの技の呼びさまし / ほかは全問正解 */
@@ -1229,6 +1397,40 @@ if(location.search.indexOf("selftest")>-1){
     toast=function(m){if(m.indexOf("再挑戦")>-1)sawRetryToast=true;_toast(m);};
     startBattle(0);
     let steps=0,cleared=0,missedQ=null,retrySeen=false,finBtn=false,lostDone=false,expectAgain=false,againSeen=false,summon=0,cueSeen=false,lastBlow=false,seenRun=-1;
+    /* 第2部: 台本の外の操作(タイトルへ/初回あそびかた/キーボード/解説タップで一時停止/逃走の二段確認と残留タイマー) */
+    const wait=ms=>new Promise(r=>setTimeout(r,ms));
+    const until=async(f,ms)=>{const t0=performance.now();while(!f()){if(performance.now()-t0>ms)return false;await wait(30);}return true;};
+    const key=k=>document.dispatchEvent(new KeyboardEvent("keydown",{key:k,bubbles:true}));
+    const onScr=id=>$("#"+id).classList.contains("on");
+    async function phase2(){
+      await wait(450);
+      const tb=$$("#result-btns button").find(b=>b.textContent==="タイトルへ");
+      if(!tb){LOG.push("NO:p2-titlebtn");return;}
+      tb.click();
+      if(!onScr("scr-title"))LOG.push("NO:p2-title");
+      if($("#btn-story").textContent.indexOf("もういちど")<0||!$("#btn-restart").hidden)LOG.push("BAD:p2-title-cleared");
+      save.tut=0;$("#btn-story").click();
+      if($("#tut").hidden||onScr("scr-battle"))LOG.push("NO:p2-tut");
+      $("#tut-close").click();
+      if(!onScr("scr-battle")||B.chapter!==0||!save.tut)LOG.push("NO:p2-tut-battle");
+      if(!await until(()=>typeTimer||B.introHold,5000)){LOG.push("STUCK:p2-intro");return;}
+      while(B.asked===0){key("Enter");await wait(60);if(performance.now()>1e12)break;}
+      if(!await until(()=>!B.locked,5000)){LOG.push("STUCK:p2-q1");return;}
+      key(String(B.correctIdx+1));
+      if(!$("#explain").classList.contains("good"))LOG.push("NO:p2-key");
+      await wait(400);$("#explain").click();
+      if(B.autoT||$("#btn-next").textContent.indexOf("つづける")<0)LOG.push("NO:p2-pause");
+      const a1=B.asked;await wait(10000);if(B.asked!==a1)LOG.push("BAD:p2-pause-held");
+      key("Enter");
+      if(!await until(()=>!B.locked,5000)){LOG.push("STUCK:p2-q2");return;}
+      $("#btn-flee").click();await wait(100);$("#btn-flee").click();
+      if(!onScr("scr-battle"))LOG.push("BAD:p2-flee-dbl");
+      await wait(500);$("#btn-flee").click();
+      if(!onScr("scr-title"))LOG.push("NO:p2-flee");
+      const a2=B.asked;await wait(12000);
+      if(B.asked!==a2||!onScr("scr-title")||document.querySelector(".chapter-intro"))LOG.push("STUCK:p2-stray-timer");
+      LOG.push("P2");
+    }
     const wrong=()=>{
       const btns=$$(".choice");
       const wi=btns.findIndex((b,i)=>i!==B.correctIdx&&!b.disabled);
@@ -1246,7 +1448,7 @@ if(location.search.indexOf("selftest")>-1){
           if($("#trivia").textContent.indexOf("その後のボスたち")<0)LOG.push("NOAFTER");
           const lit=$$("#trail .tnode.lit").length;LOG.push("LIT:"+lit);if(lit<1)LOG.push("NOLIT");
           if(summon!==1)LOG.push("NOSUMMON");
-          clearInterval(iv);finish();return;
+          clearInterval(iv);phase2().catch(e=>LOG.push("EX:p2:"+e.message)).then(finish);return;
         }
         if(seenRun!==B.run){/* 結果画面ごとに1回だけ検査する(ボタンは表示直後0.4秒は効かないので、押せるまで毎回押し直す) */
           seenRun=B.run;
@@ -1298,7 +1500,7 @@ if(location.search.indexOf("selftest")>-1){
 
 <script>
 if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("./sw.js").catch(function(){});}
-(function(){var f=document.getElementById("title-foot");if(f)f.textContent+=" / 📲 「ホーム画面に追加」でアプリになります";})();
+(function(){var app=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone;var f=document.getElementById("title-foot");if(f&&!app)f.textContent+=" / 📲 「ホーム画面に追加」でアプリになります";})();
 </script>
 </body>
 </html>
