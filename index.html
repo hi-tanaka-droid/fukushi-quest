@@ -83,7 +83,8 @@ body{
   line-height:1.25;
 }
 .logo .q{color:var(--gold);text-shadow:0 3px 0 #8a6a10,0 6px 0 #4d3a06,4px 4px 0 #000,0 0 30px #ffcf4d66;}
-.logo-sub{color:var(--dim);margin-top:8px;font-size:.9rem;letter-spacing:.22em;}
+.logo-sub{color:#fff;margin-top:10px;font-size:clamp(1.1rem,4.6vw,1.4rem);font-weight:bold;letter-spacing:.14em;
+  text-shadow:2px 2px 0 #000,0 0 14px #7dd8ff88;}
 .tagline{
   margin:24px auto 4px;color:var(--gold);font-size:1.02rem;letter-spacing:.1em;font-weight:bold;
   animation:blink 1.3s steps(2) infinite;
@@ -134,8 +135,10 @@ body{
 .trail{display:flex;gap:7px;justify-content:center;align-items:center;margin:0 0 12px;flex-wrap:wrap;}
 .tnode{font-size:1.3rem;line-height:1;filter:drop-shadow(1px 2px 0 #000);}
 .tnode.done{opacity:.32;filter:grayscale(1) drop-shadow(1px 2px 0 #000);}
-.tnode.now{transform:scale(1.28);animation:hover 1.6s ease-in-out infinite;text-shadow:0 0 14px var(--gold);}
+.tnode.now{transform:scale(1.28);animation:hoverbig 1.6s ease-in-out infinite;text-shadow:0 0 14px var(--gold);}
+@keyframes hoverbig{0%,100%{transform:scale(1.28);}50%{transform:scale(1.28) translateY(-5px);}}
 .tnode.todo{opacity:.3;}
+.tnode.done.lit{opacity:1;filter:drop-shadow(0 0 6px var(--gold)) drop-shadow(1px 2px 0 #000);}/* 終章で正解した章が光る */
 .tsep{color:#333a5e;font-size:.7rem;}
 
 /* ===== chapter intro ===== */
@@ -179,6 +182,7 @@ body{
 .hplabel{display:flex;justify-content:space-between;font-size:.7rem;color:var(--dim);}
 .hpbar{height:15px;border:2px solid var(--frame);border-radius:8px;background:#1a1030;overflow:hidden;}
 .hpbar>i{display:block;height:100%;background:linear-gradient(#ff8ba0,var(--foe));width:100%;transition:width .5s steps(12);}
+.hplabel .cue{color:var(--gold);font-weight:bold;}
 .atk-banner{
   position:absolute;left:0;right:0;top:42%;font-size:1.15rem;font-weight:bold;color:#fff;
   text-shadow:2px 2px 0 #000,0 0 14px #ff5d7a;pointer-events:none;
@@ -235,6 +239,7 @@ body{
 .choice.wrongpick{border-color:var(--foe);color:var(--foe);animation:wobble .35s steps(6);}
 .choice.wrongpick .key{color:var(--foe);border-color:var(--foe);}
 .choice.faded{opacity:.28;}
+@media(max-width:600px){.choice.faded{display:none;}}/* スマホ: 答えたら選ばなかった選択肢をたたみ、解説とボスの反応を同じ画面に収める */
 @keyframes wobble{25%{transform:translateX(-6px);}50%{transform:translateX(5px);}75%{transform:translateX(-3px);}}
 
 .explain{margin-top:12px;display:none;}
@@ -246,6 +251,7 @@ body{
 .explain.bad .tag{color:var(--foe);}
 .explain p{font-size:.95rem;margin-top:6px;line-height:1.8;}
 .explain .foe-say{color:var(--foe);font-size:.85rem;margin-top:6px;}
+.explain.good .foe-say{color:var(--cyan);}
 .explain .center{margin-top:12px;}
 .kbd-hint{margin-top:10px;color:var(--dim);font-size:.72rem;text-align:center;}
 @media(max-width:600px){.kbd-hint{display:none;}}
@@ -267,16 +273,38 @@ body{
 .defeat-quote{color:var(--cyan);font-size:.95rem;margin:14px auto;max-width:32em;line-height:2;}
 .result-score{font-size:1.1rem;color:#fff;font-variant-numeric:tabular-nums;}
 .result-score b{color:var(--gold);font-size:1.55rem;}
+.result-score .grow{font-size:.78rem;color:var(--cyan);}
 .trivia{margin-top:18px;color:var(--dim);font-size:.8rem;line-height:1.9;max-width:34em;margin-left:auto;margin-right:auto;
   border-top:1px dashed #333a5e;padding-top:12px;}
 .trivia b{color:var(--cyan);}
+.trivia{text-align:left;}/* ふりかえり・その後のボスたちは複数行の一覧なので左揃え */
 .result-btns{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;align-items:center;}
+/* 低い画面(iPhone SE級)では戦闘画面と結果画面を詰め、1問目の選択肢と「つぎの地へ」を最初の画面に収める */
+@media(max-height:740px){
+  .result-box{padding:16px 16px;}
+  .stamp{font-size:2rem;margin-bottom:2px;}
+  .result-title{font-size:1.45rem;}
+  .result-stars{font-size:1.8rem;margin:2px 0 0;}
+  .defeat-quote{margin:6px auto;line-height:1.7;font-size:.88rem;}
+  .trivia{margin-top:10px;padding-top:8px;line-height:1.65;}
+  .result-btns{margin-top:12px;}
+  .trail{margin-bottom:6px;}
+  .foe-win{padding:8px 16px;}
+  .foe-sprite{font-size:2.6rem;margin:2px 0;}
+  .pstrip{margin-top:8px;}
+  .qwin{margin-top:8px;}
+  .qtext{min-height:0;}
+  .choices{margin-top:10px;gap:8px;}
+  .tsep{display:none;}
+  .trail{gap:4px;}
+  .tnode{font-size:1.05rem;}
+}
 .ending-parade{font-size:1.6rem;letter-spacing:10px;margin:10px 0 2px;filter:drop-shadow(2px 3px 0 #000);}
 
 /* ===== overlay / tutorial ===== */
-.overlay{position:fixed;inset:0;background:#000000c0;z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;}
+.overlay{position:fixed;inset:0;background:#000000c0;z-index:60;display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;}
 .overlay[hidden]{display:none;}
-.tut-box{max-width:460px;width:100%;}
+.tut-box{max-width:460px;width:100%;margin:auto 0;}/* 収まるときは中央、低い画面ではスクロールで「わかった!」まで届く */
 .tut-box h3{color:var(--gold);letter-spacing:.2em;font-size:1.15rem;text-align:center;margin-bottom:12px;}
 .tut-box ol{list-style:none;display:flex;flex-direction:column;gap:12px;font-size:.92rem;line-height:1.8;}
 .tut-box li{padding-left:2.4em;position:relative;}
@@ -301,6 +329,8 @@ body{
   *,*::before,*::after{animation:none!important;transition:none!important;}
   .crit-flash{display:none;}
   .chapter-intro{display:none;}
+  .foe-sprite.dead{opacity:0;}/* 消滅はアニメーションだけで表現していたため、とどめ後もボスが残っていた */
+  .dmg{transform:translate(-50%,-30px);}/* translate(-50%)がキーフレーム内にしかなく右にずれていた */
 }
 </style>
 
@@ -311,7 +341,7 @@ body{
   <section class="screen on" id="scr-title">
     <p class="logo-eyebrow px">木曜4限 社会福祉原論A 完全対応</p>
     <h1 class="logo px">福祉<span class="q">クエスト</span></h1>
-    <p class="logo-sub px">— 謎の大冒険 —</p>
+    <p class="logo-sub px">（通称クソゲー）</p>
     <p class="tagline">よくわからん戦いが、いま始まる。</p>
     <div class="modes">
       <button class="mode-btn" id="btn-story">🗡️ ぼうけんに出る<small id="story-sub"></small></button>
@@ -340,7 +370,7 @@ body{
         <div class="foe-state" id="foe-state"></div>
         <div class="foe-sprite" id="foe-sprite"></div>
         <div class="hpwrap">
-          <div class="hplabel"><span>てきのHP</span><span id="foe-hp-num" class="px"></span></div>
+          <div class="hplabel"><span id="foe-cue">てきのHP</span><span id="foe-hp-num" class="px"></span></div>
           <div class="hpbar"><i id="foe-hp"></i></div>
         </div>
       </div>
@@ -384,7 +414,7 @@ body{
         <li><span class="ico">🗺️</span>冒険は全12章。ボスを倒すと<b style="color:var(--gold)">次の地へ進む!</b> 進み具合は自動セーブ。</li>
         <li><span class="ico">🗡️</span>クイズに正解するとボスにダメージ! <b style="color:var(--gold)">3コンボで会心の一撃</b>、<b style="color:#ff9de2">5コンボでフィーバー(1.5倍)!</b></li>
         <li><span class="ico">❤️</span>まちがえるとボスの反撃でライフが減る。0になると敗北…でもすぐリベンジできる!</li>
-        <li><span class="ico">💡</span>まちがえてもダイジョーブ。<b style="color:var(--hp)">解説で覚えれば</b>次は必ず勝てる!</li>
+        <li><span class="ico">💡</span>まちがえてもダイジョーブ。<b style="color:var(--hp)">解説で覚えれば</b>次は必ず勝てる! まちがえた問題は、少しあとでもう一度出るぞ。</li>
       </ol>
       <div class="center"><button class="next-btn" id="tut-close">わかった! ▶</button></div>
     </div>
@@ -402,13 +432,13 @@ body{
 const STAGES=[
 {id:"s1",no:"第2回",title:"能力主義と尊厳",
  boss:{name:"デキルマウントクジャク",icon:"🦚",kana:"MERITOCRACY PEACOCK",glow:"#ffcf4d",
-   intro:"「ドヤァ…役に立たぬ者に、価値などない…!」",
+   intro:"「ドヤァ…できる者だけが、えらいのだ…!」",
    attacks:["ドヤ羽ばたき","自己責任ビーム","「で、それ何の役に立つの?」"],
    defeat:"「ば、ばかな…『できること』は『人間の価値』ではない…だと…!? 存在そのものに…尊厳が…シュルル…(羽がしぼむ)」"},
  q:[
   ["「能力によって社会的な地位が変わる仕組み」を何という?",["メリトクラシー(能力主義)","アリストクラシー(貴族制)","デモクラシー(民主制)","テクノクラシー(技術者支配)"],"Merit(功績)+cracy(支配)。生まれた身分ではなく能力で地位が決まる仕組み。"],
-  ["『実力も運のうち 能力主義は正義か?』の著者は?",["マイケル・サンデル","ジョン・ロールズ","マックス・ウェーバー","ジョナサン・ハイト"],"サンデルは「君の成功は努力か、運か?」と問いかけた。"],
-  ["サンデル『実力も運のうち』の主張として正しいのは?",["成功は努力だけでなく、運や環境にも大きく左右される","成功はすべて本人の実力だけで決まる","運の良い人だけが努力できる","能力主義は完全に公正な制度だ"],"生まれ・時代・才能など、成功の多くは自分では選べない偶然に支えられている。だから『すべて自分の実力』という驕りは危うい。"],
+  ["『実力も運のうち 能力主義は正義か?』の著者は?",["マイケル・サンデル","ジョン・ロールズ","マックス・ウェーバー","ジョナサン・ハイト"],"表紙の問いかけは「君の成功は努力か、運か?」。能力主義そのものを問い直した一冊。"],
+  ["『実力も運のうち』の主張として正しいのは?",["成功は努力だけでなく、運や環境にも大きく左右される","成功者は努力したのだから、その報酬を誇ってよい","結局は運で決まるので、努力することに意味はない","機会が平等なら、結果の差は本人の努力の差だ"],"生まれ・時代・才能など、成功の多くは自分では選べない偶然に支えられている。だから『すべて自分の実力』という驕りは危うい。"],
   ["世界人権宣言第一条「すべての人間は、生れながらにして自由であり、かつ、○○と権利とについて平等である」",["尊厳","能力","財産","幸福"],"尊厳(Human Dignity)=生まれながらに持つ、侵してはならない絶対的な価値。"],
   ["「尊厳」の説明として正しいのは?",["能力に関係なく存在そのものが持つ侵しえない価値","努力によって獲得される社会的な評価","役に立つことで初めて得られる価値","高い地位の人だけが持つ特別な名誉"],"「能力」に関係なく、「存在」はかけがえのないもの。"],
   ["批判してよいのは相手の「行動」。では絶対に否定してはいけないのは?",["存在","意見","服装","成績"],"「人として終わってる」は正論っぽく見えて存在の否定=尊厳の侵害。"],
@@ -422,9 +452,9 @@ const STAGES=[
    defeat:"「そんな…自立とは、依存先を増やすこと…だと…!? 我が『ひとりで生きろ』の教えが…砕けるゥ…!」"},
  q:[
   ["熊谷晋一郎いわく「自立とは○○を増やすこと」",["依存先","貯金","筋肉","資格"],"1人に太く頼るのは危険。細い依存先をたくさん持つのが自立。"],
-  ["ラットパーク実験で、仲間と遊べる楽園のネズミは薬物入りの水を?",["ほとんど飲まなかった","孤独なネズミより飲んだ","全部飲み干した","仲間に配った"],"孤立ケージのネズミだけが薬物に執着した。原因は薬物ではなく孤立。"],
-  ["ベトナム帰還兵の約何%が、施設に入らず自然にヘロインをやめた?",["約95%","約50%","約20%","約5%"],"帰国して日常のつながりが戻ると、大多数が自然にやめられた。"],
-  ["依存症(アディクション)の反対は?",["つながり(コネクション)","しらふ","自立","禁欲"],"人とつながれないとき、人の代わりに何かと結びつくのが依存症。"],
+  ["ラットパーク実験で、仲間と遊べる楽園のネズミは薬物入りの水を?",["ほとんど飲まなかった","孤独なネズミより飲んだ","全部飲み干した","仲間に配った"],"ひとりぼっちのケージのネズミは、多くの場合、薬物入りの水に執着した。一方、仲間と遊べる楽園のネズミはほとんど飲まなかった。講義のまとめは「環境の違いが行動に影響する」。"],
+  ["ベトナム戦争の戦地でヘロイン依存になった米兵。帰国後、施設に入らず自然にやめたのは約何%?",["約95%","約50%","約20%","約5%"],"帰国して家族や友人のいる暮らし(人間版のラットパーク)に戻ると、大多数が自然にやめられた。※95%は「戦地で依存になった兵士」のうちの割合で、帰還兵全体の割合ではない。"],
+  ["依存症(アディクション)の反対は?",["つながり","しらふ","自立","禁欲"],"「依存」の反対は「自立」とされがちだが、ラットパーク動画の結びは「依存症(アディクション)の反対は、つながり(コネクション)」。人とつながれないとき、人の代わりに何かと結びつくのが依存症。"],
   ["「アルコール依存症」は「アルコールによる○○」と言い換えられる(桜井2020)。○○に入るのは?",["支配・コントロール","快楽・多幸感","服従・洗脳","契約・約束"],"問題の本質は「依存」ではなく「支配」。〇〇依存症=〇〇による支配・コントロール。"],
   ["日本の成年年齢、2022年からは何歳?",["18歳","20歳","16歳","22歳"],"約150年間つづいた「20歳」から引き下げ。「大人」の線引きは時代で変わる。"],
   ["「相手にとって必要な存在になりたい」という喜び、信田さよ子いわくその正体は?",["「支配」の快楽","ケアの本質","愛情の証","プロ意識"],"相手の人生の主人公に、私がなってはならない。"],
@@ -438,25 +468,25 @@ const STAGES=[
  q:[
   ["支援者の判断を相手に押し付けるかかわりを何という?",["パターナリズム","ナルシシズム","ポピュリズム","リアリズム"],"pater=父。「父親的温情主義」。良かれと思って、が押し付けになる。"],
   ["「心からやりたい!」という動機づけは?",["内発的動機づけ","外発的動機づけ","強制的動機づけ","金銭的動機づけ"],"内発的動機づけは理解・創造性・問題解決に効果大。自己決定はこれを生みやすい。"],
-  ["ある実験によると、学習内容をいちばん深く理解できたのは、どんなつもりで学んだグループ?",["「あとで人に教える」つもりで学んだ組","「あとでテストされる」つもりで学んだ組","「ごほうびがもらえる」と言われて学んだ組","「罰がある」と言われて学んだ組"],"「人に教えるつもり」で学ぶと取り組み方が変わり、テスト対策よりも理解が深まった(心理学の実験より)。"],
+  ["大学生を2組に分けたある実験。あとで両方の組にテストをしたとき、学習内容をより深く理解していたのは?",["「学んだことを人に教えてください」と言われた組","「あとでテストして成績をつけます」と言われた組","どちらの組も理解の深さに差はなかった","どちらの組も、ほとんど何も覚えていなかった"],"「人に教える」つもりで学んだ組のほうが深く理解していた。動機が変わると、学びへの取り組み方そのものが変わる。"],
   ["ケアで大事な関係のイメージは、to でも for でもなく?",["with(ともに)","by(によって)","against(対抗して)","under(下で)"],"「相手に向かって」「相手のために」ではなく「相手とともに」。"],
-  ["「あなたの気持ちを尊重します」とだけ言う態度が陥る罠は?",["「尊重」という名の責任放棄","よかれと思って決める押し付け","手を出しすぎる過干渉","本人の領分を越える越権行為"],"揉めず、イイ人でいられ、責任も問われない——それは丸投げかも。"],
+  ["「あなたの気持ちを尊重します」とだけ言う態度が陥る罠は?",["相手任せにする責任放棄","よかれと思って決める押し付け","手を出しすぎる過干渉","本人の領分を越える越権行為"],"「尊重」という名で、責任放棄・責任回避していないか? 揉めず、イイ人でいられ、責任も問われない——それは丸投げかも。"],
   ["支援の優先順位ピラミッドで、最優先(頂点)とされるのは?",["命の保護","経済効率","多数決","上司の指示"],"優先順位は「命の保護 > 社会正義 > 自己決定」。自己決定は大事だが、命より優先はされない。"],
-  ["三井(2013)いわく、よいケアをしている人ほど?",["失敗を感じることが多い","失敗を全く感じない","給料が高い","悩みがない"],"迷い悩むこと自体がケアの本質。悩まない支援者の方が危ない。"],
-  ["ケアの仕事で支援者と相手が完全に対等になれない理由は?",["権力の非対称性があるから","年齢が違うから","資格の有無があるから","給料をもらっているから"],"情報・知識・管理する立場の差。優位性を自覚して、それでも「ともに」を目指す。"],
+  ["三井(2013)いわく、よいケアをしている人ほど?",["失敗を感じることが多い","失敗を全く感じない","給料が高い","悩みがない"],"よいケアをしている人は「あの対応で良かったのか…」と失敗を感じる。よくないケアをしている人は、失敗したとすら思っておらず、悩みも少ない。迷い悩むこと自体がケアの本質。"],
+  ["ケアの仕事で支援者と相手が完全に対等になれない理由は?",["権力の非対称性があるから","年齢が違うから","性格が合わないから","知り合ってまだ日が浅いから"],"情報や知識の多さ、管理する立場の差。優位性を自覚して、それでも「ともに」を目指す。"],
  ]},
 {id:"s4",no:"第5回",title:"ノーマライゼーション",
  boss:{name:"セイヨウバリアフリーモドキ",icon:"🧱",kana:"FAKE BARRIER-FREE",glow:"#d97742",
-   intro:"「物理・制度・文化情報・こころ…4つの壁がお前を阻む!」",
+   intro:"「段差だけが壁だと思うなよ…4つの壁がお前を阻む!」",
    attacks:["見えない壁","心のバリア","「かわいそう」の呪い"],
    defeat:"「壁は…本人の中ではなく…社会の側に…あったのか…ゴゴゴ…(崩壊)」"},
  q:[
-  ["ノーマライゼーションの考えを生んだデンマークの人物は?",["バンク=ミケルセン","ニィリエ","ベヴァリッジ","ヘックマン"],"劣悪な施設の状況に心を痛め、親の会の運動を支えた。"],
+  ["ノーマライゼーションの考えを生んだ人物は?",["バンク=ミケルセン","ニィリエ","ベヴァリッジ","ヘックマン"],"デンマークの人。1950年代、劣悪な施設の状況に心を痛め、親の会の運動を支えた。"],
   ["ノーマライゼーションを8つの原則に深めて広めたスウェーデンの人物は?",["ニィリエ","バンク=ミケルセン","ウェッブ","サンデル"],"1日・1週間・1年のリズム、尊厳と自己決定など8原則。"],
-  ["1959年、世界で初めてノーマライゼーションを法律に盛り込んだ国は?",["デンマーク","スウェーデン","イギリス","日本"],"バンク=ミケルセンが1959年デンマーク法に盛り込んだ。"],
+  ["1959年、ノーマライゼーションという言葉を法律に盛り込んだ国は?",["デンマーク","スウェーデン","イギリス","日本"],"1959年のデンマーク法。劣悪な施設に暮らす知的障害者の状況を変えようとした、親の会の運動が実を結んだ。"],
   ["4つのバリア=物理・制度・文化情報と、もう1つは?",["こころ(意識)","お金","時間","距離"],"「かわいそう」という偏見や「特別扱い」の思い込みも立派なバリア。"],
   ["「障害があるのにすごいね」という褒め言葉、実は?",["マイクロアグレッション","合理的配慮","インクルージョン","アドボカシー"],"悪意のない無意識の言動が人を傷つける「見えにくい傷つけ」。"],
-  ["障害の原因を社会や環境の側に見るモデルは?",["社会モデル","医学モデル","統合モデル","個人モデル"],"金魚が苦しそうなら、金魚ではなく水を疑え。"],
+  ["障害の原因はその人の「外」にあると考え、「環境を変えよう」とするモデルは?",["社会モデル","医学モデル","統合モデル","個人モデル"],"医学モデル(個人モデル)は原因をその人の「中」に見て「障害を治そう」と考える。社会モデルは「外」に見る。金魚が苦しそうなら、金魚ではなく水を疑え。"],
   ["「異なる個人として、異なるまま承認される」状態は?",["インクルージョン(包摂)","インテグレーション(統合)","セグリゲーション(分離)","エクスクルージョン(排除)"],"NG3パターンは排除・分離・統合。鍵は\"「私たち」の1人\"と思えるか。"],
   ["合理的配慮(Reasonable Accommodation)の法律上の位置づけは?",["義務","努力目標","ボランティア","マナー"],"思いやりではなく、社会的バリアを除去する法的義務。"],
  ]},
@@ -472,7 +502,7 @@ const STAGES=[
   ["「必要な人に、必要なだけ」配るのは?",["公平性","平等性","効率性","自由"],"平等性は「みんなに同じだけ」。似て非なる2つの正義。"],
   ["資力調査(ミーンズテスト)で対象を絞って配るのは?",["選別主義","普遍主義","楽観主義","温情主義"],"困っている人を選んで集中支援。公平性重視の配り方。"],
   ["ベーシック・インカムの配り方は?",["普遍主義","選別主義","成果主義","縁故主義"],"選ばず全員に同じ量。スティグマが生じにくい利点がある。"],
-  ["「最も苦しい人々の状況改善」を条件に格差を認めるのは、誰の何原理?",["ロールズの格差原理","ウェーバーの官僚制","マルクスの唯物史観","ベンサムの功利原理"],"『正義論』。功利主義「最大多数の最大幸福」への対抗として構想された。"],
+  ["「ある程度の格差は認められるが、最も苦しい人々の状況改善が条件である」——この格差原理を唱えたのは?",["ジョン・ロールズ","ジェレミー・ベンサム","マックス・ウェーバー","カール・マルクス"],"ロールズ『正義論』の格差原理。『正義論』は、功利主義の「最大多数の最大幸福」に取って代わる「公正としての正義」を構想した。"],
   ["公平・効率・自由・平等が衝突して同時に満たせないことをウェーバーは何と呼んだ?",["神々の争い","万人の万人に対する闘争","見えざる手","囚人のジレンマ"],"どの価値(神)に仕えるかは、最後は自分で選ぶしかない。"],
  ]},
 {id:"s6",no:"第7回",title:"構築主義",
@@ -483,12 +513,12 @@ const STAGES=[
  q:[
   ["「これは問題だ!」と主張することを構築主義で何という?",["クレイム申し立て","パブリックコメント","アジテーション","ロビイング"],"社会問題は言葉によって「つくられる」。claimは苦情より広く「正当な要求・主張」。"],
   ["物理的には緑色なのに「青信号」。これが示すのは?",["言葉が現実の見え方をつくる","日本人は色覚が特殊","昔の信号は青かった","法律の誤り"],"色そのもの+呼び方=「青信号」という現実。言葉が変わると見え方も変わる。"],
-  ["児童虐待の相談対応件数、1992年度1,372件→2024年度は?",["約22万件","約2万件","約5万件","約223万件"],"223,691件。ただし「相談が増えた」ことと「虐待が増えた」ことは別問題。"],
+  ["令和6年度(2024年度)の児童虐待の相談対応件数は約何件?",["約22万件","約2万件","約5万件","約223万件"],"223,691件。1992年度の1,372件から、32年で約163倍になった。ただし「相談が増えた」ことと「虐待が増えた」ことは別問題。"],
   ["児童虐待の相談対応件数は32年で163倍に増えた——このデータ「だけ」では、ただちに言えないことは?",["虐待そのものが増えた","相談対応件数が増えた","1992年度より2024年度の件数が多い","件数は100倍以上に増えた"],"統計の増加=実態の増加とは限らない。社会の認知や通告の変化も件数を押し上げる。"],
-  ["令和6年度、児童虐待で最も多い種類は?",["心理的虐待","身体的虐待","ネグレクト","性的虐待"],"最多は心理的虐待で約6割(59.5%)。面前DVなども含まれる。"],
+  ["令和6年度の児童虐待相談対応件数で、最も多い虐待の種類は?",["心理的虐待","身体的虐待","ネグレクト","性的虐待"],"心理的虐待が約6割(59.5%)で最多。子どもの前での配偶者への暴力(面前DV)も心理的虐待に含まれる。ただしこれは「相談対応件数」の内訳で、実態の割合そのものではない。"],
   ["人種×性別など、複数の属性が交差する地点の差別を捉える概念は?",["インターセクショナリティ","ダイバーシティ","アイデンティティ","マイノリティ"],"黒人男性も白人女性も採用されるのに黒人女性だけ不採用——重ねて見ないと見えない差別。"],
   ["社会問題の「個人化」3パターン=教育化・心理主義化と、もう1つは?",["医療化","商業化","政治化","高齢化"],"能力・こころ・からだの問題にされると、社会の構造が見えなくなる。"],
-  ["「学校に行かない子」の呼び名は「学校恐怖症」→「登校拒否」→「不登校」と変わってきた。呼び名とともに変わってきたのは?",["問題の見え方・扱われ方","学校の数","子どもの数","法律の罰則"],"「恐怖症」なら病気、「拒否」なら本人の意思、「不登校」なら状態。ワードが、ワールドをつくる(中村正)。"],
+  ["「学校に行かない子」の呼び名は「学校恐怖症」→「登校拒否」→「不登校」と移り変わった。同じ状況でも、呼び名によって変わるのは?",["問題の見え方・扱われ方","学校の数","教室の広さ","法律の罰則"],"「恐怖症」なら病気、「拒否」なら本人の意思、「不登校」なら状態。ワードが、ワールドをつくる(中村正)。"],
  ]},
 {id:"s7",no:"第8回",title:"家族主義",
  boss:{name:"ママフターン",icon:"🏋️",kana:"MOM'S BURDEN",glow:"#bfeaff",
@@ -499,8 +529,8 @@ const STAGES=[
   ["夫が稼ぎ手・妻は主婦という性別役割分業で、子に強い愛情と教育関心を注ぐ家族モデルは?(落合2023)",["近代家族","拡大家族","伝統家族","武家家族"],"「昔ながらの家族」に見えて、実は歴史的には新しい形。"],
   ["「夫は仕事・妻は家事」という家族のかたち、歴史的に見ると実は?",["戦後に広まった新しい形","縄文からつづく古い伝統","江戸の武家が広めた形","人類共通の自然な本能"],"人類約700万年の歴史のうち、日本で「あたりまえ」だったのは戦後〜1990年代ごろのごく短い期間だけ。"],
   ["仕事のあとに家事・育児という「もうひと仕事」をすることを?",["セカンドシフト","オーバータイム","ダブルワーク","サードプレイス"],"負担は一方(多くは女性)にかたよりやすい。"],
-  ["6歳未満の子がいる家庭、妻の育児219分/日に対して夫は?",["65分","219分","130分","12分"],"家事は夫30分/妻187分。「意識」は変わっても「行動」の差は大きい。"],
-  ["「三歳までは母親が子育てに専念すべき」という考えの正体は?",["神話(三歳児神話)","科学的事実","法律","発達心理学の定説"],"賛成率は2008年86.7%→2022年61.0%に低下。それでもまだ6割。"],
+  ["6歳未満の子がいる夫婦。妻の育児は1日3時間以上。では夫は1日何分?(令和3年社会生活基本調査)",["65分","12分","130分","300分"],"夫は育児65分・家事30分。妻は家事も育児も、夫の数倍の時間を担っている。「意識」は変わっても「行動」の差は大きい。"],
+  ["「三歳までは母親が子育てに専念すべき」という考えの正体は?",["神話","科学的事実","法律","発達心理学の定説"],"その名も「三歳児神話」。妻(有配偶女性)の賛成率は2008年86.7%→2022年61.0%に低下。それでもまだ6割。"],
   ["「ケアは家族がみるのが当たり前」という考え方を?",["家族主義","個人主義","脱家族化","温情主義"],"家族の犠牲と協力を美しいとみなす〈ケアの家族責任規範〉(齋藤2024)。"],
   ["スウェーデン・デンマークなど「家族への支援も脱家族化も強い」型は?(ライトナー)",["選択的家族主義","積極的家族主義","消極的家族主義","脱家族主義"],"家族で見ても、サービスに頼っても選べる。だから「選択的」。"],
   ["福祉レジーム(自由主義・保守主義・社会民主主義)の3類型で有名なのは?",["エスピン=アンデルセン","ライトナー","ロールズ","ブース"],"国・市場・家族の誰が生活を支えるかで各国を分類した。"],
@@ -515,39 +545,39 @@ const STAGES=[
   ["社会保障の根拠となる日本国憲法の条文は?",["第25条","第9条","第1条","第96条"],"「健康で文化的な最低限度の生活を営む権利」=生存権。"],
   ["令和8年度の国の一般会計歳出総額は約?",["122兆円","39兆円","12兆円","500兆円"],"122兆3,092億円。1万円札を積み上げたら大変なことになる額。"],
   ["国家予算に占める社会保障関係費の割合は約?",["3分の1","10分の1","2分の1","20分の1"],"39兆559億円=31.9%。毎年増え続けている。"],
-  ["社会保険5種類(医療・年金・介護・雇用・労災)に入らないのは?",["がん保険(民間保険)","医療保険","雇用保険","労災保険"],"アフラックやソニー損保は民間保険。社会保険は強制加入が原則。"],
+  ["社会保険の5つの種類に入らないのは?",["がん保険","労災保険","雇用保険","介護保険"],"社会保険は医療・年金・介護・雇用・労災の5つ。がん保険や自動車保険は、アフラックやソニー損保など民間会社の保険。社会保険は強制加入が原則。"],
   ["給与から保険料・税金があらかじめ差し引かれることを俗に?",["天引き","中抜き","源泉狩り","仕送り"],"給与明細の「控除」欄。額面35万円→手取り約27万円の例も。"],
-  ["日本の公的年金の構造は?",["2階建て","平屋","3階建て","タワーマンション"],"1階=国民年金(全員)、2階=厚生年金(会社員・公務員)。"],
+  ["日本の公的年金の構造は?",["2階建て","平屋","3階建て","タワーマンション"],"1階=国民年金(日本に住む20歳以上60歳未満の人が原則加入)、2階=厚生年金(会社員・公務員が上乗せ)。"],
   ["老齢基礎年金(満額)は月およそ?",["7.1万円","14.5万円","23万円","3万円"],"国民年金の満額で月約7.1万円(令和8年度)。厚生年金込みの平均は約14.5万円。"],
  ]},
 {id:"s9",no:"第10-11回",title:"高齢化と子育て",
  boss:{name:"ローゴ・キッツー",icon:"🏔️",kana:"TOUGH OLD DAYS",glow:"#9aa2c8",
-   intro:"「1965年は9.1人で支えた…2065年、お前はたった1.3人で我を支えるのだ…」",
+   intro:"「昔は大勢で支えた…だが支え手は減る一方…この重み、お前ひとりで支えきれるかぁ…?」",
    attacks:["少子化ウェーブ","肩車プレス","8050の重圧"],
    defeat:"「支え手が減っても…施設ではなく、地域で支え合う道が…あるのだな…ほっ…よっこいしょ…」"},
  q:[
   ["「超高齢社会」の基準は、65歳以上人口が総人口の?",["21%以上","7%以上","14%以上","50%以上"],"7%=高齢化社会、14%=高齢社会、21%=超高齢社会。"],
-  ["高齢者1人を支える現役世代の人数のたとえ。「胴上げ型」「騎馬戦型」ときて、2065年ごろの予想は?",["肩車型","おんぶ型","綱引き型","二人三脚型"],"1965年9.1人(胴上げ)→2020年2.0人(騎馬戦)→2065年推計1.3人(肩車)。支え手がどんどん減っていく。"],
+  ["高齢者1人を支える現役世代の人数のたとえ。「胴上げ型」「騎馬戦型」ときて、2065年ごろの予想は?",["肩車型","おんぶ型","綱引き型","二人三脚型"],"高齢者1人を支える現役世代は、1965年ごろ約9人(胴上げ)→2020年ごろ約2人(騎馬戦)→2065年ごろは1人あまり(肩車)。支え手がどんどん減っていく。"],
   ["2024年の日本の高齢化率は?",["29.3%","19.3%","39.3%","9.3%"],"約3.4人に1人が65歳以上。2070年推計は38.7%。"],
   ["「8050問題」の8050が意味するのは?",["80代の親が50代の子を支える","昭和80年と50年","80歳まで50万円","時速80kmと50km"],"ひきこもりの長期化と親の高齢化。次は「9060」へ。"],
-  ["地域包括ケアシステムの圏域の目安は、自宅から?",["30分圏内(おおむね中学校区)","3時間圏内","徒歩5分","県内全域"],"住み慣れた町で最後まで。「本人が家にいたい」+「施設を増やすお金がない」。"],
+  ["地域包括ケアシステムの圏域の目安は、自宅から?",["30分圏内","3時間圏内","徒歩5分","県内全域"],"おおむね30分以内に必要なサービスが届く範囲=だいたい中学校区。住み慣れた町で最後まで暮らすための仕組みで、理由は「本人が家にいたい」+「施設や病院を増やすお金が国にない」の2つ。"],
   ["保育と教育を一体化し、この10年で約3.7倍に急増した施設は?",["認定こども園","幼稚園","保育所","学童保育"],"幼稚園は減少、保育所は横ばいのなか、認定こども園が急増して幼稚園の数を逆転した。"],
   ["ヘックマンが「大人になっても残る」と主張した能力は?",["非認知能力","IQ","偏差値","記憶力"],"実行機能・自制心・社会情緒など。学力は消えても、これは残る。"],
-  ["子育てと親の介護が同時に重なることを?",["ダブルケア","ツインケア","ペアケア","セカンドケア"],"晩産化で増加中。家族だけで背負うのはもう限界——だから脱家族化。"],
+  ["子育てと親の介護が同時に重なることを?",["ダブルケア","ツインケア","ペアケア","セカンドケア"],"講義の例は「35歳で出産した人が、子どもと82歳の親の両方をケア」。晩婚・晩産で、2つのケアの時期が重なりやすい。家族だけで背負うのはもう限界——だから脱家族化。"],
  ]},
 {id:"s10",no:"第12回",title:"生活保護",
  boss:{name:"ヘン・ケーン",icon:"👁️",kana:"EYE OF PREJUDICE",glow:"#ff5d7a",
-   intro:"「申請などしてみろ…『恥』のラベルを貼りつけてやる…世間の目は怖いぞぉ?」",
+   intro:"「保護を受けようものなら…『恥』のラベルを貼りつけてやる…世間の目は怖いぞぉ?」",
    attacks:["世間の目","扶養照会の鎖","「タダ乗り」の烙印"],
    defeat:"「保護は恥ではなく…憲法25条の権利…だと…!? ひ、光がまぶしい…消えるうぅ…!」"},
  q:[
   ["生活保護の4つの原理=国家責任・無差別平等・最低生活保障と、もう1つは?",["補足性","効率性","選別性","快適性"],"足りない分だけ補う。収入+保護費=最低生活費。"],
   ["生活保護は何によって始まる?",["申請","推薦","抽選","招待"],"申請保護の原則。だから「申請できない空気」が最大の壁になる。"],
-  ["日本の生活保護の捕捉率(利用する資格がある人のうち、実際に利用している人の割合)は約?",["22.6%","91.6%","64.0%","82.0%"],"5人に1人しか使えていない。フランス91.6%・米国82%・独64%・英63%。"],
-  ["捕捉率が最も高い国(91.6%)は?",["フランス","日本","アメリカ","ドイツ"],"日本の22.6%は先進国で突出して低い。"],
-  ["不正受給は保護費総額の?",["0.4%未満","約10%","約30%","約半分"],"99.6%は正規受給。イメージと実態のギャップこそ試験の狙い目。"],
-  ["生活保護受給世帯のうち日本国籍世帯は?",["97%","67%","3%","50%"],"「3分の1は外国人」というSNS情報は誤報(実際は2.87%)。記事は削除・謝罪済み。"],
-  ["2025年6月27日、最高裁が「違法」と初判断したのは?",["生活扶助基準のデフレ調整引き下げ","扶養照会","外国人への支給","申請主義"],"2013〜15年の最大10%・670億円引き下げ。ただし国の賠償責任は認めず。"],
+  ["日本の生活保護の捕捉率(使える人のうち、実際に使っている人の割合)は、厚労省の推計(2018年公表・所得のみで判定)で約何割?",["約2割","約9割","約6割","約8割"],"使える人のうち、実際に使っているのは4〜5人に1人ほど。「申請できない空気」がその壁になっている。"],
+  ["日本の子どもの貧困率は、およそ何人に1人?",["9人に1人","3人に1人","30人に1人","100人に1人"],"約9人に1人。40人のクラスなら4〜5人いる計算。講義では、NPO・ボランティア・企業・地域の寄付で運営される学習支援や居場所づくりも紹介された。"],
+  ["不正受給は保護費総額の?",["0.4%未満","約10%","約30%","約半分"],"2022年度は0.4%未満(厚労省データ)。裏返せば99.6%以上は正規の受給。イメージと実態のギャップこそ試験の狙い目。"],
+  ["生活保護受給世帯のうち日本国籍世帯は?",["97%","67%","3%","50%"],"外国籍世帯は2.87%(2023年度)。SNSで広がった「生活保護の3分の1は外国人」は、月ごとの数を12か月分足した「延べ数」を実数と取り違えた記事がもとの誤情報で、その記事は削除・おわび済み。"],
+  ["2025年6月27日、最高裁が「違法」と初判断したのは?",["生活扶助基準のデフレ調整による引き下げ","ケースワーカーによる家庭訪問","在留外国人への保護費の支給","医療費を自己負担なしにする医療扶助"],"2013〜15年の生活扶助引き下げ(最大10%・計670億円)のうち、物価下落を理由にした「デフレ調整」(580億円)の部分を違法とした。ただし国の賠償責任は認めず。"],
   ["「周囲と比べて、みんなが当たり前にできることができない」貧困は?",["相対的貧困","絶対的貧困","精神的貧困","一時的貧困"],"日本の相対的貧困率は15.4%(2021)。子どもの貧困は9人に1人。"],
  ]},
 {id:"s11",no:"第13回",title:"福祉の歴史",
@@ -556,13 +586,13 @@ const STAGES=[
    attacks:["劣等処遇の鞭","ワークハウスの闇","「施しに感謝せよ」"],
    defeat:"「施しの時代は…終わった…福祉は、恩恵ではなく…権利になったのだ…ビリビリ…(破れて散る)」"},
  q:[
-  ["1601年、世界初の公的救貧制度は?",["エリザベス救貧法","新救貧法","救護法","ハンムラビ法典"],"国がはじめて貧しい人を助けるルールを作った。ただし浮浪者には懲罰的。"],
-  ["1834年新救貧法の「救済水準は最下層労働者より低く」という原則は?",["劣等処遇","応能負担","最低保障","水際作戦"],"「助けを甘くするとなまける」という発想。スティグマの原点。"],
+  ["1601年、イギリスで制定され、公的な救貧制度の出発点とされる法律は?",["エリザベス救貧法","新救貧法","救護法","ハンムラビ法典"],"国が貧しい人を助けるルールをつくった。ただし教区まかせで水準に地域差があり、浮浪者には懲罰的だった。"],
+  ["1834年新救貧法の「救済水準は最下層労働者より低く」という原則は?",["劣等処遇","応能負担","最低保障","水際作戦"],"「助けを甘くするとなまける」と、わざと厳しくした。救済を受けること自体に「劣等」の烙印(スティグマ)が押され、ワークハウスも過酷だった。"],
   ["世界初の社会保険(1883年)をつくった国は?",["ドイツ","イギリス","日本","フランス"],"みんなで少しずつ出し合い、病気やケガに「前もって備える」世界初のしくみ。"],
-  ["「ナショナル・ミニマム」を提唱したのは?",["ウェッブ夫妻","キュリー夫妻","ベヴァリッジ","ブース"],"1897年。「誰もが下回ってはならない最低限を国が保障せよ」。憲法25条に受け継がれた。"],
+  ["「ナショナル・ミニマム」を提唱したのは?",["ウェッブ夫妻","キュリー夫妻","ベヴァリッジ","ブース"],"1897年。「だれもが下回ってはならない最低限の生活水準を国が保障せよ」。この考えがベヴァリッジ報告と日本国憲法25条に受け継がれた。"],
   ["「ゆりかごから墓場まで」で有名な1942年の報告書は?",["ベヴァリッジ報告","チャーチル報告","ウェッブ報告","王立救貧報告"],"300ページの政府報告書なのに60万部超の大ヒット。発売日に行列ができた。"],
-  ["1874年、日本初の救貧制度は?",["恤救規則","救護法","生活保護法","十七条憲法"],"「まずは家族や近所で」。国が助けるのは身寄りのない人だけだった。"],
-  ["1929年の救護法、救済を受けると失ったものは?",["選挙権","戸籍","財産","苗字"],"恩恵的で市民権を奪う救済。「権利としての福祉」はまだ遠かった。"],
+  ["1874年、明治政府が定めた全国的な救貧制度は?",["恤救規則","救護法","生活保護法","十七条憲法"],"「まずは家族や近所で」。国が助けるのは身寄りのない人だけで、公的責任は弱かった。"],
+  ["1929年の救護法、救済を受けると失ったものは?",["選挙権","戸籍","財産","苗字"],"給付は限定的で恩恵的。救済を受けると選挙権を失った。「権利としての福祉」はまだ遠かった。"],
   ["2000年、「措置から契約へ」の大転換となった改革は?",["社会福祉基礎構造改革","明治維新","構造改革特区","大化の改新"],"給食からレストランへ。利用者が「受ける側」から「選ぶ主役」に。"],
  ]},
 ];
@@ -579,8 +609,8 @@ const TRIVIA=[
 "ドイツで年金制度が生まれた当初、支給開始はなんと70歳。当時の平均寿命は約40歳だった…!",
 "ベヴァリッジ報告は300ページの政府報告書なのに60万部超の大ヒット。発売日に行列ができた。",
 "「青信号」は物理的には緑色。言葉が現実の見え方をつくる(構築主義)。",
-"日本の生活保護の捕捉率22.6%は、フランス(91.6%)の4分の1以下。",
-"扶養照会が実際に援助につながる割合は0.7〜1.45%程度と極めて低い。",
+"扶養照会をする割合(照会率)は自治体でバラバラ。東京の区でも、低いところで7.1%、高いところで91.6%(2021年度・全国平均30.2%)。",
+"扶養照会をしても、実際に援助につながる割合はごくわずか(ある調査で0.7%以下、別の集計でも1.45%)。申請をためらわせる壁になる一方、効果は極めて限定的。",
 "日本の高齢化率は2024年で29.3%=約3.4人に1人が65歳以上。2070年には38.7%の予測。",
 "ラットパーク=楽園で暮らすネズミは、薬物入りの水にほぼ興味を示さなかった。",
 "児童虐待の相談対応件数は32年で約163倍。ただし「実態が163倍」とは別問題(構築主義)。",
@@ -590,10 +620,28 @@ const TRIVIA=[
 "熊谷晋一郎いわく「自立とは依存先を増やすこと」。1本に太く頼らず、細い依存先をたくさん持つのが自立。",
 "近代家族(夫は仕事・妻は家事)は人類700万年の歴史の中のごく短い一時期の形にすぎない。",
 "日本の公的年金は「2階建て」。1階=国民年金、2階=厚生年金。",
-"従業員300人未満企業の大卒求人倍率は8.98倍。大企業(0.34倍)とは別世界。",
+"従業員300人未満企業の大卒求人倍率は8.98倍(2026年卒)。大企業(0.34倍)とは別世界。",
 ];
 
 const RANKS=[[0,"ふくし見習い"],[3,"ケアのたまご"],[9,"まなびの冒険者"],[15,"福祉のタビビト"],[21,"地域のたよれる人"],[27,"福祉の賢者"],[33,"福祉マスター"],[36,"Well-beingの化身"]];
+
+/* ボスの台詞パック。rage=HP30%未満の状態名(14字以内) / lose=プレイヤーが力尽きたときの捨て台詞 /
+   again=負けた直後の「リベンジ!」で再戦したときの登場台詞 / after=エンディングの「その後」 */
+const TALK={
+ s1:{rage:"羽を逆立てている",lose:"ドヤァ…今回はワタシの勝ちだ。勝ち負けで、お前という人間が決まるわけでは…ハッ! い、今のはナシだ!",again:"ドヤァ…懲りずにまた来たか。その粘り…い、いや、認めんぞ!",after:"羽をたたみ、『実力も運のうち』を読みなおしている。"},
+ s2:{rage:"意地を張っている",lose:"ひとりで反省してこい!! …だ、誰かに聞いてから来るのも、ま、まあ止めはせんがな!!",again:"また来ただと…? さては誰かに教わってきたな!? ひ、卑怯だぞ!!",after:"依存先を増やすため、連絡先を一件ずつ増やしている。(現在3件)"},
+ s3:{rage:"おせっかいが加速中",lose:"ほれ見たことか、ワシの言う通りにせんから…いや、次も自分で決めて来るのじゃぞ…?",again:"おお、戻ってきたか。今度こそワシの言う通りに…なに、自分で考えてきた、じゃと?",after:"「あなたのため」と言いかけては飲みこみ、「どうしたい?」と聞く練習中。"},
+ s4:{rage:"壁を積み増している",lose:"ゴゴゴ…壁は高かろう? …だが、金魚が苦しそうなら金魚ではなく水を疑え…とも言うな…し、しまった!",again:"また来たか…ム、こちらの壁にもヒビが入っておる…?",after:"社会の側の壁を、一枚ずつ外して回っている。"},
+ s5:{rage:"天秤がぐらついている",lose:"迷うたな? よい、あちらを立てればこちらが立たぬ。即答などない。…だが、このクイズには答えがあるぞ",again:"再び来たか。…して、汝の軸は定まったか?",after:"神々のケンカは今日もつづく。でも、選ぶ人を見守ることにした。"},
+ s6:{rage:"レッテルを乱れ貼り中",lose:"ガオォ! 一度負けたくらいで『どうせ無理』と決めつけ…ハッ、それはワシの悪いクセだった!",again:"また来たか…前に貼ったレッテル、もう剥がれかけておるではないか…!",after:"名札に「ワードがワールドをつくる」と書き、言葉選びに気をつけている。"},
+ s7:{rage:"重圧がふくらんでいる",lose:"ほら、ひとりで抱えこむから…誰かと分け合えば軽くなるのに…あら、私ったら何を言ってるのかしら…?",again:"また来たの…? 今度は、ひとりで抱えこまずに来たのかしら…?",after:"荷物を家族だけで抱えず、サービスや地域と分け合うことにした。肩こりが治ったらしい。"},
+ s8:{rage:"手取りをけずっている",lose:"チャリーン♪ キミのライフ、しっかり差し引いておいたよ。次はちゃんと備えて来てね?",again:"おかえり~♪ 前回のぶんじゃ、まだ足りなかった?",after:"「天引きは支え合い」と給与明細の裏に書いて配っている。"},
+ s9:{rage:"地鳴りがしている",lose:"ほっ…この山は、ひとりで登るには険しいぞ…。次は誰かと来るがよい…",again:"また来たか…前より足どりが軽いな。誰かと支え合ってきたか…?",after:"住み慣れた町で、地域の支え合いの輪に加わった。"},
+ s10:{rage:"世間の目がギラついている",lose:"どうだ、もう一度挑むのは気まずかろう? …そうやって、ためらわせるのが我のやり口よ…!",again:"また来ただと…!? 世間の目が気にならんのか…! な、なぜ堂々としておる…!",after:"サングラスをかけ、「保護は権利」の貼り紙をして回っている。"},
+ s11:{rage:"ワークハウスを増築中",lose:"出直してまいれ…ただし、挑み直すのは汝の権利じゃ。恩恵ではないぞ…チッ、口がすべった",again:"また来たか…挑み直しを許すとは、甘い時代になったものよ…",after:"「恩恵から権利へ」と書き足され、歴史の一ページに収まった。"},
+ final:{rage:"無関心の霧が濃くなる",lose:"…どうでもいい。おぬしがまた来ようが、来まいが。…来るなら、まあ、待っておる",again:"…また来たの。…どうでもいいけど。…ちょっとだけ、うれしい",after:"最近、木曜4限の教室の前をうろうろしているらしい。"},
+};
+function talk(k){const t=TALK[B.stage&&B.stage.id];return t&&t[k];}
 
 /* ---------- SAVE ---------- */
 const SAVE_KEY="fukushi_quest_v2";
@@ -615,7 +663,8 @@ const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
-function show(id){$$(".screen").forEach(s=>s.classList.remove("on"));$("#"+id).classList.add("on");window.scrollTo({top:0});}
+let resultAt=0;/* 結果画面を出した時刻。直後のタップ(「討伐! 結果へ」の二度押しなど)が結果画面のボタンに当たるのを防ぐ */
+function show(id){$$(".screen").forEach(s=>s.classList.remove("on"));$("#"+id).classList.add("on");window.scrollTo({top:0});if(id==="scr-result")resultAt=performance.now();}
 function rankName(table,v){let n=table[0][1];for(const[min,name]of table){if(v>=min)n=name;}return n;}
 function totalStars(){return Object.values(save.stars||{}).reduce((a,b)=>a+(Number(b)||0),0);}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
@@ -626,7 +675,7 @@ function toast(msg){
 
 /* ---------- TITLE ---------- */
 const QT=STAGES.reduce((a,s)=>a+s.q.length,0);
-$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.1`;
+$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.5`;
 const paradeStr=CHAPTERS.map(c=>c.boss.icon).join("");
 /* オープニングの流れるアイコンは人型・人の顔(人間味のある絵文字)を除外。ending parade は全ボス維持 */
 const PARADE_SKIP=new Set(["🦸","🏋️","😇","😶"]);
@@ -684,9 +733,23 @@ $("#btn-reset").addEventListener("click",e=>{
 
 /* ---------- BATTLE STATE ---------- */
 const B={chapter:0,stage:null,boss:null,isFinal:false,queue:[],qi:0,asked:0,hearts:3,combo:0,maxCombo:0,score:0,
-  bossHP:0,bossMax:0,locked:true,autoT:null,introT:null,hitT:null,resultT:null,over:false,angry:false,current:null,correctIdx:0};
+  bossHP:0,bossMax:0,locked:true,autoT:null,introT:null,hitT:null,resultT:null,over:false,angry:false,current:null,correctIdx:0,
+  run:0,introHold:false};/* run: startBattleごとに加算。非同期コールバックが「別のバトルに変わった」かを章番号でなくこれで判定する */
 
 function allQuestions(){const all=[];STAGES.forEach(s=>s.q.forEach(q=>all.push(q)));return all;}
+/* 問い→出典の章番号(STAGESの添字)。終章で「どの章の問いか」を示すのに使う */
+const SRC=new Map();STAGES.forEach((s,si)=>s.q.forEach(q=>SRC.set(q,si)));
+/* 終章の出題順: 章ごとにシャッフルし、章の並びも毎回変えながら1問ずつ取る(最初の11問で全章が1回ずつ出る) */
+function finalQueue(){
+  const pools=STAGES.map(s=>shuffle(s.q)),out=[];
+  while(pools.some(p=>p.length))shuffle(pools.map((p,i)=>i)).forEach(i=>{if(pools[i].length)out.push(pools[i].pop());});
+  return out;
+}
+/* 正解時のダメージ(コンボ数cの関数)。3コンボで会心1.4倍、5コンボでフィーバー1.5倍 */
+function calcDmg(c){let d=70+Math.min(c,5)*12;if(c>=3)d=Math.round(d*1.4);if(c>=5)d=Math.round(d*1.5);return d;}
+/* 解説の長さに応じた読み時間(1.5秒+75ms/字、最大9秒)。速く読める人は「すぐ次へ」で先へ進める */
+function readMs(q){return Math.min(9000,1500+q[2].length*75);}
+let lastLost=-1;/* 直前に力尽きた章。「リベンジ!」の再戦だけ again 台詞で迎える(メモリ上のみ) */
 
 function renderTrail(){
   const t=$("#trail");t.innerHTML="";
@@ -711,9 +774,11 @@ function startBattle(chIdx){
   B.stage=CHAPTERS[chIdx];
   B.isFinal=chIdx===CHAPTERS.length-1;
   B.boss=B.stage.boss;
-  B.queue=B.isFinal?shuffle(allQuestions()):shuffle(B.stage.q.slice());
+  B.queue=B.isFinal?finalQueue():shuffle(B.stage.q.slice());
   B.qi=0;B.asked=0;B.hearts=3;B.combo=0;B.maxCombo=0;B.score=0;
   B.locked=true;B.over=false;B.angry=false;
+  B.retry=new Set();B.isRetry=false;B.requeued=false;B.miss=0;
+  B.misses=[];B.redeemed=new Set();/* ふりかえり用のミス一覧 / おかわりで取り返した問い */
   const qn=B.isFinal?12:B.stage.q.length;
   B.bossMax=Math.round(qn*110);
   B.bossHP=B.bossMax;
@@ -735,17 +800,36 @@ function startBattle(chIdx){
   /* chapter intro */
   const ci=document.createElement("div");
   ci.className="chapter-intro";
-  ci.innerHTML=`<span class="ch px">${chapterLabel(chIdx)}</span><span class="tt">${esc(B.stage.title)}</span><span class="bs">VS ${esc(B.boss.name)}</span>`;
+  const best=Number(save.stars[B.stage.id])||0;
+  ci.innerHTML=`<span class="ch px">${chapterLabel(chIdx)}</span><span class="tt">${esc(B.stage.title)}</span><span class="bs">VS ${esc(B.boss.name)}</span>`+
+    (best>0?`<span class="bs">これまでの最高 ${"★".repeat(Math.min(3,best))}${"☆".repeat(Math.max(0,3-best))}</span>`:"");
   document.body.appendChild(ci);
   setTimeout(()=>ci.remove(),1750);
-  const myRun=B.chapter;
+  const line=(lastLost===chIdx&&talk("again"))||B.boss.intro;
+  lastLost=-1;
+  /* 登場セリフは章イントロの暗幕が明けてから打ち始め、読む時間をとってから1問目へ(タップ/Enterで先へ)。
+     以前は暗幕の下で打ち終わり、0.35秒で問題文に置き換わって読めなかった */
+  const myRun=++B.run;
+  const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
   B.introT=setTimeout(()=>{
     B.introT=null;
-    if(B.over||B.chapter!==myRun)return;
-    msgType(B.boss.intro,()=>{B.introT=setTimeout(()=>{B.introT=null;if(!B.over)nextQuestion();},350);});
-  },900);
+    if(B.over||B.run!==myRun)return;
+    msgType(line,()=>{
+      if(B.over||B.run!==myRun)return;
+      B.introHold=true;
+      const go=()=>{
+        if(!B.introHold)return;
+        B.introHold=false;
+        if(B.introT){clearTimeout(B.introT);B.introT=null;}
+        if(!B.over&&B.run===myRun)nextQuestion();
+      };
+      B.introT=setTimeout(go,Math.min(4000,1200+line.length*40));
+      $("#qwin").onclick=go;
+    });
+  },reduce?300:1350);
 }
 function leaveBattle(){
+  B.introHold=false;B.finishReady=false;B.pendingResult=null;
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
   if(B.introT){clearTimeout(B.introT);B.introT=null;}
   if(B.hitT){clearTimeout(B.hitT);B.hitT=null;}
@@ -753,17 +837,22 @@ function leaveBattle(){
   if(typeTimer){clearInterval(typeTimer);typeTimer=null;}
   B.over=true;
 }
-let fleeArmed=false;
+let fleeArmed=false,fleeArmedAt=0;
 $("#btn-flee").addEventListener("click",()=>{
   if(B.over)return;/* 勝敗確定後は無効。とどめ直後の離脱でvictory予約が消え章クリアが失われるのを防ぐ */
+  if(fleeArmed&&performance.now()-fleeArmedAt<400)return;/* ダブルタップ1回で「本当にやめる?」を突破しない */
   if(!fleeArmed){
-    fleeArmed=true;$("#btn-flee").textContent="本当にやめる?";
+    fleeArmed=true;fleeArmedAt=performance.now();$("#btn-flee").textContent="本当にやめる?";
     setTimeout(()=>{fleeArmed=false;if($("#scr-battle").classList.contains("on"))$("#btn-flee").textContent="◀ タイトル";},2500);
     return;
   }
   fleeArmed=false;$("#btn-flee").textContent="◀ タイトル";
   leaveBattle();renderTitle();show("scr-title");
 });
+/* マウス/タップで押したらフォーカスを外す。残ると次の Enter(「Enterで先へ」)で離脱が確定してしまう */
+$("#btn-flee").addEventListener("pointerup",e=>e.currentTarget.blur());
+/* 被弾アニメ(.hit)が終わったら外す。付けっぱなしだと浮遊も「怒り」の震えも止まっていた */
+$("#foe-sprite").addEventListener("animationend",e=>{if(e.animationName==="foehit")e.currentTarget.classList.remove("hit");});
 
 /* ---------- HUD ---------- */
 function updateHUD(){
@@ -779,8 +868,12 @@ function updateHUD(){
   if(!B.angry&&B.bossHP>0&&r<.3){
     B.angry=true;
     $("#foe-sprite").classList.add("angry");
-    $("#foe-state").textContent="!! 怒りに燃えている !!";
+    $("#foe-state").textContent=`!! ${talk("rage")||"怒りに燃えている"} !!`;
   }
+  /* あと一押しの合図(HPラベルの左): 終章以外のラスト1問 > 次の正解でとどめ > ふだんは「てきのHP」 */
+  const last=!B.isFinal&&B.qi>0&&B.qi>=B.queue.length;
+  const cue=B.over||B.bossHP<=0?"":last?"⚔️ ラスト1問! 正解で討伐":calcDmg(B.combo+1)>=B.bossHP?"⚔️ 次の正解で とどめ!":"";
+  const ce=$("#foe-cue");ce.textContent=cue||"てきのHP";ce.classList.toggle("cue",!!cue);
 }
 
 /* ---------- typewriter ---------- */
@@ -802,16 +895,20 @@ function nextQuestion(){
   if(B.over)return;
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
   if(B.qi>=B.queue.length){
-    /* 全問出題済み。最後が正解(combo>0)またはHP0なら戦い抜いた=討伐成立。
-       最後が誤答でボスがHPを残していたら、倒しきれず=敗北とする。 */
+    /* 全問を出し切った。ライフが残っていれば討伐成立。
+       ミスした問いは(ライフが尽きない限り)後ろに差し戻され、ラスト1問の正解は一撃でとどめになるので、ここはふつう通らない予備。
+       (7月版の「最後の1問が誤答ならライフが残っていても敗北」は出題順の運に左右されるため廃止) */
     B.over=true;
     $("#btn-next").style.display="none";/* 勝敗確定の待ち時間に「すぐ次へ」を押させない */
-    if(B.combo>0||B.bossHP<=0){B.bossHP=0;updateHUD();B.autoT=setTimeout(victory,400);}
+    if(B.hearts>0){B.bossHP=0;updateHUD();B.autoT=setTimeout(()=>victory(),400);}
     else{updateHUD();B.autoT=setTimeout(gameOver,400);}
     return;
   }
   const q=B.queue[B.qi];B.qi++;B.asked++;
   B.current=q;
+  B.isRetry=B.retry.has(q);
+  if(B.isRetry)toast("🔁 さっきの問題に再挑戦!");
+  updateHUD();
   const correct=q[1][0];
   const opts=shuffle(q[1]);
   B.correctIdx=opts.indexOf(correct);
@@ -850,64 +947,90 @@ function onAnswer(idx){
     const wasFeverStart=B.combo===5;
     const fever=B.combo>=5;
     const crit=B.combo>=3;
-    let dmg=70+Math.min(B.combo,5)*12;
-    if(crit)dmg=Math.round(dmg*1.4);
-    if(fever)dmg=Math.round(dmg*1.5);
+    const dmg=calcDmg(B.combo);
+    /* 通常章のラスト1問に正解したら、HPが残っていても一撃でとどめ(スコアは通常のダメージ分だけ) */
+    const lastQ=!B.isFinal&&B.qi>=B.queue.length;
+    const hit=lastQ?Math.max(dmg,B.bossHP):dmg;
     B.score+=dmg;
     if(wasFeverStart)toast("🌈 FEVER!! ダメージ1.5倍!");
-    if(crit){const f=document.createElement("div");f.className="crit-flash";document.body.appendChild(f);setTimeout(()=>f.remove(),320);}
-    hitBoss(dmg,crit,fever);
+    /* 全画面フラッシュは山場(3コンボ目・フィーバー突入・とどめ)だけ。毎回光ると授業中にまぶしい */
+    if(B.combo===3||wasFeverStart||B.bossHP-hit<=0){const f=document.createElement("div");f.className="crit-flash";document.body.appendChild(f);setTimeout(()=>f.remove(),320);}
+    if(B.isRetry){B.retry.delete(q);B.redeemed.add(q);}
+    if(B.isFinal){const n=$$("#trail .tnode")[SRC.get(q)];if(n)n.classList.add("lit");}/* 終章: 正解した問いの章が道のりで光る */
+    hitBoss(hit,crit,fever);
     updateHUD();
     if(B.bossHP<=0){
       B.over=true;
       showExplain(true,q,"finish");
-      B.autoT=setTimeout(victory,1300);
+      /* 被弾アニメのあとに消滅させ、とどめの解説を読む時間をとってから結果へ(「討伐! 結果へ」で即時) */
+      B.autoT=setTimeout(()=>{B.autoT=null;victory(Math.max(1300,readMs(q)-600));},600);
       return;
     }
     showExplain(true,q,null);
-    /* 解説の長さに応じて読み時間を確保(1.5秒+55ms/字、最大6秒) */
-    const wait=Math.min(6000,1500+q[2].length*55);
-    B.autoT=setTimeout(()=>{B.autoT=null;if(!B.over){B.locked=false;nextQuestion();}},wait);
+    B.autoT=setTimeout(()=>{B.autoT=null;if(!B.over){B.locked=false;nextQuestion();}},readMs(q));
   }else{
     B.combo=0;
     $("#qwin").classList.remove("fever");
-    const atk=pick(B.boss.attacks);
+    /* おかわり: このミスでライフが尽きないなら、同じ問いを2問あとにもう一度出す(選択肢は並べ替わる) */
+    if(B.misses.indexOf(q)<0)B.misses.push(q);B.redeemed.delete(q);
+    B.requeued=false;
+    if(B.hearts>1){B.queue.splice(Math.min(B.qi+2,B.queue.length),0,q);B.retry.add(q);B.requeued=true;}
+    /* 終章: 1回目・3回目のミスは、その問いが出た章のボスの技を「呼びさます」 */
+    B.miss++;
+    const src=B.isFinal&&B.miss%2===1?STAGES[SRC.get(q)].boss:null;
+    const atk=pick((src||B.boss).attacks);
     const banner=document.createElement("div");
-    banner.className="atk-banner";banner.textContent=`💢 ${atk}!!`;
+    banner.className="atk-banner";banner.textContent=`💢 ${src?src.icon+" ":""}${atk}!!`;
     $("#foe-win").appendChild(banner);
     setTimeout(()=>banner.remove(),950);
-    const hitRun=B.chapter;
+    const hitRun=B.run;
     B.hitT=setTimeout(()=>{
       B.hitT=null;
-      if(B.over||B.chapter!==hitRun)return;
+      if(B.over||B.run!==hitRun)return;
       $("#battle-wrap").classList.add("shake");
       setTimeout(()=>$("#battle-wrap").classList.remove("shake"),450);
       B.hearts--;updateHUD();
-      showExplain(false,q,atk);
+      showExplain(false,q,atk,src);
       if(B.hearts<=0)$("#btn-next").textContent="力尽きた… ▶";
       else $("#btn-next").textContent="つづける ▶";
     },550);
   }
 }
-function showExplain(good,q,finishOrAtk){
+function showExplain(good,q,finishOrAtk,src){
   const ex=$("#explain");
   ex.classList.remove("good","bad");
   ex.classList.add("on",good?"good":"bad");
+  /* 終章では回答後に出典の章を添える(出題前に出すと章題が答えのヒントになるため回答後だけ) */
+  const si=B.isFinal?SRC.get(q):undefined;
+  const from=si===undefined?"":`<br><span class="small-dim">📍 ${chapterLabel(si)}(${esc(STAGES[si].no)})「${esc(STAGES[si].title)}」の問い</span>`;
   if(good){
-    $("#ex-tag").textContent=finishOrAtk==="finish"?"⭕ せいかい! とどめの一撃!!":"⭕ せいかい!";
-    $("#ex-body").innerHTML=esc(q[2]);
-    $("#foe-say").textContent="";
+    $("#ex-tag").textContent=finishOrAtk==="finish"?"⭕ せいかい! とどめの一撃!!":B.isRetry?"⭕ せいかい! リベンジ成功!":
+      B.combo>=5?"🌈 せいかい! フィーバー中!":B.combo>=3?"⭕ せいかい! 会心!!":"⭕ せいかい!";
+    $("#ex-body").innerHTML=esc(q[2])+from;
+    B.exAt=performance.now();/* 正解の解説は即座に出るので、直後の連打が「すぐ次へ」や一時停止に当たらないようにする */
+    $("#foe-say").textContent=si!==undefined&&finishOrAtk!=="finish"?`無関心の霧が晴れた! ${STAGES[si].boss.icon}の記憶がよみがえる!`:"";
     $("#btn-next").textContent="すぐ次へ ▶";
     $("#btn-next").style.display=finishOrAtk==="finish"?"none":"";
   }else{
     $("#ex-tag").textContent="❌ ミス!";
-    $("#ex-body").innerHTML=`正解は「<b style="color:var(--hp)">${esc(q[1][0])}</b>」。${esc(q[2])}`;
-    $("#foe-say").textContent=`${B.boss.name}の ${finishOrAtk}! 手痛い反撃を受けた!`;
+    $("#ex-body").innerHTML=`正解は「<b style="color:var(--hp)">${esc(q[1][0])}</b>」。${esc(q[2])}`+
+      (B.requeued?`<br><span class="small-dim">🔁 この問題は、少しあとでもう一度出るぞ。</span>`:"")+from;
+    const a=finishOrAtk.charAt(0)==="「"?finishOrAtk:`『${finishOrAtk}』`;
+    $("#foe-say").textContent=src?`${B.boss.name}は ${src.name}の${a}を呼びさました! 手痛い反撃を受けた!`:`${B.boss.name}の ${finishOrAtk}! 手痛い反撃を受けた!`;
     $("#btn-next").style.display="";
   }
   ex.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
+/* 正解後の自動送り中に解説をタップすると止まる(じっくり読みたいとき用)。再開は「つづける」 */
+$("#explain").addEventListener("click",e=>{
+  if(e.target.closest("#btn-next")||B.over||!B.autoT||performance.now()-(B.exAt||0)<350)return;
+  clearTimeout(B.autoT);B.autoT=null;
+  $("#btn-next").textContent="つづける ▶";
+});
 $("#btn-next").addEventListener("click",()=>{
+  /* とどめ後の「討伐! 結果へ」: 予約済みの結果表示をすぐ出す(下の二重発火ガードより先に判定する) */
+  if(B.finishReady){flushResult();return;}
+  if(performance.now()-(B.exAt||0)<350)return;
   const wasOn=$("#explain").classList.contains("on");
   if(!wasOn||B.over)return;/* 二重発火ガード。B.over時に先にautoTを消すと予約済みのvictory/gameOverが死んで進行不能になるため、ガードを最初に判定する */
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
@@ -920,33 +1043,48 @@ function hitBoss(dmg,crit,fever){
   sp.classList.remove("hit");void sp.offsetWidth;sp.classList.add("hit");
   B.bossHP-=dmg;
   const d=document.createElement("div");
-  d.className="dmg"+(crit?" crit":"");
-  d.textContent=(fever?"FEVER ":crit?"会心! ":"")+dmg;
+  const kill=B.bossHP<=0;
+  d.className="dmg"+(crit||kill?" crit":"");
+  d.textContent=(kill?"とどめ!! ":fever?"FEVER ":crit?"会心! ":"")+dmg;
   $("#foe-win").appendChild(d);
   setTimeout(()=>d.remove(),1050);
 }
 
 /* ---------- victory / gameover ---------- */
-function victory(){
+const starStr=n=>"★".repeat(n)+"☆".repeat(Math.max(0,3-n));
+/* 勝利の確定(セーブ)はすぐ行い、結果画面の表示は delay 後に予約する。
+   delay を渡すのは「とどめ」経由のときだけで、そのあいだ「討伐! 結果へ」で即時に表示できる */
+function victory(delay){
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
   const sp=$("#foe-sprite");sp.classList.remove("angry");sp.classList.add("dead");
+  $("#foe-state").textContent="";/* 消えていくボスに怒り状態名を残さない */
   const stars=B.hearts>=3?3:B.hearts===2?2:1;
   const rank=stars===3?"S":stars===2?"A":"B";
   const bonus=stars*300+B.hearts*100;
   B.score+=bonus;
+  /* 伸びの表示用に、更新前の記録を控える */
+  const prevStars=Number(save.stars[B.stage.id])||0,prevBest=Number(save.best[B.stage.id])||0,prevRank=rankName(RANKS,totalStars());
   save.stars[B.stage.id]=Math.max(save.stars[B.stage.id]||0,stars);
   save.best[B.stage.id]=Math.max(save.best[B.stage.id]||0,B.score);
   save.hiscore=Math.max(save.hiscore,B.score);
   save.progress=Math.max(save.progress,B.chapter+1);
   persist();
   const isEnding=B.isFinal;
-  B.resultT=setTimeout(()=>{
-    B.resultT=null;
+  const ts=totalStars(),newRank=rankName(RANKS,ts),grow=[];
+  if(newRank!==prevRank)grow.push(`🎖️ 称号アップ!「${esc(prevRank)}」→「${esc(newRank)}」`);
+  if(!isEnding){
+    if(prevStars>0&&stars>prevStars)grow.push(`★ 更新! ${starStr(prevStars)} → ${starStr(stars)}`);
+    if(prevBest>0&&B.score>prevBest)grow.push(`🆕 この章の自己ベスト更新!(前回 ${prevBest.toLocaleString()})`);
+    const nr=RANKS.find(([min])=>min>ts);
+    if(!grow.length&&nr&&nr[0]-ts<=3)grow.push(`つぎの称号「${esc(nr[1])}」まで あと★${nr[0]-ts}`);
+  }
+  const growHtml=grow.slice(0,2).map(g=>`<br><span class="grow">${g}</span>`).join("");
+  B.pendingResult=()=>{
     if(!$("#scr-battle").classList.contains("on"))return;
     $("#stamp-area").innerHTML=`<span class="stamp px ${rank==="A"?"rA":rank==="B"?"rB":""}">RANK ${rank}</span>`;
     $("#result-title").classList.remove("lose");
     $("#result-stars").innerHTML="★".repeat(stars)+"<span class='off'>"+"★".repeat(3-stars)+"</span>";
-    $("#trivia").innerHTML=`<b>📖 まめちしき:</b>${esc(pick(TRIVIA))}`;
+    renderReview();
     const btns=$("#result-btns");btns.innerHTML="";
     if(isEnding){
       $("#result-title").textContent="〜 エンディング 〜";
@@ -954,13 +1092,18 @@ function victory(){
         `<span class="ending-parade">${paradeStr}</span><br>`+
         `全12章、制覇おめでとう!<br>称号「<b style="color:var(--gold)">${esc(rankName(RANKS,totalStars()))}</b>」 ★${totalStars()}/${CHAPTERS.length*3}<br>`+
         `キミはもう、福祉を自分の言葉で語れる。`;
-      $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span style="font-size:.75rem;color:var(--dim)">(クリア+${bonus} / 最大コンボ×${B.maxCombo})</span>`;
+      $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span style="font-size:.75rem;color:var(--dim)">(クリア+${bonus} / 最大コンボ×${B.maxCombo})</span>`+growHtml;
+      /* エンディングだけ、まめちしきの代わりに改心したボスたちの「その後」 */
+      const un=B.misses.filter(q=>!B.redeemed.has(q));/* 取り返していないミスがあれば、ふりかえりを先に残す */
+      $("#trivia").innerHTML=(un.length?$("#trivia").innerHTML+"<br><br>":"")+`<b>— その後のボスたち —</b><br>`+
+        CHAPTERS.filter(c=>TALK[c.id]&&TALK[c.id].after).map(c=>`${c.boss.icon} ${esc(c.boss.name)}:${esc(TALK[c.id].after)}`).join("<br>");
       addBtn(btns,"タイトルへ",()=>{renderTitle();show("scr-title");},true);
       addBtn(btns,"終章にもう一度挑む",()=>startBattle(B.chapter));
     }else{
       $("#result-title").textContent="ボス討伐!!";
       $("#defeat-quote").textContent=B.boss.defeat;
       $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span style="font-size:.75rem;color:var(--dim)">(クリア+${bonus} / 最大コンボ×${B.maxCombo})</span>`
+        +growHtml
         +(stars<3?`<br><span style="font-size:.72rem;color:var(--dim)">💡 ノーダメージで倒すと RANK S(★3)!</span>`:"");
       const nx=B.chapter+1;
       addBtn(btns,`つぎの地へ ▶ ${chapterLabel(nx)}`,()=>startBattle(nx),true);
@@ -968,18 +1111,40 @@ function victory(){
       addBtn(btns,"タイトルへ",()=>{renderTitle();show("scr-title");});
     }
     show("scr-result");
-  },1300);
+  };
+  B.resultT=setTimeout(flushResult,delay||1300);
+  if(delay){B.finishReady=true;const b=$("#btn-next");b.textContent="討伐! 結果へ ▶";b.style.display="";b.scrollIntoView({behavior:"smooth",block:"nearest"});}
+}
+/* 結果画面の下段: まちがえたまま取り返せなかった問いがあれば「ふりかえり」(問いと正解)、なければまめちしき。
+   負けたときは、おかわりで取り返した問い(🔁済)も含めて並べる */
+function renderReview(lost){
+  const list=lost?B.misses:B.misses.filter(q=>!B.redeemed.has(q));
+  if(!list.length){$("#trivia").innerHTML=`<b>📖 まめちしき:</b>${esc(pick(TRIVIA))}`;return;}
+  $("#trivia").innerHTML=`<b>📝 ふりかえり:</b>`+list.slice(0,3).map(q=>
+    `<br>・${esc(q[0])} → <b style="color:var(--hp)">${esc(q[1][0])}</b>${B.redeemed.has(q)?" 🔁済":""}`).join("");
+}
+function flushResult(){
+  if(B.resultT){clearTimeout(B.resultT);B.resultT=null;}
+  B.finishReady=false;
+  const f=B.pendingResult;B.pendingResult=null;
+  if(f)f();
 }
 function gameOver(){
   B.over=true;
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
+  lastLost=B.chapter;
   $("#stamp-area").innerHTML="";
   $("#result-title").textContent="力尽きた…";
   $("#result-title").classList.add("lose");
   $("#result-stars").textContent="💤";
-  $("#defeat-quote").textContent=`${B.boss.name}「フハハ…出直してくるがよい。復習こそ最強の武器だぞ?」`;
-  $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b>`;
-  $("#trivia").innerHTML=`<b>📖 まめちしき:</b>${esc(pick(TRIVIA))}`;
+  const lose=talk("lose");
+  $("#defeat-quote").innerHTML=lose
+    ?`${esc(B.boss.name)}「${esc(lose)}」<br><span class="small-dim">— 復習こそ最強の武器だぞ?</span>`
+    :esc(`${B.boss.name}「フハハ…出直してくるがよい。復習こそ最強の武器だぞ?」`);
+  const cut=B.bossMax?Math.round((1-Math.max(0,B.bossHP)/B.bossMax)*100):0;
+  $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b>`+
+    (cut>0?`<br><span class="grow">⚔️ ${esc(B.boss.name)}のHPを ${cut}% けずった!</span>`:"");
+  renderReview(true);
   const btns=$("#result-btns");btns.innerHTML="";
   addBtn(btns,"リベンジ!",()=>startBattle(B.chapter),true);
   addBtn(btns,"タイトルへ",()=>{renderTitle();show("scr-title");});
@@ -989,7 +1154,7 @@ function addBtn(parent,label,fn,primary){
   const b=document.createElement("button");
   b.className=primary?"next-btn":"icon-btn";
   b.textContent=label;
-  b.addEventListener("click",fn);
+  b.addEventListener("click",()=>{if(performance.now()-resultAt<400)return;fn();});
   parent.appendChild(b);
 }
 
@@ -1011,7 +1176,7 @@ document.addEventListener("keydown",e=>{
   }else if(e.key==="Enter"||e.key===" "){
     e.preventDefault();
     if($("#explain").classList.contains("on")&&$("#btn-next").style.display!=="none"){$("#btn-next").click();}
-    else if(typeTimer){$("#qtext").click();}
+    else if(typeTimer||B.introHold){$("#qtext").click();}
   }
 });
 
@@ -1025,7 +1190,7 @@ if(location.search.indexOf("selftest")>-1){
   persist=function(){};/* セルフテストが実プレイヤーのlocalStorageセーブを上書きしないよう無効化 */
   window.addEventListener("error",e=>LOG.push("ERR:"+e.message));
   const finish=()=>{
-    const fails=LOG.filter(l=>/^(ERR|EX|QBAD|QLEN|DUPQ|TIMEOUT|STUCK)/.test(l));
+    const fails=LOG.filter(l=>/^(ERR|EX|QBAD|QLEN|DUPQ|TIMEOUT|STUCK|BAD|NO|DMGBAD|TALKBAD|FINQ|LEAK)/.test(l));
     document.title="ST:"+(fails.length===0?"OK":"FAIL")+"|"+LOG.join("|").slice(0,400);
     const d=document.createElement("pre");d.id="selftest-log";d.textContent=LOG.join("\n")||"CLEAN";
     d.style.cssText="position:fixed;bottom:0;left:0;z-index:99;background:#000;color:#0f0;font-size:10px;max-height:120px;overflow:auto;";
@@ -1039,10 +1204,35 @@ if(location.search.indexOf("selftest")>-1){
         if(new Set(q[1]).size!==4)LOG.push("DUPQ:"+s.id+":"+qi);
       });
     });
+    const dm=[1,2,3,4,5,6].map(calcDmg).join(",");if(dm!=="82,94,148,165,273,273")LOG.push("DMGBAD:"+dm);
+    CHAPTERS.forEach(c=>{
+      const t=TALK[c.id];
+      if(!t||["rage","lose","again","after"].some(k=>typeof t[k]!=="string"||!t[k]))LOG.push("TALKBAD:"+c.id);
+      else if(t.rage.length>14)LOG.push("TALKBAD:rage:"+c.id);
+    });
+    /* 答え漏れ検査: 章の登場台詞・怒り状態名・再戦台詞・捨て台詞(リベンジの直前に出る)に、その章の正解語が入っていないか(終章は全問) */
+    const core=s=>s.replace(/[(（][^)）]*[)）]/g,"").replace(/[「」『』]/g,"").trim();
+    CHAPTERS.forEach(c=>{
+      const t=TALK[c.id]||{},txt=[c.boss.intro,t.rage,t.again,t.lose].join("|");
+      (c===FINAL?allQuestions():c.q).forEach(q=>{const a=core(q[1][0]);if(a.length>=2&&txt.indexOf(a)>-1)LOG.push("LEAK:"+c.id+":"+a);});
+    });
+    const fq=finalQueue();
+    if(fq.length!==QT||new Set(fq).size!==QT)LOG.push("FINQ:"+fq.length);
+    if(new Set(fq.slice(0,STAGES.length).map(q=>SRC.get(q))).size!==STAGES.length)LOG.push("FINQ:spread");
     LOG.push("DATA:"+QT+"q/"+CHAPTERS.length+"ch");
-    save.tut=1;save.progress=0;
+    /* 台本: 第1章=1回ミス→おかわり再出題で取り返す / 第2章=とどめ後「討伐! 結果へ」を押す / 第3章=4問目と8問目でミス→ラスト1問の一撃でとどめ(★1)
+       第4章=3連続ミスで力尽きる→捨て台詞とふりかえり→「リベンジ!」→再戦台詞 / 終章=2問目でミス→他章ボスの技の呼びさまし / ほかは全問正解 */
+    save.tut=1;save.progress=0;save.stars={};save.best={};save.hiscore=0;
+    const _toast=toast;let sawRetryToast=false;
+    toast=function(m){if(m.indexOf("再挑戦")>-1)sawRetryToast=true;_toast(m);};
     startBattle(0);
-    let steps=0,wrongDone=false,cleared=0;
+    let steps=0,cleared=0,missedQ=null,retrySeen=false,finBtn=false,lostDone=false,expectAgain=false,againSeen=false,summon=0,cueSeen=false,lastBlow=false,seenRun=-1;
+    const wrong=()=>{
+      const btns=$$(".choice");
+      const wi=btns.findIndex((b,i)=>i!==B.correctIdx&&!b.disabled);
+      if(wi>=0)btns[wi].click();
+      return wi>=0;
+    };
     const iv=setInterval(()=>{
       steps++;
       if(steps>30000){LOG.push("TIMEOUT:ch"+B.chapter);clearInterval(iv);finish();return;}
@@ -1050,25 +1240,54 @@ if(location.search.indexOf("selftest")>-1){
         const t=$("#result-title").textContent;
         if(t.indexOf("エンディング")>-1){
           LOG.push("ENDING:progress="+save.progress+":stars="+totalStars()+":cleared="+cleared);
+          if(save.progress!==CHAPTERS.length||totalStars()!==32)LOG.push("BAD:ending");
+          if($("#trivia").textContent.indexOf("その後のボスたち")<0)LOG.push("NOAFTER");
+          const lit=$$("#trail .tnode.lit").length;LOG.push("LIT:"+lit);if(lit<1)LOG.push("NOLIT");
+          if(summon!==1)LOG.push("NOSUMMON");
           clearInterval(iv);finish();return;
         }
-        if(t.indexOf("力尽きた")>-1){LOG.push("STUCK:gameover-ch"+B.chapter);clearInterval(iv);finish();return;}
+        if(seenRun!==B.run){/* 結果画面ごとに1回だけ検査する(ボタンは表示直後0.4秒は効かないので、押せるまで毎回押し直す) */
+          seenRun=B.run;
+          if(t.indexOf("力尽きた")>-1){
+            if(B.chapter!==3||lostDone){LOG.push("STUCK:gameover-ch"+B.chapter);clearInterval(iv);finish();return;}
+            lostDone=true;expectAgain=true;/* 次の「リベンジ!」で再戦台詞を確かめる */
+            LOG.push($("#defeat-quote").textContent.indexOf(TALK.s4.lose)>-1?"LOSE":"NOLOSE");
+            if($("#trivia").textContent.indexOf("ふりかえり")<0)LOG.push("NOREVIEW");
+          }else{
+            const tv=$("#trivia").textContent;
+            if(B.chapter===0){LOG.push(retrySeen&&sawRetryToast?"RETRY":"NORETRY");if(tv.indexOf("まめちしき")<0)LOG.push("BAD:review-redeemed");}/* 取り返したミスだけならまめちしき */
+            if(B.chapter===1)LOG.push(finBtn?"FINBTN":"NOFINBTN");
+            if(B.chapter===2)LOG.push(cueSeen&&lastBlow&&save.stars.s3===1?"LASTBLOW":"NOLASTBLOW");
+            if(B.chapter===3&&!againSeen)LOG.push("NOAGAIN");
+            cleared++;
+          }
+        }
         const nb=$("#result-btns .next-btn");
-        if(nb){cleared++;nb.click();}
+        if(nb)nb.click();
         return;
       }
+      if(expectAgain&&$("#qtext").textContent===TALK.s4.again){expectAgain=false;againSeen=true;}
+      if(B.chapter===2&&!lastBlow){const d=$("#foe-win .dmg");if(d&&d.textContent.indexOf("とどめ!!")>-1&&B.qi>=B.queue.length)lastBlow=true;}
       const exOn=$("#explain").classList.contains("on");
-      if(exOn&&B.locked&&$("#btn-next").style.display!=="none"&&B.combo===0&&B.hearts>0){$("#btn-next").click();return;}
-      if(!B.locked&&!B.over){
-        if(!wrongDone&&B.chapter===0&&B.asked>=3){
-          const btns=$$(".choice");
-          const wrongIdx=btns.findIndex((b,i)=>i!==B.correctIdx&&!b.disabled);
-          if(wrongIdx>=0){wrongDone=true;LOG.push("WRONGCLICK");btns[wrongIdx].click();return;}
-        }
-        const cb=$$(".choice")[B.correctIdx];
-        if(cb&&!cb.disabled){cb.click();return;}
+      if(exOn&&$("#foe-say").textContent.indexOf("呼びさました")>-1&&B.isFinal&&summon===0)summon=1;
+      if(exOn&&$("#btn-next").style.display!=="none"){
+        if(B.finishReady){if(B.chapter===1&&!finBtn){finBtn=true;$("#btn-next").click();}return;}/* 他の章は自動で結果へ進むのを待つ */
+        if(B.locked&&!B.over&&B.combo===0){$("#btn-next").click();return;}/* ミス後の「つづける」「力尽きた…」 */
       }
-      if(typeTimer)$("#qtext").click();
+      if(!B.locked&&!B.over){
+        if(B.chapter===0&&B.current===missedQ&&B.isRetry)retrySeen=true;
+        if(B.chapter===0&&!missedQ&&B.asked===3){missedQ=B.current;if(wrong())return;}
+        if(B.chapter===2&&B.qi>=B.queue.length&&$("#foe-cue").textContent.indexOf("ラスト1問")>-1)cueSeen=true;
+        if(B.chapter===2&&(B.asked===4||B.asked===8)&&!B.isRetry){if(wrong())return;}
+        if(B.chapter===3&&!lostDone){if(wrong())return;}
+        if(B.isFinal&&B.asked===2&&B.miss===0){if(wrong())return;}
+        const cb=$$(".choice")[B.correctIdx];
+        if(cb&&!cb.disabled){
+          if(cb.textContent.slice(1)!==B.current[1][0])LOG.push("BAD:map");/* 表示中の正解ボタンの文言とデータの正解が一致するか */
+          cb.click();return;
+        }
+      }
+      if(typeTimer||B.introHold)$("#qtext").click();
     },60);
   }catch(e){LOG.push("EX:"+e.message);finish();}
 }
