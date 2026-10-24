@@ -77,6 +77,8 @@ body{
 /* ===== title ===== */
 #scr-title{text-align:center;padding-top:5vh;}
 .logo-eyebrow{color:var(--cyan);font-size:.82rem;letter-spacing:.45em;margin-bottom:10px;}
+@media(max-width:400px){.logo-eyebrow{letter-spacing:.24em;}}/* 狭い画面でも1行に収める */
+@media(max-width:340px){.logo-eyebrow{letter-spacing:.1em;font-size:.78rem;}}
 .logo{
   font-size:clamp(2.7rem,9vw,4.3rem);font-weight:bold;letter-spacing:.06em;color:#fff;
   text-shadow:0 3px 0 #2a2f6b,0 6px 0 #14173d,4px 4px 0 #000,0 0 28px #7dd8ff44;
@@ -339,7 +341,7 @@ body{
 
   <!-- ===== TITLE ===== -->
   <section class="screen on" id="scr-title">
-    <p class="logo-eyebrow px">木曜4限 社会福祉原論A 完全対応</p>
+    <p class="logo-eyebrow px">前期木曜4限 社会福祉原論A 完全対応</p>
     <h1 class="logo px">福祉<span class="q">クエスト</span></h1>
     <p class="logo-sub px">（通称クソゲー）</p>
     <p class="tagline">よくわからん戦いが、いま始まる。</p>
