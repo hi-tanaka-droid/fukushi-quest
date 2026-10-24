@@ -357,6 +357,11 @@ body{
 .qtext,.choice,.explain p,.defeat-quote,.trivia,.tut-box li,.mode-btn small,.result-score{word-break:auto-phrase;text-wrap:pretty;}
 .chapter-intro .tt{text-wrap:balance;}
 .qtext .ghost{visibility:hidden;}
+/* 1b 文節で折る: スクリプトが文節の境目に <wbr> を入れ、そこと句読点・空白のほかでは折らない(Safari でも Chrome でも同じ所で折れる)。
+   長すぎる語だけは、はみ出さずに折る。Intl.Segmenter がない古い端末では .wbr が付かず、上の auto-phrase のまま */
+.wbr .qtext,.wbr .choice,.wbr .explain p,.wbr .defeat-quote,.wbr .trivia,.wbr .tut-box li,.wbr .mode-btn small,.wbr .result-score,.wbr .title-foot{word-break:keep-all;overflow-wrap:anywhere;}
+.bar .mid{word-break:keep-all;overflow-wrap:anywhere;}/* 狭い画面(320px)で章題が「尊/厳」と割れず、空白(第1章 / 能力主義と尊厳)で折れる */
+.nbp{white-space:nowrap;}/* 」と・○○を・バンク=ミケルセン・Well-being・…=自立 は keep-all でも折れるので離さない */
 /* 2 道のり=一本の道 */
 .trail{flex-wrap:nowrap;gap:0;max-width:560px;margin-left:auto;margin-right:auto;padding:0 2px;}
 .tsep{display:block;flex:1 1 0;min-width:2px;height:2px;margin:0 2px;background:#2a3160;font-size:0;border-radius:1px;}
@@ -432,6 +437,32 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
 .title-foot{font-size:.78rem;}
 @media(hover:none){.kbd-hint{display:none;}}
 @media(max-height:500px){.choice.faded{display:none;}}/* 横向きのスマホでも、答えたあとは正解と自分の答えだけ残す */
+/* ===== 余白の整理(v2.7): 中身のない場所取りを削る ===== */
+/* 1 ボスの状態名(怒り)は英字副題の行に重ねる。ふだんは空のまま14px(1行)をとっていた。怒り中は副題を隠す */
+.foe-state{height:0;position:relative;top:-1.6em;}
+.foe-win:has(.foe-sprite.angry) .foe-name small{visibility:hidden;}
+/* 2 問題文: 行間 1.9→1.7、2行ぶんの最低高さも合わせて詰める(スマホで最も多い2行の問いに合わせ、選択肢の位置がそろう意図は残す) */
+.qtext{line-height:1.7;min-height:3.4em;}
+@media(max-height:740px){.qtext{min-height:0;}}
+@media(min-width:601px){.qtext{min-height:0;}}/* PC・横向き: 88問中77問が1行。2行ぶんとると1行の問いの下が空く */
+/* 3 窓の内側: 問題窓と解説窓の上下の余白 16→12px(本文の行間 1.8→1.7) */
+#qwin{padding-top:12px;padding-bottom:12px;}/* 横(18px)は変えない=改行位置は v2.6 のまま(v2.7で文節改行) */
+.explain{padding-top:12px;padding-bottom:12px;}
+.explain p{line-height:1.7;}
+.qwin.hold::after{bottom:2px;line-height:1;}/* ▼を最後の行の字に重ねない */
+/* 4 要素間: 12/12/14/12px とばらついていた間隔を 8/8/10/10px にそろえる(低い画面で使っていた値) */
+.pstrip,.qwin{margin-top:8px;}
+.choices{margin-top:10px;}
+.explain{margin-top:10px;}
+/* 5 ページ下の余白 60px→24px(安全域があればそれ+12px)。中身が画面に収まるのに少しだけスクロールできていた */
+#app{padding-bottom:24px;}
+@supports(padding:max(0px)){#app{padding-bottom:max(24px,calc(env(safe-area-inset-bottom) + 12px));}}
+/* 6 PC・タブレット・横向き: 幅696pxの選択肢に2〜8文字の答えが並んで間延びしていた → 2×2 に並べる */
+@media(min-width:601px){.choices{display:grid;grid-template-columns:1fr 1fr;}}
+/* 7 HUD(ライフ・COMBO・SCORE): 375px以下の画面で2桁コンボ・4桁スコアになると2段に折れ、下の窓が33px動いていた → 間を詰めて1段に */
+.pstrip{gap:4px 6px;}.pstrip .hearts{letter-spacing:1px;}.pstrip small{margin-right:3px;letter-spacing:.04em;}
+/* 8 320px級の狭い画面: 中央寄せ用の右の空き(76px)を外して章題の欄を広げ(「自己責/任」と割れない)、結果見出しの字間を詰めて「〜 エンディング 〜」を1行に */
+@media(max-width:340px){.bar .sp{display:none;}.result-title{letter-spacing:.08em;}}
 </style>
 </head>
 <body>
@@ -528,7 +559,7 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
 <script>
 "use strict";
 /* =========================================================
-   福祉クエスト v2.6 — ひとすじの冒険(音・タイマー・アイテムなし)
+   福祉クエスト v2.7 — ひとすじの冒険(音・タイマー・アイテムなし)
    ========================================================= */
 
 /* ---------- DATA ---------- */
@@ -777,6 +808,80 @@ function show(id){$$(".screen").forEach(s=>s.classList.remove("on"));$("#"+id).c
 function rankName(table,v){let n=table[0][1];for(const[min,name]of table){if(v>=min)n=name;}return n;}
 function totalStars(){return Object.values(save.stars||{}).reduce((a,b)=>a+(Number(b)||0),0);}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+/* ---------- 日本語の改行(文節) ----------
+   Intl.Segmenter で語に分け、ひらがなだけの語・句読点・閉じ括弧は前の語に、開き括弧は次の語にくっつけ、
+   カタカナ語・数字と単位は切らずに、「文節」に近いまとまりを作る。その境目にだけ <wbr> を入れる(CSS は keep-all) */
+const SEG=window.Intl&&Intl.Segmenter?new Intl.Segmenter("ja",{granularity:"word"}):null;
+if(SEG)document.documentElement.classList.add("wbr");
+const KANA=/[\p{sc=Katakana}ー]/u,KANJI=/[\p{sc=Han}々〆]/u,DIGIT=/[0-9０-９]/,CJK=/[\p{sc=Han}\p{sc=Hiragana}\p{sc=Katakana}ー々〆、。「」『』（）【】〔〕〈〉《》・〜＝＋！？％]/u;/* 和文の文字と全角記号 */
+function joinSeg(a,t){/* a: いまのまとまり / t: 次の語。true ならくっつける(間で折らない) */
+  const z=a.slice(-1),f=t.charAt(0);
+  if(/[「『（(【〔〈《［]/.test(z))return true;/* 開き括弧は次へ */
+  if(/^[\s、。,，.．!！?？…‥:：;；」』）)】〕〉》］%％・〜~ー=＝+＋×—―]/.test(t))return true;/* 句読点・閉じ括弧・記号は前へ */
+  if(/^\p{sc=Hiragana}+$/u.test(t)&&!/[、。,，!！?？…‥\s]$/.test(a))return true;/* ひらがなだけの語(助詞・送りがな)は前へ */
+  if(/\p{sc=Hiragana}/u.test(f)&&(KANJI.test(z)||KANA.test(z)))return true;/* 漢字・カナの直後のひらがなは離さない(信田さよ子) */
+  if(KANJI.test(z)&&KANJI.test(f))return true;/* 漢字の連なり(社会福祉基礎構造改革)は切らない */
+  if(KANA.test(z)&&KANA.test(f))return true;/* カタカナ語は切らない(ICU は未知のカタカナ語を細切れにする) */
+  if(/[=＝]/.test(z)&&KANA.test(f))return true;/* バンク=ミケルセン */
+  if(DIGIT.test(z)&&(KANJI.test(f)||KANA.test(f)))return true;/* 95年・3コンボ */
+  if((KANJI.test(z)||KANA.test(z))&&/[A-Za-z]/.test(f)||/[A-Za-z]/.test(z)&&(KANJI.test(f)||KANA.test(f)))return true;/* 原論A */
+  if(DIGIT.test(f)&&(KANJI.test(z)||/[〜~.,:/+=\-]/.test(z)))return true;/* 約95・第25・令和6・2013〜15 */
+  if(!CJK.test(z)&&!CJK.test(f))return true;/* 英数どうしはブラウザに任せる(空白で折れる) */
+  return false;
+}
+function phraseCuts(s){/* <wbr> を入れる位置(文字の添字)の一覧 */
+  const out=[];if(!SEG)return out;let cur="";
+  for(const {segment:t,index:i} of SEG.segment(s)){if(cur&&!joinSeg(cur,t)){out.push(i);cur="";}cur+=t;}
+  if(out.length&&s.slice(out[out.length-1]).replace(/[\s、。,，.．!！?？…‥」』)）]/g,"").length<=2)out.pop();/* 末尾の1〜2字(「約?」)だけが次の行へ行かないよう前とつなぐ */
+  return out;
+}
+/* keep-all でもブラウザが折ってしまう所: 閉じ括弧・○・%の直後の助詞(」と ○○を 95%が)、範囲の〜(4〜5人)、
+   カタカナ名の=(バンク=ミケルセン)、英単語のハイフン(Well-being)、記号の直前(…=自立 ——この)。ここは <span class="nbp"> で包んで離さない */
+const NBP=/[」』）)】〕〉》○◯●%％]\p{sc=Hiragana}|[A-Za-z0-9] \p{sc=Hiragana}|[〜~][^\s]|[\p{sc=Katakana}ー][=＝]\p{sc=Katakana}|[A-Za-z]-[A-Za-z]|[^\s][=＝+＋—―→×]/gu;
+/* 文字列 → <wbr> 入りのHTML。each=true なら1文字ずつ <span class="ghost"> に包む(タイプライター用) */
+/* 折ってよい所(cuts → <wbr>)と離さない所(keep → nbp)。離さない所の内側には <wbr> を入れない(入れると nowrap の中でも折れた: 「for /でもなく」) */
+function phraseMarks(s){
+  const keep=[...s.matchAll(NBP)].map(m=>[m.index,m.index+m[0].length]);
+  return {cuts:phraseCuts(s).filter(p=>!keep.some(([a,b])=>p>a&&p<b)),keep};
+}
+function phraseHTML(s,each){
+  const {cuts,keep}=phraseMarks(s),cs=new Set(cuts),nb=new Map(keep);let h="",i=0,close=-1;
+  for(const ch of s){
+    if(cs.has(i))h+="<wbr>";
+    if(close<0&&nb.has(i)){h+='<span class="nbp">';close=nb.get(i);}
+    h+=each?`<span class="ghost">${esc(ch)}</span>`:esc(ch);i+=ch.length;
+    if(i===close){h+="</span>";close=-1;}
+  }
+  return h;
+}
+/* 要素の中の文字(読み上げ専用・飾りの aria-hidden は除く)に <wbr> を入れ直す */
+function wbr(el){
+  el.querySelectorAll("wbr").forEach(w=>w.remove());el.querySelectorAll(".nbp").forEach(x=>x.replaceWith(...x.childNodes));el.normalize();
+  const ns=[],tw=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let s="";
+  for(let n;(n=tw.nextNode());)if(!n.parentNode.closest("[aria-hidden]")){ns.push({n,at:s.length});s+=n.data;}
+  /* 後ろから順に: 切れ目には <wbr>、離さない所は <span class="nbp">(同じ位置なら span が先) */
+  const {cuts,keep}=phraseMarks(s);
+  const ops=[...cuts.map(p=>[p,0]),...keep.map(([a,b])=>[a,b-a])].sort((x,y)=>y[0]-x[0]||y[1]-x[1]);
+  let j=ns.length-1;
+  for(const [p,len] of ops){
+    while(j>0&&ns[j].at>p)j--;
+    const n=ns[j].n,o=p-ns[j].at;
+    if(!len){const w=document.createElement("wbr");if(o<=0)n.before(w);else n.splitText(o).before(w);}
+    else if(o+len<=n.data.length){const sp=document.createElement("span");sp.className="nbp";n.splitText(o+len);const mid=n.splitText(o);mid.before(sp);sp.append(mid);}
+  }
+}
+/* 文が入れ替わる要素は、書き換えのたびに自動で <wbr> を入れる(問題文はタイプライターが自分で入れる) */
+const WBR_T=".choice,#ex-body,#foe-say,#defeat-quote,#result-score,#trivia,#story-sub,.tut-box li,#title-foot";
+if(SEG){
+  const mo=new MutationObserver(rs=>{
+    const set=new Set();
+    rs.forEach(r=>[r.target,...r.addedNodes].forEach(n=>{const e=n.nodeType===1?n:n.parentElement;if(!e)return;
+      const c=e.closest(WBR_T);if(c)set.add(c);else e.querySelectorAll(WBR_T).forEach(x=>set.add(x));}));
+    set.forEach(wbr);mo.takeRecords();/* 自分で入れた <wbr> の記録は捨てる */
+  });
+  mo.observe(document.getElementById("app"),{childList:true,subtree:true,characterData:true});
+  document.querySelectorAll(WBR_T).forEach(wbr);
+}
 /* 読み上げ用(画面には出ない)。同じ文言の連続でも読まれるよう、いったん空にしてから入れる */
 let srT=null;
 /* 動きを減らす設定ではスクロールも瞬時に */
@@ -790,7 +895,7 @@ function toast(msg){
 
 /* ---------- TITLE ---------- */
 const QT=STAGES.reduce((a,s)=>a+s.q.length,0);
-$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.6`;
+$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.7`;
 const paradeStr=CHAPTERS.map(c=>c.boss.icon).join("");
 /* オープニングの流れるアイコンは人型・人の顔(人間味のある絵文字)を除外。ending parade は全ボス維持 */
 const PARADE_SKIP=new Set(["🦸","🏋️","😇","😶"]);
@@ -1014,17 +1119,14 @@ function updateHUD(){
 let typeTimer=null;
 function msgType(text,done){
   if(typeTimer){clearInterval(typeTimer);typeTimer=null;}
-  const el=$("#qtext");el.textContent="";let i=0;
-  const full=text;
-  /* 未表示の残りを透明で先に置く: 改行位置が最初から確定し、打ち込み中に窓の高さも変わらない */
-  const shown=document.createTextNode(""),ghost=document.createElement("span");
-  ghost.className="ghost";ghost.textContent=full;el.append(shown,ghost);
-  typeTimer=setInterval(()=>{
-    i++;shown.data=full.slice(0,i);ghost.textContent=full.slice(i);
-    if(i>=full.length){clearInterval(typeTimer);typeTimer=null;el.textContent=full;if(done)done();}
-  },17);
+  const el=$("#qtext");
+  /* 全文を文節の <wbr> 入りで最初に置き、1文字ずつ透明を外すだけ: 改行位置は打ち始めから打ち終わりまで動かず、窓の高さも変わらない */
+  el.innerHTML=phraseHTML(text,true);
+  const cs=[...el.querySelectorAll(".ghost")];let i=0;
+  const end=()=>{clearInterval(typeTimer);typeTimer=null;el.innerHTML=phraseHTML(text);if(done)done();};
+  typeTimer=setInterval(()=>{if(i<cs.length)cs[i++].className="";if(i>=cs.length)end();},17);
   /* ウィンドウ全体タップで文字送りスキップ(スマホでも押しやすく) */
-  $("#qwin").onclick=()=>{if(typeTimer){clearInterval(typeTimer);typeTimer=null;el.textContent=full;if(done)done();}};
+  $("#qwin").onclick=()=>{if(typeTimer)end();};
 }
 
 /* ---------- question flow ---------- */
@@ -1238,7 +1340,7 @@ function victory(delay){
     const btns=$("#result-btns");btns.innerHTML="";
     if(isEnding){
       $("#result-title").textContent="〜 エンディング 〜";
-      $("#defeat-quote").innerHTML=`${esc(B.boss.defeat)}<br><br>`+
+      $("#defeat-quote").innerHTML=`${esc(B.boss.defeat)}<br>`+
         `<span class="ending-parade">${paradeStr}</span><br>`+
         `全12章、制覇おめでとう!<br>称号「<b style="color:var(--gold)">${esc(rankName(RANKS,totalStars()))}</b>」 ★${totalStars()}/${CHAPTERS.length*3}<br>`+
         `キミはもう、福祉を自分の言葉で語れる。`;
@@ -1278,7 +1380,7 @@ function renderReview(lost){
   const list=lost?B.misses:B.misses.filter(q=>!B.redeemed.has(q));
   if(!list.length){$("#trivia").innerHTML=`<b>📖 まめちしき:</b>${esc(safeTrivia())}`;return;}
   $("#trivia").innerHTML=`<b>📝 ふりかえり:</b>`+list.slice(0,3).map(q=>
-    `<span class="li">・${esc(q[0])} → <b class="ans" style="color:var(--hp)">${esc(q[1][0])}</b>${B.redeemed.has(q)?" 🔁済":""}</span>`).join("");
+    `<span class="li">・${esc(q[0])} → <b class="ans" style="color:var(--hp)">${esc(q[1][0])}</b>${B.redeemed.has(q)?'<span style="white-space:nowrap"> 🔁済</span>':""}</span>`).join("");/* 「🔁済」だけが次の行に落ちないよう前の語につなぐ */
 }
 function flushResult(){
   if(B.resultT){clearTimeout(B.resultT);B.resultT=null;}
