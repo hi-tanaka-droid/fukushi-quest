@@ -359,7 +359,7 @@ body{
 .qtext .ghost{visibility:hidden;}
 /* 1b 文節で折る: スクリプトが文節の境目に <wbr> を入れ、そこと句読点・空白のほかでは折らない(Safari でも Chrome でも同じ所で折れる)。
    長すぎる語だけは、はみ出さずに折る。Intl.Segmenter がない古い端末では .wbr が付かず、上の auto-phrase のまま */
-.wbr .qtext,.wbr .choice,.wbr .explain p,.wbr .defeat-quote,.wbr .trivia,.wbr .tut-box li,.wbr .mode-btn small,.wbr .result-score,.wbr .title-foot{word-break:keep-all;overflow-wrap:anywhere;}
+.wbr .qtext,.wbr .choice,.wbr .explain p,.wbr .defeat-quote,.wbr .trivia,.wbr .tut-box li,.wbr .mode-btn small,.wbr .result-score,.wbr .title-foot,.wbr .inst-note{word-break:keep-all;overflow-wrap:anywhere;}
 .bar .mid{word-break:keep-all;overflow-wrap:anywhere;}/* 狭い画面(320px)で章題が「尊/厳」と割れず、空白(第1章 / 能力主義と尊厳)で折れる */
 .nbp{white-space:nowrap;}/* 」と・○○を・バンク=ミケルセン・Well-being・…=自立 は keep-all でも折れるので離さない */
 /* 2 道のり=一本の道 */
@@ -463,6 +463,13 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
 .pstrip{gap:4px 6px;}.pstrip .hearts{letter-spacing:1px;}.pstrip small{margin-right:3px;letter-spacing:.04em;}
 /* 8 320px級の狭い画面: 中央寄せ用の右の空き(76px)を外して章題の欄を広げ(「自己責/任」と割れない)、結果見出しの字間を詰めて「〜 エンディング 〜」を1行に */
 @media(max-width:340px){.bar .sp{display:none;}.result-title{letter-spacing:.08em;}}
+/* 10 文字拡大(125%〜)で「福祉クエス/ト」「ぼうけんに出/る」と1字だけ次の行に落ちない(ロゴは「福祉/クエスト」でだけ折れる) */
+.logo,.mode-btn{word-break:keep-all;overflow-wrap:anywhere;}
+/* 9 ホーム画面に追加(v2.11): 手順の補足と、LINE などの中から外のブラウザで開くボタン */
+.inst-note{font-size:.8rem;color:var(--dim);line-height:1.7;margin:12px 0 0;}
+.inst-note:empty{display:none;}
+#inst-open{text-decoration:none;font-size:.92rem;padding:8px 22px;margin-top:12px;}
+#inst .center:last-child{margin-top:16px;}
 </style>
 </head>
 <body>
@@ -474,7 +481,7 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
   <!-- ===== TITLE ===== -->
   <section class="screen on" id="scr-title">
     <p class="logo-eyebrow px">前期木曜4限 社会福祉原論A 完全対応</p>
-    <h1 class="logo px">福祉<span class="q">クエスト</span></h1>
+    <h1 class="logo px">福祉<wbr><span class="q">クエスト</span></h1>
     <p class="logo-sub px">通称：クソゲー</p>
     <p class="tagline">よくわからん戦いが、いま始まる。</p>
     <div class="modes">
@@ -483,6 +490,7 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
     <div class="title-tools">
       <button class="icon-btn" id="btn-restart" hidden>↩ 第1章から旅をやり直す</button>
       <button class="icon-btn" id="btn-howto">❓ あそびかた</button>
+      <button class="icon-btn" id="btn-install" hidden>📲 ホーム画面に追加</button>
     </div>
     <div class="records" id="records"></div>
     <div class="parade" aria-hidden="true"><span id="parade1"></span><span id="parade2"></span></div>
@@ -554,12 +562,23 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
     </div>
   </div>
 
+  <!-- ===== ホーム画面に追加の手順(ブラウザがインストール画面を出せないとき) ===== -->
+  <div class="overlay" id="inst" hidden>
+    <div class="win tut-box" role="dialog" aria-modal="true" aria-labelledby="inst-title">
+      <h3 class="px" id="inst-title" tabindex="-1">— ホーム画面に追加 —</h3>
+      <ol id="inst-steps"></ol>
+      <p class="inst-note" id="inst-note"></p>
+      <div class="center" id="inst-open-wrap" hidden><a class="next-btn" id="inst-open">Safari・Chromeで開く ▶</a></div>
+      <div class="center"><button class="next-btn" id="inst-close">とじる</button></div>
+    </div>
+  </div>
+
 </div>
 
 <script>
 "use strict";
 /* =========================================================
-   福祉クエスト v2.10 — ひとすじの冒険(音・タイマー・アイテムなし)
+   福祉クエスト v2.11 — ひとすじの冒険(音・タイマー・アイテムなし)
    ========================================================= */
 
 /* ---------- DATA ---------- */
@@ -838,7 +857,7 @@ function phraseCuts(s){/* <wbr> を入れる位置(文字の添字)の一覧 */
 }
 /* keep-all でもブラウザが折ってしまう所: 閉じ括弧・○・%の直後の助詞(」と ○○を 95%が)、範囲の〜(4〜5人)、
    カタカナ名の=(バンク=ミケルセン)、英単語のハイフン(Well-being)、記号の直前(…=自立 ——この)。ここは <span class="nbp"> で包んで離さない */
-const NBP=/[」』）)】〕〉》○◯●%％]\p{sc=Hiragana}|[A-Za-z0-9] \p{sc=Hiragana}|[〜~][^\s]|[\p{sc=Katakana}ー][=＝]\p{sc=Katakana}|[A-Za-z]-[A-Za-z]|[^\s][=＝+＋—―→×]/gu;
+const NBP=/[」』）)】〕〉》○◯●%％]\p{sc=Hiragana}|[A-Za-z0-9] \p{sc=Hiragana}|[〜~][^\s]|[\p{sc=Katakana}ー][=＝]\p{sc=Katakana}|[A-Za-z]-[A-Za-z]|[^\s][=＝+＋—―→×]|(?:📲 「?)?ホーム画面|共有ボタン|□に↑|引き継/gu;/* 後半はホーム画面に追加の手順用(「ホーム/画面」「引き/継がれません」と割れない) */
 /* 文字列 → <wbr> 入りのHTML。each=true なら1文字ずつ <span class="ghost"> に包む(タイプライター用) */
 /* 折ってよい所(cuts → <wbr>)と離さない所(keep → nbp)。離さない所の内側には <wbr> を入れない(入れると nowrap の中でも折れた: 「for /でもなく」) */
 function phraseMarks(s){
@@ -872,7 +891,7 @@ function wbr(el){
   }
 }
 /* 文が入れ替わる要素は、書き換えのたびに自動で <wbr> を入れる(問題文はタイプライターが自分で入れる) */
-const WBR_T=".choice,#ex-body,#foe-say,#defeat-quote,#result-score,#trivia,#story-sub,.tut-box li,#title-foot";
+const WBR_T=".choice,#ex-body,#foe-say,#defeat-quote,#result-score,#trivia,#story-sub,.tut-box li,#title-foot,#inst-note";
 if(SEG){
   const mo=new MutationObserver(rs=>{
     const set=new Set();
@@ -897,7 +916,7 @@ function toast(msg){
 
 /* ---------- TITLE ---------- */
 const QT=STAGES.reduce((a,s)=>a+s.q.length,0);
-$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.10`;
+$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.11`;
 const paradeStr=CHAPTERS.map(c=>c.boss.icon).join("");
 /* オープニングの流れるアイコンは人型・人の顔(人間味のある絵文字)を除外。ending parade は全ボス維持 */
 const PARADE_SKIP=new Set(["🦸","🏋️","😇","😶"]);
@@ -956,6 +975,52 @@ function closeTut(){$("#tut").hidden=true;$$(".screen").forEach(s=>s.inert=false
   if(tutNext){const f=tutNext;tutNext=null;f();}else if(tutOpener&&tutOpener.focus)tutOpener.focus();tutOpener=null;}
 $("#btn-howto").addEventListener("click",openTut);
 $("#tut-close").addEventListener("click",closeTut);
+
+/* ---------- ホーム画面に追加(v2.11) ----------
+   公開版(https)で、ホーム画面のアプリとして開いていないときだけ「📲 ホーム画面に追加」を出す(開発版の file:// では出ない)。
+   Android・PC の Chrome/Edge はブラウザのインストール画面(beforeinstallprompt)を出し、出せないとき(iPhone・iPad、LINE などの中、
+   一度断ったあと)は端末ごとの手順を見せる。iPhone は Safari とアプリで記録が別になるので、最初に追加するよう添える */
+let installEvt=null,instOpener=null;
+const isApp=()=>(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+function showInstallBtn(){$("#btn-install").hidden=!(location.protocol==="https:"&&!isApp());}
+showInstallBtn();
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEvt=e;showInstallBtn();});
+window.addEventListener("appinstalled",()=>{installEvt=null;$("#btn-install").hidden=true;if(!$("#inst").hidden)closeInst();toast("📲 ホーム画面に追加しました!");});
+function instGuide(){
+  const ua=navigator.userAgent,ios=/iP(hone|ad|od)/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  const line=/ Line\//.test(ua),inApp=line||/FBAN|FBAV|Instagram|Twitter|TikTok|MicroMessenger/i.test(ua);
+  const PC="スマホで遊ぶなら、授業のQRコードからスマホで開いて追加しよう。";
+  if(inApp)return{steps:line?["下の「Safari・Chromeで開く」を押す","開いた画面で、もう一度「📲 ホーム画面に追加」を押す"]:["右上(または右下)のメニューから「ブラウザで開く」を選ぶ","開いた画面で、もう一度「📲 ホーム画面に追加」を押す"],
+    note:"LINE などのアプリの中の画面からは追加できません。ここで遊んだ記録は、Safari・Chrome やホーム画面のアプリには引き継がれません。",open:line};
+  if(ios){
+    /* iOS 26 から、Safari の共有ボタンはふだんアドレスバーの横のメニュー(iOS 26 は「…」、iOS 27 は「≡」)の中。
+       Safari の版は UA の Version/NN で見る(iOS 26 から UA の OS の版は 18_6 などに固定されている) */
+    const safari=!/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua),pad=!/iPhone|iPod/.test(ua),v=+((ua.match(/Version\/(\d+)/)||[])[1]||0);
+    const s1=!safari?"アドレスバーの横の共有ボタン(□に↑)を押す":pad?"画面の上の共有ボタン(□に↑)を押す"
+      :v>=26?"アドレスバーの横のメニュー(「…」や「≡」)を押して「共有」を選ぶ(画面の下に共有ボタン(□に↑)があれば、それを押す)":"画面の下の共有ボタン(□に↑)を押す";
+    return{steps:[s1,"「ホーム画面に追加」を選ぶ(見えなければ「その他」を押すか、一覧をスクロール)","右上の「追加」を押す → ホーム画面の「ク」のアイコンから遊ぶ"],
+      note:(safari?"Safari で":"このブラウザで")+"遊んだ記録は、ホーム画面のアプリには引き継がれません。遊び始める前に追加しよう。"+(safari?"":"うまくいかないときは Safari で開いてから。")};}
+  if(/Android/.test(ua))return{steps:["右上のメニュー(︙)を押す","「アプリをインストール」か「ホーム画面に追加」を選ぶ","「インストール」(「追加」)を押す → ホーム画面の「ク」のアイコンから遊ぶ"],note:"メニューに見当たらないときは、Chrome で開いてから。"};
+  if(/Macintosh/.test(ua)&&/Version\/[\d.]+ Safari/.test(ua)&&!/Chrome|Chromium|Edg\//.test(ua))return{steps:["メニューバーの「ファイル」→「Dockに追加」を選ぶ(macOS Sonoma 以降)","「追加」を押す → Dock の「ク」のアイコンから遊ぶ"],note:PC};
+  if(/Firefox\//.test(ua))return{steps:["Chrome か Edge でこのページを開く","もう一度「📲 ホーム画面に追加」を押す"],note:PC};
+  return{steps:["アドレスバーの右にあるインストールのアイコン、またはメニュー(︙)を押す","「福祉クエストをインストール」(「アプリをインストール」)を選ぶ"],note:PC};
+}
+function openInst(){
+  const g=instGuide();instOpener=document.activeElement;
+  $("#inst-steps").innerHTML=g.steps.map((s,i)=>`<li><span class="ico">${"①②③"[i]}</span>${esc(s)}</li>`).join("");
+  $("#inst-note").textContent=g.note||"";
+  $("#inst-open-wrap").hidden=!g.open;
+  if(g.open){const u=new URL(location.href);u.searchParams.set("openExternalBrowser","1");$("#inst-open").href=u.href;}
+  $("#inst").hidden=false;$$(".screen").forEach(s=>s.inert=true);$("#inst-title").focus({preventScroll:true});
+}
+function closeInst(){$("#inst").hidden=true;$$(".screen").forEach(s=>s.inert=false);if(instOpener&&instOpener.focus)instOpener.focus();instOpener=null;}
+$("#btn-install").addEventListener("click",async()=>{
+  if(installEvt){const e=installEvt;installEvt=null;
+    try{await e.prompt();const r=await e.userChoice;if(r&&r.outcome==="accepted")$("#btn-install").hidden=true;}catch(err){openInst();}
+    return;}
+  openInst();
+});
+$("#inst-close").addEventListener("click",closeInst);
 let tutNext=null;
 function maybeTut(next){
   if(save.tut){next();return;}
@@ -1188,6 +1253,8 @@ function nextQuestion(){
       if(lb>innerHeight&&lb-qt<=innerHeight-8)window.scrollBy({top:lb-innerHeight+8,behavior:scrollBeh()});}
     say(`${B.isRetry?"再挑戦。":""}第${B.asked}問。${q[0]}`);/* 打ち終わってから全文を1回だけ読み上げる */
   });
+  /* 前の解説まで送っていた分で問題窓の上が画面の上に隠れたら、打ち始めに問題窓の上端まで戻す(背の低い画面・文字拡大。新しい問題文を置いたあとで測る) */
+  {const qt=$("#qwin").getBoundingClientRect().top;if(qt<0)window.scrollBy(0,qt-8);}
 }
 function onAnswer(idx){
   if(B.locked||B.over)return;
@@ -1366,7 +1433,8 @@ function victory(delay){
         `<span class="ending-parade">${paradeStr}</span><br>`+
         `全12章、制覇おめでとう!<br>称号「<b style="color:var(--gold)">${esc(rankName(RANKS,totalStars()))}</b>」 ★${totalStars()}/${CHAPTERS.length*3}<br>`+
         `キミはもう、福祉を自分の言葉で語れる。`;
-      $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span class="brk">(クリア+${bonus} / 最大コンボ×${B.maxCombo})</span>`+growHtml;
+      $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span class="brk">(クリア+${bonus} / 最大コンボ×${B.maxCombo})</span>`+growHtml
+        +(stars<3?`<br><span style="font-size:.8rem;color:var(--dim)">💡 ノーミスで倒すと RANK S(★3)!</span>`:"");/* 終章も★3集めの対象なので、通常章と同じ案内 */
       /* エンディングだけ、まめちしきの代わりに改心したボスたちの「その後」 */
       const un=B.misses.filter(q=>!B.redeemed.has(q));/* 取り返していないミスがあれば、ふりかえりを先に残す */
       $("#trivia").innerHTML=(un.length?$("#trivia").innerHTML+"<br><br>":"")+`<b>— その後のボスたち —</b><br>`+
@@ -1445,6 +1513,7 @@ function addBtn(parent,label,fn,primary){
 /* ---------- keyboard ---------- */
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"&&$("#tut").hidden===false){e.preventDefault();closeTut();return;}
+  if($("#inst").hidden===false){if(e.key==="Escape"){e.preventDefault();closeInst();}return;}/* 手順を開いている間は、ゲームのキー操作をしない */
   if(e.repeat)return;/* 長押しリピートでリザルト画面を飛ばさない */
   /* フォーカス中の有効なボタンはネイティブのEnter/Space動作に任せる(横取りすると別のボタンが押される) */
   if((e.key==="Enter"||e.key===" ")&&document.activeElement&&document.activeElement.tagName==="BUTTON"&&!document.activeElement.disabled)return;
@@ -1543,6 +1612,10 @@ if(location.search.indexOf("selftest")>-1){
       if(!onScr("scr-title"))LOG.push("NO:p2-title");
       {const todo=huntNext(-1);/* 全章クリア後: ★3まだの章があれば「第1章から」を出し、副題で行き先を示す */
         if($("#btn-story").textContent.indexOf("もういちど")<0||$("#btn-restart").hidden!==(todo<=0)||(todo>=0&&$("#story-sub").textContent.indexOf("★3まで")<0))LOG.push("BAD:p2-title-cleared");}
+      /* ホーム画面に追加: file:// ではボタンを出さない。手順の窓は開いて、Esc で閉じ、背後の inert も戻る */
+      if(location.protocol!=="https:"&&!$("#btn-install").hidden)LOG.push("BAD:p2-inst-btn");
+      openInst();if($("#inst").hidden||$("#inst-steps").children.length<2||!$("#scr-title").inert)LOG.push("NO:p2-inst");
+      key("Escape");if(!$("#inst").hidden||$("#scr-title").inert)LOG.push("NO:p2-inst-close");
       save.tut=0;$("#btn-story").click();
       if($("#tut").hidden||onScr("scr-battle"))LOG.push("NO:p2-tut");
       $("#tut-close").click();
