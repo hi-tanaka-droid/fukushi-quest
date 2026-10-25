@@ -228,7 +228,7 @@ body{
 .pstrip{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;font-size:.9rem;flex-wrap:wrap;}
 .pstrip .hearts{letter-spacing:3px;font-size:1.05rem;text-shadow:1px 1px 0 #000;}
 .pstrip .hearts small{color:var(--dim);font-size:.7rem;letter-spacing:0;margin-right:4px;}
-.hearts .broke{display:inline-block;animation:heartbreak .6s steps(6);}
+.hearts .broke,.hearts .heal{display:inline-block;animation:heartbreak .6s steps(6);}
 @keyframes heartbreak{0%{transform:scale(1.7);filter:drop-shadow(0 0 8px #ff5d7a);}30%{transform:scale(1.2) rotate(-12deg);}60%{transform:scale(1) rotate(8deg);}100%{transform:none;}}
 .combo{color:var(--cyan);font-weight:bold;}
 .combo b{color:var(--gold);font-size:1.1rem;display:inline-block;}
@@ -548,7 +548,7 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
         <li><span class="ico">🗺️</span>冒険は全12章。ボスを倒すと<b style="color:var(--gold)">次の地へ進む!</b> 進み具合は自動セーブ。</li>
         <li><span class="ico">🗡️</span>クイズに正解するとボスにダメージ! <b style="color:var(--gold)">3コンボで会心の一撃</b>、<b style="color:#ff9de2">5コンボでフィーバー(1.5倍)!</b></li>
         <li><span class="ico">❤️</span>まちがえるとボスの反撃でライフが減る。0になると敗北…でもすぐリベンジできる!</li>
-        <li><span class="ico">💡</span>まちがえてもダイジョーブ。<b style="color:var(--hp)">解説で覚えれば</b>次は必ず勝てる! まちがえた問題は、少しあとでもう一度出るぞ。</li>
+        <li><span class="ico">💡</span>まちがえてもダイジョーブ。<b style="color:var(--hp)">解説で覚えれば</b>次は必ず勝てる! まちがえた問題は、少しあとでもう一度出るぞ。そこで正解すれば、1戦に1回<b style="color:var(--hp)">ライフが1つ戻る</b>!</li>
       </ol>
       <div class="center"><button class="next-btn" id="tut-close">わかった! ▶</button></div>
     </div>
@@ -559,7 +559,7 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
 <script>
 "use strict";
 /* =========================================================
-   福祉クエスト v2.9 — ひとすじの冒険(音・タイマー・アイテムなし)
+   福祉クエスト v2.10 — ひとすじの冒険(音・タイマー・アイテムなし)
    ========================================================= */
 
 /* ---------- DATA ---------- */
@@ -890,13 +890,14 @@ const reduceMotion=()=>!!(window.matchMedia&&matchMedia("(prefers-reduced-motion
 const scrollBeh=()=>reduceMotion()?"auto":"smooth";
 function say(t){const s=$("#sr");if(!s)return;s.textContent="";if(srT)clearTimeout(srT);srT=setTimeout(()=>{srT=null;s.textContent=t;},80);}
 function toast(msg){
+  document.querySelectorAll(".toast").forEach(x=>x.remove());/* 前のトーストと重ねない */
   const t=document.createElement("div");t.className="toast";t.textContent=msg;
   document.body.appendChild(t);setTimeout(()=>t.remove(),1650);
 }
 
 /* ---------- TITLE ---------- */
 const QT=STAGES.reduce((a,s)=>a+s.q.length,0);
-$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.9`;
+$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.10`;
 const paradeStr=CHAPTERS.map(c=>c.boss.icon).join("");
 /* オープニングの流れるアイコンは人型・人の顔(人間味のある絵文字)を除外。ending parade は全ボス維持 */
 const PARADE_SKIP=new Set(["🦸","🏋️","😇","😶"]);
@@ -905,6 +906,13 @@ const PARADE_ADD=["🗡️","🛡️","⭐","💡"];
 const paradeTitle=CHAPTERS.map(c=>c.boss.icon).filter(ic=>!PARADE_SKIP.has(ic)).concat(PARADE_ADD).join("");
 $("#parade1").textContent=paradeTitle;$("#parade2").textContent=paradeTitle;
 
+/* 全章クリア後の★3集め(メモリ上だけ。保存しない): from の次から順に、★3がまだの章を探す。後ろに無ければ前へ回る。from 自身は返さない。無ければ -1 */
+let hunt=false;
+function huntNext(from){
+  const n=CHAPTERS.length;
+  for(let k=1;k<=n;k++){const i=(from+k+n)%n;if(i!==from&&(Number(save.stars[CHAPTERS[i].id])||0)<3)return i;}
+  return -1;
+}
 function renderTitle(){
   const p=save.progress;
   const btn=$("#btn-story"),sub=$("#story-sub");
@@ -918,9 +926,11 @@ function renderTitle(){
     sub.textContent=`次なる敵:${ch.boss.name}(${ch.title})`;
     $("#btn-restart").hidden=false;
   }else{
+    /* 全章クリア後: ★3がまだの章があれば、そこから★3まだの章だけをたどる(「第1章から」は一本道のやり直し) */
+    const todo=huntNext(-1);
     btn.childNodes[0].textContent="🗡️ もういちど ぼうけんに出る";
-    sub.textContent="全章クリア済み! 語り部として、旅をもう一周。";
-    $("#btn-restart").hidden=true;
+    sub.textContent=todo<0?"全章クリア済み! 語り部として、旅をもう一周。":`全章★3まで あと${CHAPTERS.filter(c=>(Number(save.stars[c.id])||0)<3).length}章 ─ ${chapterLabel(todo)}「${CHAPTERS[todo].title}」から`;
+    $("#btn-restart").hidden=todo<=0;/* ★3まだの章が第1章からなら、もういちど=第1章からなので並べない */
   }
   $("#records").innerHTML=
     `<span>称号</span><b>${esc(rankName(RANKS,totalStars()))}</b>`+
@@ -931,11 +941,13 @@ function renderTitle(){
 renderTitle();
 
 $("#btn-story").addEventListener("click",()=>{
-  const start=save.progress>=CHAPTERS.length?0:save.progress;
+  const t=huntNext(-1),cleared=save.progress>=CHAPTERS.length;
+  hunt=cleared&&t>=0;
+  const start=cleared?Math.max(0,t):save.progress;
   maybeTut(()=>startBattle(start));
 });
 $("#btn-restart").addEventListener("click",()=>{
-  maybeTut(()=>startBattle(0));
+  hunt=false;maybeTut(()=>startBattle(0));
 });
 /* あそびかた: 開いている間は背後の画面を inert にし(Tabで背後のボタンへ行かない)、閉じたら開いたボタンへ戻す */
 let tutOpener=null;
@@ -973,6 +985,7 @@ function finalQueue(){
   return out;
 }
 /* 正解時のダメージ(コンボ数cの関数)。3コンボで会心1.4倍、5コンボでフィーバー1.5倍 */
+const HP_PER_Q=165;/* 通常章のボスHP=8問×165=1320(終章は12問×110=1320) */
 function calcDmg(c){let d=70+Math.min(c,5)*12;if(c>=3)d=Math.round(d*1.4);if(c>=5)d=Math.round(d*1.5);return d;}
 /* 解説の長さに応じた読み時間(1.5秒+75ms/字、最大9秒)。速く読める人は「すぐ次へ」で先へ進める */
 function readMs(q){return Math.min(9000,1500+q[2].length*75);}
@@ -1008,7 +1021,8 @@ function startBattle(chIdx){
   B.misses=[];B.redeemed=new Set();/* ふりかえり用のミス一覧 / おかわりで取り返した問い */
   B.heartsShown=3;B.comboShown=0;
   const qn=B.isFinal?12:B.stage.q.length;
-  B.bossMax=Math.round(qn*110);
+  /* 通常章は8問×165=1320(終章の12問×110と同じ)。ノーミスでも7問の累計1308では倒れず、章の8問を必ず全部通る(880だと6問で倒れ、2問を見ないまま勝っていた) */
+  B.bossMax=Math.round(qn*(B.isFinal?110:HP_PER_Q));
   B.bossHP=B.bossMax;
   fleeArmed=false;$("#btn-flee").textContent="◀ タイトル";
   $("#battle-stage-name").textContent=`${chapterLabel(chIdx)} ${B.stage.title}`;
@@ -1090,9 +1104,9 @@ $("#foe-sprite").addEventListener("animationend",e=>{
 /* ---------- HUD ---------- */
 function updateHUD(){
   /* いま減ったハートだけ割れる演出。コンボは増えた瞬間だけ数字が弾む(再描画のたびには動かさない) */
-  const broke=B.hearts<B.heartsShown;B.heartsShown=B.hearts;
+  const broke=B.hearts<B.heartsShown,healed=B.hearts>B.heartsShown;B.heartsShown=B.hearts;
   $("#hearts").setAttribute("aria-label",`ライフ ${B.hearts} / 3`);
-  $("#hearts").innerHTML=`<small>ライフ</small>`+"❤️".repeat(B.hearts)+(broke?'<span class="broke">🤍</span>':"")+"🤍".repeat(Math.max(0,3-B.hearts-(broke?1:0)));
+  $("#hearts").innerHTML=`<small>ライフ</small>`+"❤️".repeat(B.hearts-(healed?1:0))+(healed?'<span class="heal">❤️</span>':"")+(broke?'<span class="broke">🤍</span>':"")+"🤍".repeat(Math.max(0,3-B.hearts-(broke?1:0)));
   const fever=B.combo>=5,up=B.combo>B.comboShown;B.comboShown=B.combo;
   $("#combo").innerHTML=B.combo>1
     ?`<small>COMBO</small><b${up?' class="pop"':""}>×${B.combo}</b>${fever?' <span class="fv">FEVER!!</span>':B.combo>=3?" 🔥":""}`
@@ -1105,13 +1119,14 @@ function updateHUD(){
   if(lw>=(parseFloat(lag.style.width)||100)){lag.style.transition="none";lag.style.width=lw+"%";void lag.offsetWidth;lag.style.transition="";}
   else lag.style.width=lw+"%";
   $("#foe-hp-num").textContent=`${Math.max(0,B.bossHP)} / ${B.bossMax}`;
-  if(!B.angry&&B.bossHP>0&&r<.3){
+  /* 通常章(HP1320)はHP3割に届かないままラスト1問の一撃で倒れることが多いので、ラスト1問に入ったら怒り状態にする */
+  const last=!B.isFinal&&B.qi>0&&B.qi>=B.queue.length;
+  if(!B.angry&&B.bossHP>0&&(r<.3||(last&&B.hearts>0&&!B.over))){
     B.angry=true;
     $("#foe-sprite").classList.add("angry");
     $("#foe-state").textContent=`!! ${talk("rage")||"怒りに燃えている"} !!`;
   }
   /* あと一押しの合図(HPラベルの左): 終章以外のラスト1問 > 次の正解でとどめ > ふだんは「てきのHP」 */
-  const last=!B.isFinal&&B.qi>0&&B.qi>=B.queue.length;
   const cue=B.over||B.bossHP<=0?"":last?"⚔️ ラスト1問! 正解で討伐":calcDmg(B.combo+1)>=B.bossHP?"⚔️ 次の正解で とどめ!":"";
   const ce=$("#foe-cue");ce.textContent=cue||"てきのHP";ce.classList.toggle("cue",!!cue);
 }
@@ -1200,7 +1215,9 @@ function onAnswer(idx){
     if(wasFeverStart)toast("🌈 FEVER!! ダメージ1.5倍!");
     /* 全画面フラッシュは山場(3コンボ目・フィーバー突入・とどめ)だけ。毎回光ると授業中にまぶしい */
     if(B.combo===3||wasFeverStart||B.bossHP-hit<=0){const f=document.createElement("div");f.className="crit-flash";document.body.appendChild(f);setTimeout(()=>f.remove(),320);}
-    if(B.isRetry){B.retry.delete(q);B.redeemed.add(q);}
+    if(B.isRetry){B.retry.delete(q);B.redeemed.add(q);
+      /* おかわりで取り返したら、1戦に1回だけライフが1つ戻る(★はライフではなくミスの数で決まるので、RANK S=ノーミスは変わらない) */
+      if(B.hearts<3&&B.healRun!==B.run){B.hearts++;B.healRun=B.run;B.healAt=B.asked;toast("❤️ ライフが1つ戻った!");}}
     if(B.isFinal){const n=$$("#trail .tnode")[SRC.get(q)];if(n)n.classList.add("lit");}/* 終章: 正解した問いの章が道のりで光る */
     hitBoss(hit,crit,fever);
     updateHUD();
@@ -1267,7 +1284,7 @@ function showExplain(good,q,finishOrAtk,src){
     $("#foe-say").textContent=src?`${B.boss.name}は ${src.name}の${a}を呼びさました! 手痛い反撃を受けた!`:`${B.boss.name}の ${finishOrAtk}! 手痛い反撃を受けた!`;
     $("#btn-next").style.display="";
   }
-  say(good?$("#ex-tag").textContent:`ミス。正解は ${q[1][0]}。${q[2]} ライフ のこり${B.hearts}。`);/* 読み上げ(画面には出ない) */
+  say(good?$("#ex-tag").textContent+(B.healRun===B.run&&B.healAt===B.asked?" ライフが1つ戻った。":""):`ミス。正解は ${q[1][0]}。${q[2]} ライフ のこり${B.hearts}。`);/* 読み上げ(画面には出ない) */
   if(good)ex.scrollIntoView({behavior:scrollBeh(),block:"nearest"});/* ミスのときは onAnswer 側でゆれの後に送る */
 }
 /* キーボードで解説(すぐ次へ)にフォーカスが入ったら、タップと同じく自動送りを止める */
@@ -1314,7 +1331,7 @@ function victory(delay){
   if(B.autoT){clearTimeout(B.autoT);B.autoT=null;}
   const sp=$("#foe-sprite");sp.classList.remove("angry");sp.classList.add("dead");
   $("#foe-state").textContent="";/* 消えていくボスに怒り状態名を残さない */
-  const stars=B.hearts>=3?3:B.hearts===2?2:1;
+  const stars=B.miss===0?3:B.miss===1?2:1;/* ★はミスの数(ライフはおかわりで1つ戻ることがあるため) */
   const rank=stars===3?"S":stars===2?"A":"B";
   const bonus=stars*300+B.hearts*100;
   B.score+=bonus;
@@ -1330,7 +1347,7 @@ function victory(delay){
   if(newRank!==prevRank)grow.push(`🎖️ 称号アップ!「${esc(prevRank)}」→「${esc(newRank)}」`);
   if(!isEnding){
     if(prevStars>0&&stars>prevStars)grow.push(`★ 更新! ${starStr(prevStars)} → ${starStr(stars)}`);
-    if(prevBest>0&&B.score>prevBest)grow.push(`🆕 この章の自己ベスト更新!(前回 ${prevBest.toLocaleString()})`);
+    if(prevBest>0&&B.score>prevBest&&stars>=prevStars)grow.push(`🆕 この章の自己ベスト更新!(前回 ${prevBest.toLocaleString()})`);
     const nr=RANKS.find(([min])=>min>ts);
     if(!grow.length&&nr&&nr[0]-ts<=3)grow.push(`つぎの称号「${esc(nr[1])}」まで あと★${nr[0]-ts}`);
   }
@@ -1361,10 +1378,13 @@ function victory(delay){
       $("#defeat-quote").textContent=B.boss.defeat;
       $("#result-score").innerHTML=`SCORE <b>${B.score.toLocaleString()}</b> <span class="brk">(クリア+${bonus} / 最大コンボ×${B.maxCombo})</span>`
         +growHtml
-        +(stars<3?`<br><span style="font-size:.8rem;color:var(--dim)">💡 ノーダメージで倒すと RANK S(★3)!</span>`:"");
-      const nx=B.chapter+1;
-      addBtn(btns,`つぎの地へ ▶ ${chapterLabel(nx)}`,()=>startBattle(nx),true);
-      addBtn(btns,"この章をもう一度",()=>startBattle(B.chapter));
+        +(stars<3?`<br><span style="font-size:.8rem;color:var(--dim)">💡 ノーミスで倒すと RANK S(★3)!</span>`:"");
+      const hx=hunt?huntNext(B.chapter):-1,nx=hx>=0?hx:B.chapter+1;/* ★3集めの途中なら、次の★3まだの章へ(ボタンに行き先の章が出る) */
+      /* ★3集めで、★3がまだなのがこの章だけ(=ほかの行き先がない)なら「この章をもう一度」を主ボタンに */
+      const stay=hunt&&hx<0&&(Number(save.stars[B.stage.id])||0)<3;
+      if(stay)addBtn(btns,"この章をもう一度 ▶",()=>startBattle(B.chapter),true);
+      addBtn(btns,`つぎの地へ ▶ ${chapterLabel(nx)}`,()=>startBattle(nx),!stay);
+      if(!stay)addBtn(btns,"この章をもう一度",()=>startBattle(B.chapter));
       addBtn(btns,"タイトルへ",()=>{renderTitle();show("scr-title");});
     }
     show("scr-result");
@@ -1471,6 +1491,12 @@ if(location.search.indexOf("selftest")>-1){
       });
     });
     const dm=[1,2,3,4,5,6].map(calcDmg).join(",");if(dm!=="82,94,148,165,273,273")LOG.push("DMGBAD:"+dm);
+    /* 通常章のHP: ノーミス7問の累計では倒れず、8問目で倒れる(=章の8問を必ず全部通る) */
+    {let c7=0;for(let k=1;k<=7;k++)c7+=calcDmg(k);const hp=Math.round(8*HP_PER_Q);if(!(c7<hp&&c7+calcDmg(8)>=hp))LOG.push("DMGBAD:hp:"+c7+"/"+hp);}
+    /* ★3集めの行き先: 後ろの★3まだの章 → 無ければ前へ回る。自分の章は返さない。全部★3なら -1 */
+    {const ks=save.stars;save.stars={};CHAPTERS.forEach(c=>save.stars[c.id]=3);save.stars[CHAPTERS[2].id]=2;save.stars[CHAPTERS[7].id]=1;
+      const r=[huntNext(-1),huntNext(2),huntNext(7),huntNext(8)].join(",");if(r!=="2,7,2,2")LOG.push("BAD:hunt:"+r);
+      CHAPTERS.forEach(c=>save.stars[c.id]=3);if(huntNext(-1)!==-1)LOG.push("BAD:hunt-full");save.stars=ks;}
     CHAPTERS.forEach(c=>{
       const t=TALK[c.id];
       if(!t||["rage","lose","again","after"].some(k=>typeof t[k]!=="string"||!t[k]))LOG.push("TALKBAD:"+c.id);
@@ -1500,8 +1526,8 @@ if(location.search.indexOf("selftest")>-1){
     /* 台本: 第1章=1回ミス→おかわり再出題で取り返す / 第2章=とどめ後「討伐! 結果へ」を押す / 第3章=4問目と8問目でミス→ラスト1問の一撃でとどめ(★1)
        第4章=3連続ミスで力尽きる→捨て台詞とふりかえり→「リベンジ!」→再戦台詞 / 終章=2問目でミス→他章ボスの技の呼びさまし / ほかは全問正解 */
     save.tut=1;save.progress=0;save.stars={};save.best={};save.hiscore=0;
-    const _toast=toast;let sawRetryToast=false;
-    toast=function(m){if(m.indexOf("再挑戦")>-1)sawRetryToast=true;_toast(m);};
+    const _toast=toast;let sawRetryToast=false,sawHeal=0;
+    toast=function(m){if(m.indexOf("再挑戦")>-1)sawRetryToast=true;if(m.indexOf("ライフが1つ")>-1)sawHeal++;_toast(m);};
     startBattle(0);
     let steps=0,cleared=0,missedQ=null,retrySeen=false,finBtn=false,lostDone=false,expectAgain=false,againSeen=false,summon=0,cueSeen=false,lastBlow=false,seenRun=-1;
     /* 第2部: 台本の外の操作(タイトルへ/初回あそびかた/キーボード/解説タップで一時停止/逃走の二段確認と残留タイマー) */
@@ -1515,11 +1541,12 @@ if(location.search.indexOf("selftest")>-1){
       if(!tb){LOG.push("NO:p2-titlebtn");return;}
       tb.click();
       if(!onScr("scr-title"))LOG.push("NO:p2-title");
-      if($("#btn-story").textContent.indexOf("もういちど")<0||!$("#btn-restart").hidden)LOG.push("BAD:p2-title-cleared");
+      {const todo=huntNext(-1);/* 全章クリア後: ★3まだの章があれば「第1章から」を出し、副題で行き先を示す */
+        if($("#btn-story").textContent.indexOf("もういちど")<0||$("#btn-restart").hidden!==(todo<=0)||(todo>=0&&$("#story-sub").textContent.indexOf("★3まで")<0))LOG.push("BAD:p2-title-cleared");}
       save.tut=0;$("#btn-story").click();
       if($("#tut").hidden||onScr("scr-battle"))LOG.push("NO:p2-tut");
       $("#tut-close").click();
-      if(!onScr("scr-battle")||B.chapter!==0||!save.tut)LOG.push("NO:p2-tut-battle");
+      if(!onScr("scr-battle")||B.chapter!==Math.max(0,huntNext(-1))||!hunt||!save.tut)LOG.push("NO:p2-tut-battle");
       if(!await until(()=>typeTimer||B.introHold,5000)){LOG.push("STUCK:p2-intro");return;}
       while(B.asked===0){key("Enter");await wait(60);if(performance.now()>1e12)break;}
       if(!await until(()=>!B.locked,5000)){LOG.push("STUCK:p2-q1");return;}
@@ -1566,9 +1593,9 @@ if(location.search.indexOf("selftest")>-1){
             if($("#trivia").textContent.indexOf("ふりかえり")<0)LOG.push("NOREVIEW");
           }else{
             const tv=$("#trivia").textContent;
-            if(B.chapter===0){LOG.push(retrySeen&&sawRetryToast?"RETRY":"NORETRY");if(tv.indexOf("まめちしき")<0)LOG.push("BAD:review-redeemed");}/* 取り返したミスだけならまめちしき */
+            if(B.chapter===0){LOG.push(retrySeen&&sawRetryToast&&sawHeal===1&&B.hearts===3&&save.stars.s1===2?"RETRY":"NORETRY");/* おかわり正解でライフが戻る・★はミス数 */if(tv.indexOf("まめちしき")<0)LOG.push("BAD:review-redeemed");}/* 取り返したミスだけならまめちしき */
             if(B.chapter===1)LOG.push(finBtn?"FINBTN":"NOFINBTN");
-            if(B.chapter===2)LOG.push(cueSeen&&lastBlow&&save.stars.s3===1?"LASTBLOW":"NOLASTBLOW");
+            if(B.chapter===2)LOG.push(cueSeen&&lastBlow&&save.stars.s3===1&&B.hearts===2&&sawHeal===2&&B.angry?"LASTBLOW":"NOLASTBLOW");/* 回復は1戦に1回・ラスト1問で怒り状態 */
             if(B.chapter===3&&!againSeen)LOG.push("NOAGAIN");
             cleared++;
           }
