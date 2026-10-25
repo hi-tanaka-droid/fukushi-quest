@@ -1639,7 +1639,7 @@ if(location.search.indexOf("selftest")>-1){
 
 <script>
 if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("./sw.js").catch(function(){});}
-(function(){var app=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone;var f=document.getElementById("title-foot");if(f&&!app)f.textContent+=" / 📲 「ホーム画面に追加」でアプリになります";var ol=document.querySelector("#tut ol");if(ol&&navigator.standalone===false){var li=document.createElement("li");li.innerHTML='<span class="ico">📲</span><b style="color:var(--gold)">最初に「ホーム画面に追加」</b>してから遊ぼう。Safariで進めた記録はアプリに引き継げず、しばらく開かないと消えることもある。';ol.appendChild(li);}})();/* 記録の注意は iPhone・iPad の Safari(ホーム画面アプリではないとき)だけ、初回の「あそびかた」に出す */
+(function(){var ol=document.querySelector("#tut ol");if(ol&&navigator.standalone===false){var li=document.createElement("li");li.innerHTML='<span class="ico">📲</span><b style="color:var(--gold)">最初に「ホーム画面に追加」</b>してから遊ぼう。Safariで進めた記録はアプリに引き継げず、しばらく開かないと消えることもある。';ol.appendChild(li);}})();/* 記録の注意は iPhone・iPad の Safari(ホーム画面アプリではないとき)だけ、初回の「あそびかた」に出す */
 </script>
 </body>
 </html>
