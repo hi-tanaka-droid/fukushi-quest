@@ -359,7 +359,7 @@ body{
 .qtext .ghost{visibility:hidden;}
 /* 1b 文節で折る: スクリプトが文節の境目に <wbr> を入れ、そこと句読点・空白のほかでは折らない(Safari でも Chrome でも同じ所で折れる)。
    長すぎる語だけは、はみ出さずに折る。Intl.Segmenter がない古い端末では .wbr が付かず、上の auto-phrase のまま */
-.wbr .qtext,.wbr .choice,.wbr .explain p,.wbr .defeat-quote,.wbr .trivia,.wbr .tut-box li,.wbr .mode-btn small,.wbr .result-score,.wbr .title-foot,.wbr .inst-note{word-break:keep-all;overflow-wrap:anywhere;}
+.wbr .qtext,.wbr .choice,.wbr .explain p,.wbr .defeat-quote,.wbr .trivia,.wbr .tut-box li,.wbr .mode-btn small,.wbr .result-score,.wbr .title-foot{word-break:keep-all;overflow-wrap:anywhere;}
 .bar .mid{word-break:keep-all;overflow-wrap:anywhere;}/* 狭い画面(320px)で章題が「尊/厳」と割れず、空白(第1章 / 能力主義と尊厳)で折れる */
 .nbp{white-space:nowrap;}/* 」と・○○を・バンク=ミケルセン・Well-being・…=自立 は keep-all でも折れるので離さない */
 /* 2 道のり=一本の道 */
@@ -465,22 +465,6 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
 @media(max-width:340px){.bar .sp{display:none;}.result-title{letter-spacing:.08em;}}
 /* 10 文字拡大(125%〜)で「福祉クエス/ト」「ぼうけんに出/る」と1字だけ次の行に落ちない(ロゴは「福祉/クエスト」でだけ折れる) */
 .logo,.mode-btn{word-break:keep-all;overflow-wrap:anywhere;}
-/* 9 ホーム画面に追加(v2.11): 手順の補足と、LINE などの中から外のブラウザで開くボタン */
-.inst-note{font-size:.8rem;color:var(--dim);line-height:1.7;margin:12px 0 0;}
-.inst-note:empty{display:none;}
-#inst-open{text-decoration:none;font-size:.92rem;padding:8px 22px;margin-top:12px;}
-#inst .center:last-child{margin-top:16px;}
-/* 11 iPhone・iPad では、押す場所(Safari のツールバー)の向きを矢印で指し、窓は矢印の側に寄せる(長くて入りきらないときは上から読める) */
-.inst-arrow{display:none;}
-#inst[data-arrow="down"] .tut-box{margin-top:auto;margin-bottom:52px;}
-#inst[data-arrow="up"] .tut-box{margin-top:52px;}
-#inst[data-arrow="down"] .inst-arrow,#inst[data-arrow="up"] .inst-arrow{display:block;position:fixed;left:50%;transform:translateX(-50%);z-index:61;pointer-events:none;
-  font-size:2.6rem;line-height:1;color:var(--gold);text-shadow:0 0 14px #ffcf4d99,2px 2px 0 #000;animation:instbob 1s ease-in-out infinite;}
-#inst[data-arrow="down"] .inst-arrow{bottom:max(4px,env(safe-area-inset-bottom));}
-#inst[data-arrow="up"] .inst-arrow{top:max(4px,env(safe-area-inset-top));}
-#inst[data-arrow="down"] .inst-arrow::before{content:"▼";}
-#inst[data-arrow="up"] .inst-arrow::before{content:"▲";}
-@keyframes instbob{50%{transform:translate(-50%,6px);}}
 </style>
 </head>
 <body>
@@ -501,7 +485,6 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
     <div class="title-tools">
       <button class="icon-btn" id="btn-restart" hidden>↩ 第1章から旅をやり直す</button>
       <button class="icon-btn" id="btn-howto">❓ あそびかた</button>
-      <button class="icon-btn" id="btn-install" hidden>📲 ホーム画面に追加</button>
     </div>
     <div class="records" id="records"></div>
     <div class="parade" aria-hidden="true"><span id="parade1"></span><span id="parade2"></span></div>
@@ -573,24 +556,12 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
     </div>
   </div>
 
-  <!-- ===== ホーム画面に追加の手順(ブラウザがインストール画面を出せないとき) ===== -->
-  <div class="overlay" id="inst" hidden>
-    <div class="win tut-box" role="dialog" aria-modal="true" aria-labelledby="inst-title">
-      <h3 class="px" id="inst-title" tabindex="-1">— ホーム画面に追加 —</h3>
-      <ol id="inst-steps"></ol>
-      <p class="inst-note" id="inst-note"></p>
-      <div class="center" id="inst-open-wrap" hidden><a class="next-btn" id="inst-open">Safari・Chromeで開く ▶</a></div>
-      <div class="center"><button class="next-btn" id="inst-close">とじる</button></div>
-    </div>
-    <div class="inst-arrow" aria-hidden="true"></div>
-  </div>
-
 </div>
 
 <script>
 "use strict";
 /* =========================================================
-   福祉クエスト v2.12 — ひとすじの冒険(音・タイマー・アイテムなし)
+   福祉クエスト v2.13 — ひとすじの冒険(音・タイマー・アイテムなし)
    ========================================================= */
 
 /* ---------- DATA ---------- */
@@ -903,7 +874,7 @@ function wbr(el){
   }
 }
 /* 文が入れ替わる要素は、書き換えのたびに自動で <wbr> を入れる(問題文はタイプライターが自分で入れる) */
-const WBR_T=".choice,#ex-body,#foe-say,#defeat-quote,#result-score,#trivia,#story-sub,.tut-box li,#title-foot,#inst-note";
+const WBR_T=".choice,#ex-body,#foe-say,#defeat-quote,#result-score,#trivia,#story-sub,.tut-box li,#title-foot";
 if(SEG){
   const mo=new MutationObserver(rs=>{
     const set=new Set();
@@ -928,7 +899,7 @@ function toast(msg){
 
 /* ---------- TITLE ---------- */
 const QT=STAGES.reduce((a,s)=>a+s.q.length,0);
-$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.12`;
+$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.13`;
 const paradeStr=CHAPTERS.map(c=>c.boss.icon).join("");
 /* オープニングの流れるアイコンは人型・人の顔(人間味のある絵文字)を除外。ending parade は全ボス維持 */
 const PARADE_SKIP=new Set(["🦸","🏋️","😇","😶"]);
@@ -987,78 +958,6 @@ function closeTut(){$("#tut").hidden=true;$$(".screen").forEach(s=>s.inert=false
   if(tutNext){const f=tutNext;tutNext=null;f();}else if(tutOpener&&tutOpener.focus)tutOpener.focus();tutOpener=null;}
 $("#btn-howto").addEventListener("click",openTut);
 $("#tut-close").addEventListener("click",closeTut);
-
-/* ---------- ホーム画面に追加(v2.11〜) ----------
-   公開版(https)で、ホーム画面のアプリとして開いていないときだけ「📲 ホーム画面に追加」を出す(開発版の file:// では出ない)。
-   押したときの動き(2026-10 時点で、各ブラウザがページに許している範囲でいちばん短い道):
-   ・Android・PC の Chrome/Edge/Samsung Internet: すぐにブラウザのインストール画面を出す(beforeinstallprompt。最後の「インストール」はブラウザの確認で省けない)。
-     開いた直後でまだ届いていなければ「準備中…」で最大4秒待ち、届いたらその場で出す(押した操作の有効時間は5秒)。届かなければメニューからの手順を出す。
-   ・LINE の中: 説明を出さずに ?openExternalBrowser=1 で Safari・Chrome へ移す(add=1 を付けて、移った先で続きをする)。
-   ・iPhone・iPad: ページから追加させる仕組みを Apple が用意していない(WebKit は 2026-05 に beforeinstallprompt と Web Install API への反対を表明)。
-     押す場所を矢印で示し、Apple の手順(iOS 26・27)どおりに3つで案内する。iPhone は Safari とアプリで記録が別なので、最初に追加するよう添える */
-let installEvt=null,instOpener=null,installWait=0,installWaitT=null;
-const UA=navigator.userAgent,IS_IOS=/iP(hone|ad|od)/.test(UA)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1),IS_LINE=/ Line\//.test(UA);
-const isApp=()=>(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
-function showInstallBtn(){$("#btn-install").hidden=!(location.protocol==="https:"&&!isApp());}
-showInstallBtn();
-function resetInstallBtn(){const b=$("#btn-install");b.disabled=false;b.textContent="📲 ホーム画面に追加";}
-async function runInstallPrompt(){
-  const e=installEvt;installEvt=null;
-  try{await e.prompt();const r=await e.userChoice;if(r&&r.outcome==="accepted")$("#btn-install").hidden=true;}catch(err){openInst();}
-}
-window.addEventListener("beforeinstallprompt",e=>{
-  e.preventDefault();installEvt=e;showInstallBtn();/* 断られると Chrome が送り直すので、上書きし続ければボタンはまた使える */
-  if(installWait&&performance.now()-installWait<4000){installWait=0;clearTimeout(installWaitT);installWaitT=null;resetInstallBtn();runInstallPrompt();}
-});
-window.addEventListener("appinstalled",()=>{installEvt=null;$("#btn-install").hidden=true;if(!$("#inst").hidden)closeInst();toast("📲 ホーム画面に追加しました!");});
-function instGuide(stuck){
-  const ua=UA,inApp=IS_LINE||/FBAN|FBAV|Instagram|Twitter|TikTok|MicroMessenger/i.test(ua);
-  const PC="スマホで遊ぶなら、授業のQRコードからスマホで開いて追加しよう。";
-  if(inApp)return{steps:["右下(または右上)のメニューを押す","「ブラウザで開く」(「Safariで開く」)を選ぶ","開いた画面で、もう一度「📲 ホーム画面に追加」を押す"],
-    note:(stuck?"Safari・Chrome に切りかわらなかったときは、上の手順か、下のボタンで開いてね。":"")+"LINE などのアプリの中の画面からは追加できません。ここで遊んだ記録は、Safari・Chrome やホーム画面のアプリには引き継がれません。",open:IS_LINE};
-  if(IS_IOS){
-    /* iOS 26 から、Safari の共有ボタンはふだん画面の下のメニュー(iOS 26 は「•••」、iOS 27 は「≡」)の中。
-       Safari の版は UA の Version/NN で見る(iOS 26 から UA の OS の版は 18_6 などに固定されている) */
-    const safari=!/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua),pad=!/iPhone|iPod/.test(ua),v=+((ua.match(/Version\/(\d+)/)||[])[1]||0);
-    const alt="(共有ボタン □に↑ があれば、それを押す)";
-    const s1=!safari?"アドレスバーの横の共有ボタン(□に↑)を押す":pad?"画面の上の共有ボタン(□に↑)を押す"
-      :v>=27?"画面の下の「≡」→「共有」を押す"+alt:v>=26?"画面の下の「•••」→「共有」を押す"+alt:"画面の下の共有ボタン(□に↑)を押す";
-    const s2=safari?"下へスクロールして「ホーム画面に追加」(無ければ一番下の「アクションを編集」で足す)":"「ホーム画面に追加」を選ぶ";
-    const s3=(safari&&v>=26?"「Webアプリとして開く」はオンのまま":"右上の")+"「追加」→ ホーム画面の「ク」から遊ぶ";
-    return{steps:[s1,s2,s3],arrow:!safari?"":pad?"up":"down",
-      note:(safari?"iPhone は、ページのボタンだけでは追加できない決まりです。Safari で":"このブラウザで")+"遊んだ記録はアプリに引き継がれないので、遊ぶ前に追加しよう。"+(safari?"":"うまくいかないときは Safari で開いてから。")};}
-  if(/Android/.test(ua))return{steps:["右上のメニュー(︙)を押す","「アプリをインストール」か「ホーム画面に追加」を選ぶ","「インストール」(「追加」)を押す → ホーム画面の「ク」のアイコンから遊ぶ"],note:"すでに入っているときは、ホーム画面の「ク」のアイコンから開いてね。メニューに見当たらないときは、Chrome で開いてから。"};
-  if(/Macintosh/.test(ua)&&/Version\/[\d.]+ Safari/.test(ua)&&!/Chrome|Chromium|Edg\//.test(ua))return{steps:["メニューバーの「ファイル」→「Dockに追加」を選ぶ(macOS Sonoma 以降)","「追加」を押す → Dock の「ク」のアイコンから遊ぶ"],note:PC};
-  if(/Firefox\//.test(ua))return{steps:["Chrome か Edge でこのページを開く","もう一度「📲 ホーム画面に追加」を押す"],note:PC};
-  return{steps:["アドレスバーの右にあるインストールのアイコン、またはメニュー(︙)を押す","「福祉クエストをインストール」(「アプリをインストール」)を選ぶ"],note:PC};
-}
-function openInst(stuck){
-  const g=instGuide(stuck);instOpener=document.activeElement;
-  $("#inst-steps").innerHTML=g.steps.map((s,i)=>`<li><span class="ico">${"①②③"[i]}</span>${esc(s)}</li>`).join("");
-  $("#inst-note").textContent=g.note||"";
-  $("#inst-open-wrap").hidden=!g.open;
-  if(g.open){const u=new URL(location.href);u.searchParams.set("openExternalBrowser","1");u.searchParams.set("add","1");$("#inst-open").href=u.href;}
-  $("#inst").dataset.arrow=g.arrow||"";/* 押す場所(Safari のツールバー)の向きに矢印 */
-  $("#inst").hidden=false;$$(".screen").forEach(s=>s.inert=true);$("#inst-title").focus({preventScroll:true});
-}
-function closeInst(){$("#inst").hidden=true;$$(".screen").forEach(s=>s.inert=false);if(instOpener&&instOpener.focus)instOpener.focus();instOpener=null;}
-$("#btn-install").addEventListener("click",()=>{
-  if(installEvt){runInstallPrompt();return;}
-  if(IS_LINE){const u=new URL(location.href);u.searchParams.set("openExternalBrowser","1");u.searchParams.set("add","1");location.href=u.href;return;}
-  if("onbeforeinstallprompt" in window&&!IS_IOS){/* Chrome/Edge など: インストール画面の準備が届くのを少し待つ */
-    if(installWait)return;
-    const b=$("#btn-install");installWait=performance.now();b.disabled=true;b.textContent="📲 準備中…";
-    installWaitT=setTimeout(()=>{installWait=0;installWaitT=null;resetInstallBtn();openInst();},4000);
-    return;}
-  openInst();
-});
-$("#inst-close").addEventListener("click",closeInst);
-/* LINE から移ってきたとき(?add=1): 目印を消して続きをする(iPhone は手順の窓、Chrome などは「もう一度押して」)。LINE の中のまま(移れなかった)なら、手で移る方法を出す */
-{const u=new URL(location.href);
-  if(u.searchParams.get("add")==="1"&&location.protocol==="https:"&&!isApp()){
-    if(IS_LINE)setTimeout(()=>openInst(true),600);
-    else{u.searchParams.delete("add");u.searchParams.delete("openExternalBrowser");history.replaceState(null,"",u.pathname+u.search+u.hash);
-      if(IS_IOS)setTimeout(()=>openInst(),600);else setTimeout(()=>toast("📲 もう一度「ホーム画面に追加」を押すと追加できます"),600);}}}
 let tutNext=null;
 function maybeTut(next){
   if(save.tut){next();return;}
@@ -1551,7 +1450,6 @@ function addBtn(parent,label,fn,primary){
 /* ---------- keyboard ---------- */
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"&&$("#tut").hidden===false){e.preventDefault();closeTut();return;}
-  if($("#inst").hidden===false){if(e.key==="Escape"){e.preventDefault();closeInst();}return;}/* 手順を開いている間は、ゲームのキー操作をしない */
   if(e.repeat)return;/* 長押しリピートでリザルト画面を飛ばさない */
   /* フォーカス中の有効なボタンはネイティブのEnter/Space動作に任せる(横取りすると別のボタンが押される) */
   if((e.key==="Enter"||e.key===" ")&&document.activeElement&&document.activeElement.tagName==="BUTTON"&&!document.activeElement.disabled)return;
@@ -1650,16 +1548,6 @@ if(location.search.indexOf("selftest")>-1){
       if(!onScr("scr-title"))LOG.push("NO:p2-title");
       {const todo=huntNext(-1);/* 全章クリア後: ★3まだの章があれば「第1章から」を出し、副題で行き先を示す */
         if($("#btn-story").textContent.indexOf("もういちど")<0||$("#btn-restart").hidden!==(todo<=0)||(todo>=0&&$("#story-sub").textContent.indexOf("★3まで")<0))LOG.push("BAD:p2-title-cleared");}
-      /* ホーム画面に追加: file:// ではボタンを出さない。手順の窓は開いて、Esc で閉じ、背後の inert も戻る */
-      if(location.protocol!=="https:"&&!$("#btn-install").hidden)LOG.push("BAD:p2-inst-btn");
-      openInst();if($("#inst").hidden||$("#inst-steps").children.length<2||!$("#scr-title").inert)LOG.push("NO:p2-inst");
-      key("Escape");if(!$("#inst").hidden||$("#scr-title").inert)LOG.push("NO:p2-inst-close");
-      /* Chrome などでボタンを先に押して待っている間にインストール画面の準備が届いたら、その場で1回だけ出す。待っていないときに届いても勝手に出さない */
-      {let called=0;const mk=()=>{const ev=new Event("beforeinstallprompt");ev.prompt=()=>{called++;return Promise.resolve();};ev.userChoice=Promise.resolve({outcome:"dismissed"});return ev;};
-        installWait=performance.now();installWaitT=setTimeout(()=>{},4000);window.dispatchEvent(mk());await wait(60);
-        if(called!==1||installWait||installEvt)LOG.push("NO:p2-inst-wait");
-        window.dispatchEvent(mk());await wait(60);if(called!==1||!installEvt)LOG.push("BAD:p2-inst-auto");
-        installEvt=null;resetInstallBtn();showInstallBtn();}
       save.tut=0;$("#btn-story").click();
       if($("#tut").hidden||onScr("scr-battle"))LOG.push("NO:p2-tut");
       $("#tut-close").click();
