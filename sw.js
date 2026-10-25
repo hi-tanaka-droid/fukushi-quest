@@ -1,5 +1,5 @@
 /* 福祉クエスト Service Worker — ネットワーク優先(画面は4秒待って届かなければ手元版)+オフラインフォールバック */
-const CACHE = "fukushi-quest-v20";
+const CACHE = "fukushi-quest-v21";
 /* github.io は同じオリジンに他のアプリ(fubi-check 等)が同居する。自分の世代(と旧3D版)のキャッシュだけ消す */
 const MINE = k => k.startsWith("fukushi-quest-") || k.startsWith("fq3d:");
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png"];
