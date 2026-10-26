@@ -464,7 +464,11 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
 /* 8 320px級の狭い画面: 中央寄せ用の右の空き(76px)を外して章題の欄を広げ(「自己責/任」と割れない)、結果見出しの字間を詰めて「〜 エンディング 〜」を1行に */
 @media(max-width:340px){.bar .sp{display:none;}.result-title{letter-spacing:.08em;}}
 /* 10 文字拡大(125%〜)で「福祉クエス/ト」「ぼうけんに出/る」と1字だけ次の行に落ちない(ロゴは「福祉/クエスト」でだけ折れる) */
-.logo,.mode-btn{word-break:keep-all;overflow-wrap:anywhere;}
+.logo,.mode-btn,.logo-eyebrow{word-break:keep-all;overflow-wrap:anywhere;}/* 見出しの「完全対/応」も1字だけ落とさず、空白で折る */
+/* 11 エンディングの見出し「〜 エンディング 〜」は文字拡大(125%)で最後の「〜」だけが次の行に落ちていた → 字間を詰め、画面幅に合わせて字を小さくして1行に */
+.result-title.end{letter-spacing:.06em;font-size:min(1.65rem,7.6vw);}
+@media(max-height:740px){.result-title.end{font-size:min(1.45rem,7.6vw);}}
+@media(min-height:741px){.result-title.end{font-size:min(clamp(1.5rem,6.2vw,1.85rem),7.6vw);}}
 </style>
 </head>
 <body>
@@ -561,7 +565,7 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%;}
 <script>
 "use strict";
 /* =========================================================
-   福祉クエスト v2.13 — ひとすじの冒険(音・タイマー・アイテムなし)
+   福祉クエスト v2.15 — ひとすじの冒険(音・タイマー・アイテムなし)
    ========================================================= */
 
 /* ---------- DATA ---------- */
@@ -840,7 +844,7 @@ function phraseCuts(s){/* <wbr> を入れる位置(文字の添字)の一覧 */
 }
 /* keep-all でもブラウザが折ってしまう所: 閉じ括弧・○・%の直後の助詞(」と ○○を 95%が)、範囲の〜(4〜5人)、
    カタカナ名の=(バンク=ミケルセン)、英単語のハイフン(Well-being)、記号の直前(…=自立 ——この)。ここは <span class="nbp"> で包んで離さない */
-const NBP=/[」』）)】〕〉》○◯●%％]\p{sc=Hiragana}|[A-Za-z0-9] \p{sc=Hiragana}|[〜~][^\s]|[\p{sc=Katakana}ー][=＝]\p{sc=Katakana}|[A-Za-z]-[A-Za-z]|[^\s][=＝+＋—―→×]|(?:📲 「?)?ホーム画面|共有ボタン|□に↑|引き継/gu;/* 後半はホーム画面に追加の手順用(「ホーム/画面」「引き/継がれません」と割れない) */
+const NBP=/[」』）)】〕〉》○◯●%％]\p{sc=Hiragana}|[A-Za-z0-9] \p{sc=Hiragana}|[〜~][^\s]|[\p{sc=Katakana}ー][=＝]\p{sc=Katakana}|[A-Za-z]-[A-Za-z]|[^\s][=＝+＋—―→×]|(?:📲 「?)?ホーム画面|共有ボタン|□に↑|引き継|(?:見え方|取り組み方|進み具合|支え合|分け合|差し引|押し付|受け継|切り離|住み慣|語り部|褒め言葉|挑み直|書き足|増え続|ひと仕事|胴上げ型|ふくし見習い|呼び方|配り方|支え手|稼ぎ手|移り変|乱れ貼|盛り込|飲み干|知り合|がん保険|こども園|[0-9０-９]つ目)[=＝+＋—―→×]?/gu;/* 後半: 「ホーム/画面」「引き/継がれません」と割れない。複合語(見え方・支え合い・褒め言葉 など)は送りがなの後ろで折らない(v2.15。後ろの記号1字も一緒に包む) */
 /* 文字列 → <wbr> 入りのHTML。each=true なら1文字ずつ <span class="ghost"> に包む(タイプライター用) */
 /* 折ってよい所(cuts → <wbr>)と離さない所(keep → nbp)。離さない所の内側には <wbr> を入れない(入れると nowrap の中でも折れた: 「for /でもなく」) */
 function phraseMarks(s){
@@ -899,7 +903,7 @@ function toast(msg){
 
 /* ---------- TITLE ---------- */
 const QT=STAGES.reduce((a,s)=>a+s.q.length,0);
-$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.13`;
+$("#title-foot").textContent=`全12章・${QT}問収録 / 進行度オートセーブ / 出典:社会福祉原論A 第2〜13回スライド / v2.15`;
 const paradeStr=CHAPTERS.map(c=>c.boss.icon).join("");
 /* オープニングの流れるアイコンは人型・人の顔(人間味のある絵文字)を除外。ending parade は全ボス維持 */
 const PARADE_SKIP=new Set(["🦸","🏋️","😇","😶"]);
@@ -1359,7 +1363,7 @@ function victory(delay){
   B.pendingResult=()=>{
     if(!$("#scr-battle").classList.contains("on"))return;
     $("#stamp-area").innerHTML=`<span class="stamp px ${rank==="A"?"rA":rank==="B"?"rB":""}">RANK ${rank}</span>`;
-    $("#result-title").classList.remove("lose");
+    $("#result-title").classList.remove("lose");$("#result-title").classList.toggle("end",isEnding);
     $("#result-stars").innerHTML=[0,1,2].map(i=>`<span class="st${i<stars?"":" off"}" style="animation-delay:${(.3+i*.14).toFixed(2)}s">${i<stars?"★":"☆"}</span>`).join("");/* 取った星が1つずつ押される。空き星は☆で形でも区別 */
     $("#result-stars").setAttribute("role","img");$("#result-stars").setAttribute("aria-label",`星 ${stars} / 3`);
     renderReview();
@@ -1424,7 +1428,7 @@ function gameOver(){
   lastLost=B.chapter;
   $("#stamp-area").innerHTML="";
   $("#result-title").textContent="力尽きた…";
-  $("#result-title").classList.add("lose");
+  $("#result-title").classList.add("lose");$("#result-title").classList.remove("end");
   $("#result-stars").textContent="💤";$("#result-stars").removeAttribute("role");$("#result-stars").removeAttribute("aria-label");
   const lose=talk("lose");
   $("#defeat-quote").innerHTML=lose
