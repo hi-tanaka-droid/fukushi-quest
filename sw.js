@@ -1,5 +1,5 @@
-/* 福祉クエスト Service Worker — ネットワーク優先(画面は4秒待って届かなければ手元版)+オフラインフォールバック */
-const CACHE = "fukushi-quest-v24";
+/* 福祉クエスト Service Worker — ネットワーク優先(画面は4秒待って届かないか、サーバーがエラーを返せば手元版)+オフラインフォールバック */
+const CACHE = "fukushi-quest-v25";
 /* github.io は同じオリジンに他のアプリ(fubi-check 等)が同居する。自分の世代(と旧3D版)のキャッシュだけ消す */
 const MINE = k => k.startsWith("fukushi-quest-") || k.startsWith("fq3d:");
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png"];
@@ -31,7 +31,7 @@ self.addEventListener("fetch", e => {
       let done = false;
       const fin = r => { if (!done && r) { done = true; clearTimeout(t); resolve(r); } };
       const t = setTimeout(() => local().then(fin), NAV_TIMEOUT);
-      net.then(fin, () => local().then(m => fin(m || Response.error())));
+      net.then(r => r.ok ? fin(r) : local().then(m => fin(m || r)), () => local().then(m => fin(m || Response.error())));/* 404・5xx が返ったときも、手元版があればそれを出す(v2.16) */
     }));
     return;
   }
